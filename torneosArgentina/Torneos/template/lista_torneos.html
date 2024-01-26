@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Metadatos, enlaces a CSS, scripts, etc. van aquí -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Título de tu página</title>
+    <!-- Otros elementos del encabezado, como enlaces a estilos CSS -->
+
+    <!-- Enlaza tu archivo CSS -->
+    <link rel="stylesheet" type="text/css" href="../static/css/estilos.css">
+</head>
+
+<a>
+
+    <!-- Torneos/template/lista_torneos.html -->
+    <form action="{% url 'buscar_torneos' %}" method="get">
+        <label for="tipo">Tipo:</label>
+        <select name="tipo">
+
+            <option value="Copa">Copa</option>
+            <option value="Liga">Liga</option>
+            <option value="Superliga">Superliga</option>
+            <option value="Desafío">Desafío</option>
+            <option value="Internacional">Internacional</option>
+        </select>
+
+</a>
+<button type="submit">Buscar</button>
+</form>
+
+</html>

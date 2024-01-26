@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <!-- Metadatos, enlaces a CSS, scripts, etc. van aquí -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Título de tu página</title>
+    <!-- Otros elementos del encabezado, como enlaces a estilos CSS -->
+
+    <!-- Enlaza tu archivo CSS -->
+    <link rel="stylesheet" type="text/css" href="../static/css/estilos.css">
+</head>
+
+<body>
+    <a>
+        <!-- Contenido de tu página va aquí -->
+        <h2>{{ torneo.nombre }}</h2>
+        <p>Tipo: {{ torneo.tipo }}</p>
+        <p>Fecha: {{ torneo.fecha }}</p>
+        <p>Ubicación: {{ torneo.ubicacion }}</p>
+        <img src="{{ torneo.imagen.url }}" alt="{{ torneo.nombre }}">
+
+        <!-- Agrega más detalles del torneo según tus necesidades -->
+
+        <a href="{% url 'lista_torneos' %}">Volver a la lista de torneos</a>
+    </a>
+</body>
+
+</html>

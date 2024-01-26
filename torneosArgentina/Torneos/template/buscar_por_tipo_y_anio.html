@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+<link rel="stylesheet" type="text/css" href="../static/css/estilos.css">
+
+{% block title %}Buscar Torneos por Tipo y Año{% endblock %}
+
+{% block content %}
+<a>
+    {% block content %}
+    <div class="resultados-busqueda-container">
+        <h2>Resultados de la búsqueda para {{ tipo }} en {{ year }}</h2>
+        <ul>
+            {% for torneo in torneos %}
+            <li>
+                <a href="{% url 'buscar_por_tipo_y_anio' tipo=tipo year=torneo.fecha.year %}">{{ torneo.nombre }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endblock %}
+
+</a>
+{% endblock %}

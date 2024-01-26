@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar Torneos{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="../static/css/estilos.css">
+<a>
+    <div class="buscar-torneos-container">
+        <h2>Buscar Torneos</h2>
+
+        <form action="{% url 'buscar_torneos' %}" method="get">
+            <label for="fecha">Año:</label>
+            <input type="number" min="2015" name="fecha" pattern="\d{4}"
+                title="Ingrese un año válido de cuatro dígitos">
+            <button type="submit">Buscar</button>
+        </form>
+
+        <p>Opciones de búsqueda avanzada:</p>
+        <ul>
+            {% for year in years %}
+            <li><a href="{% url 'buscar_por_anio' year=year %}">Ver torneos por año {{ year }}</a></li>
+            {% endfor %}
+            <li><a href="{% url 'buscar_por_tipo' tipo='tipo' %}">Ver torneos de tipo Liga</a></li>
+            <!-- Agrega más opciones según tus necesidades -->
+        </ul>
+    </div>
+</a>
+{% endblock %}

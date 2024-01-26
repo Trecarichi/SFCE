@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+<link rel="stylesheet" type="text/css" href="../static/css/estilos.css">
+
+{% block title %}Buscar por Año - {{ torneo.nombre }}{% endblock %}
+
+{% block content %}
+<div class="buscar-por-anio-container">
+    <h2>Buscar por Año - {{ torneo.nombre }}</h2>
+    <form method="get" action="{% url 'buscar_por_anio' %}">
+        {% csrf_token %}
+        <label for="year">Selecciona el Año:</label>
+        <select name="year" id="year">
+            {% for año in torneo.fechas_disponibles %}
+            <option value="{{ año }}">{{ año }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if year %}
+    <h3>Información detallada para el año {{ year }}</h3>
+    <ul>
+        {% for torneo in torneos %}
+        <li>{{ torneo.nombre }} - {{ torneo.fecha }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

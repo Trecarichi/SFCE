@@ -1,0 +1,22 @@
+<!-- Torneos/templates/base.html -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Torneos Argentina{% endblock %}</title>
+    <!-- Agrega tus enlaces CSS, scripts, etc. aquí según sea necesario -->
+</head>
+
+<body>
+    <div>
+        <h1>Torneos Argentina</h1>
+        <hr>
+        <div>
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+
+</html>

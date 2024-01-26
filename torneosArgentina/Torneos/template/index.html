@@ -1,0 +1,11 @@
+<!-- Torneos/template/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Inicio - Torneos Argentina{% endblock %}
+
+{% block content %}
+<h2>Bienvenido a Torneos Argentina</h2>
+<p>Explora nuestros torneos y descubre más sobre la escena de los juegos de lucha.</p>
+
+<a href="{% url 'lista_torneos' %}">Ver Lista de Torneos</a>
+{% endblock %}

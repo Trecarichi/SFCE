@@ -1,0 +1,15 @@
+<!-- Torneos/templates/detalle_torneo_por_tipo_y_anio.html -->
+{% extends "base.html" %}
+
+{% block title %}Detalle Torneo por Tipo y Año{% endblock %}
+
+{% block content %}
+<h2>Detalles del Torneo</h2>
+<p>Nombre: {{ torneo.nombre }}</p>
+<p>Tipo: {{ torneo.tipo }}</p>
+<p>Fecha: {{ torneo.fecha }}</p>
+<!-- Agregar aquí más detalles generales según tus necesidades -->
+<p>Descripción Personalizada: {{ torneo.descripcion_personalizada }}</p>
+<!-- Agregar aquí más detalles personalizados según el tipo de torneo -->
+<a href="{% url 'lista_torneos_por_tipo' tipo=selected_tipo %}">Volver a la Lista por Tipo</a>
+{% endblock %}
