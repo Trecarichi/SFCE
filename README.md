@@ -1,6 +1,3 @@
-Aquí tienes un ejemplo de cómo podría ser un archivo README para describir cómo obtener la última versión de Django y Python 3:
-Obtener Django y Python 3
-
 Este repositorio contiene ejemplos y proyectos que utilizan Django, un marco de desarrollo web de alto nivel en Python. Para comenzar, necesitarás tener instalados Python 3 y Django en tu sistema.
 Instalación de Python 3
 
