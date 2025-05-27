@@ -1,33 +1,60 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
+{% load static %} {# Asegúrate de cargar static si usas imágenes o CSS externos #}
 
-<head>
-    <!-- Metadatos, enlaces a CSS, scripts, etc. van aquí -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Título de tu página</title>
-    <!-- Otros elementos del encabezado, como enlaces a estilos CSS -->
+{% block title %}Lista de Torneos{% endblock %}
 
-    <!-- Enlaza tu archivo CSS -->
-    <link rel="stylesheet" type="text/css" href="../static/css/estilos.css">
-</head>
+{% block content %}
 
-<a>
 
-    <!-- Torneos/template/lista_torneos.html -->
-    <form action="{% url 'buscar_torneos' %}" method="get">
-        <label for="tipo">Tipo:</label>
-        <select name="tipo">
-
-            <option value="Copa">Copa</option>
-            <option value="Liga">Liga</option>
-            <option value="Superliga">Superliga</option>
-            <option value="Desafío">Desafío</option>
-            <option value="Internacional">Internacional</option>
+<div class="filter-container">
+    <form action="{% url 'lista_torneos' %}" method="GET">
+        <select name="tipo" onchange="this.form.submit()">
+            <option value="" {% if selected_options.todos %}selected{% endif %}>Todos los Tipos</option>
+            <option value="Copa" {% if selected_options.copa %}selected{% endif %}>Copa</option>
+            <option value="Liga" {% if selected_options.liga %}selected{% endif %}>Liga</option>
+            <option value="Superliga" {% if selected_options.superliga %}selected{% endif %}>Superliga</option>
+            <option value="Desafío" {% if selected_options.desafio %}selected{% endif %}>Desafío</option>
+            <option value="Internacional" {% if selected_options.internacional %}selected{% endif %}>Internacional
+            </option>
         </select>
 
-</a>
-<button type="submit">Buscar</button>
-</form>
+        <input type="number" name="year" placeholder="Año" value="{{ selected_year }}">
+        <button type="submit">Filtrar</button>
+        {% if selected_tipo or selected_year %}
+        <a href="{% url 'lista_torneos' %}" class="reset-link">Restablecer Filtros</a>
+        {% endif %}
+    </form>
+</div>
+<button onclick="history.back()">← Volver</button>
+<div class="torneos-container">
+    {% if torneos %}
+    {% for torneo in torneos %}
+    <div class="torneo-card">
+        {% if torneo.imagen_torneo %}
+        <img src="{{ torneo.imagen_torneo.url }}" alt="Imagen de {{ torneo.nombre }}">
+        {% else %}
+        {# Imagen por defecto si el torneo no tiene una imagen cargada #}
+        <img src="{% static 'images/default_tournament.png' %}" alt="Imagen por defecto de torneo">
+        {% endif %}
+        <div class="torneo-info">
+            <h3>{{ torneo.nombre }}</h3>
+            <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
+            <p><strong>Fecha:</strong> {{ torneo.fecha|date:"d M Y" }}</p>
+            <p><strong>Ubicación:</strong> {{ torneo.ubicacion }}</p>
+            {% if torneo.internacional %}
+            <p style="color: #e67e22;">(Torneo Internacional)</p>
+            {% endif %}
+        </div>
+        <div class="torneo-actions">
+            <a href="{% url 'detalle_torneos' torneo.id %}" class="btn-detalle">Ver Detalles</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p style="grid-column: 1 / -1; text-align: center; font-size: 1.2em; color: #777;">No se encontraron torneos con los
+        filtros aplicados.</p>
+    {% endif %}
 
-</html>
+</div>
+
+{% endblock %}

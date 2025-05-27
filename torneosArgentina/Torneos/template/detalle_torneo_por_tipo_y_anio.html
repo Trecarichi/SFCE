@@ -12,4 +12,6 @@
 <p>Descripción Personalizada: {{ torneo.descripcion_personalizada }}</p>
 <!-- Agregar aquí más detalles personalizados según el tipo de torneo -->
 <a href="{% url 'lista_torneos_por_tipo' tipo=selected_tipo %}">Volver a la Lista por Tipo</a>
+<!-- Botón para volver atrás -->
+<button onclick="history.back()">← Volver</button>
 {% endblock %}

@@ -35,7 +35,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "torneosArgentina.urls"
-ROOT_URLCONF = "Torneos.urls"
 
 TEMPLATES = [
     {
@@ -89,3 +88,6 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Esto creará una carpeta 'media' en la raíz de tu proyecto

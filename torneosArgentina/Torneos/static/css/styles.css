@@ -1,0 +1,408 @@
+/* Estilos globales */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 938px;
+    /* Originalmente 1400px, ahora 1400 * 0.67 = ~938px */
+    margin: 20px auto;
+    padding: 13px;
+    /* Originalmente 20px, ahora 20 * 0.67 = ~13px */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 13px;
+    /* Originalmente 20px, ahora 20 * 0.67 = ~13px */
+    font-size: 2.34em;
+    /* Originalmente 3.5em, ahora 3.5 * 0.67 = ~2.34em */
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0));
+    margin-bottom: 20px;
+}
+
+.content {
+    padding: 13px;
+    /* Originalmente 20px, ahora 20 * 0.67 = ~13px */
+}
+
+/* Header (barra de navegación) */
+header {
+    background-color: #34495e;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0 13px;
+    /* Originalmente 0 20px, ahora 20 * 0.67 = ~13px */
+    font-size: 1.1em;
+    /* Originalmente 1.6em, ahora 1.6 * 0.67 = ~1.07em, redondeado */
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #ecf0f1;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 13px;
+    /* Originalmente 20px, ahora 20 * 0.67 = ~13px */
+    margin-top: 30px;
+    background-color: #34495e;
+    color: white;
+    font-size: 0.87em;
+    /* Originalmente 1.3em, ahora 1.3 * 0.67 = ~0.87em */
+}
+
+/* Estilos para el carrusel */
+.carrusel-container {
+    position: relative;
+    width: 100%;
+    max-width: 536px;
+    /* Ajustado: 800px * 0.67 = ~536px */
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.carrusel-inner {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carrusel-item {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.carrusel-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.carrusel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    /* Ajustado: 15px * 0.67 = ~10px */
+    text-align: center;
+    font-size: 0.74em;
+    /* Ajustado: 1.1em * 0.67 = ~0.737em, redondeado */
+}
+
+.carrusel-caption h3 {
+    font-size: 1.1em;
+    /* Ajustado el tamaño de H3 dentro del caption */
+}
+
+.carrusel-caption p {
+    font-size: 0.9em;
+    /* Ajustado el tamaño del párrafo dentro del caption */
+}
+
+.carrusel-buttons {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    padding: 0 7px;
+    /* Ajustado: 10px * 0.67 = ~7px */
+    box-sizing: border-box;
+}
+
+.carrusel-button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 7px 10px;
+    /* Ajustado: 10px*0.67=7px, 15px*0.67=10px */
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 1.2em;
+    /* Ajustado: 1.5em * 0.67 = ~1em */
+    transition: background-color 0.3s;
+}
+
+.carrusel-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Estilos para el botón principal "Ver Lista de Torneos" y "Volver al Inicio" */
+.btn-large {
+    display: inline-block;
+    background-color: #3498db;
+    color: white !important;
+    /* !important para asegurar que el color blanco no sea sobrescrito */
+    padding: 10px 20px;
+    /* Ajustado: 15px*0.67=10px, 30px*0.67=20px */
+    font-size: 1em;
+    /* Ajustado: 1.5em * 0.67 = 1.005em, redondeado */
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px;
+    /* Ajustado: 30px * 0.67 = ~20px */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid #2980b9;
+    min-width: 134px;
+    /* Ajustado: 200px * 0.67 = 134px */
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-large:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+/* Estilos para el contenido general de la página de inicio */
+.index-content {
+    text-align: center;
+    padding: 13px;
+    /* Ajustado: 20px * 0.67 = ~13px */
+}
+
+.index-content h2 {
+    color: #2c3e50;
+    font-size: 1.47em;
+    /* Ajustado: 2.2em * 0.67 = 1.474em, redondeado */
+    margin-bottom: 10px;
+    /* Ajustado: 15px * 0.67 = ~10px */
+}
+
+.index-content p {
+    font-size: 0.74em;
+    /* Ajustado: 1.1em * 0.67 = ~0.737em, redondeado */
+    line-height: 1.5;
+    margin-bottom: 17px;
+    /* Ajustado: 25px * 0.67 = ~17px */
+}
+
+/* Estilos para la lista de torneos */
+.torneos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /* Columnas responsivas */
+    gap: 25px;
+    /* Espacio entre tarjetas */
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.torneo-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    /* Asegura que la imagen no se desborde del borde redondeado */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Para empujar el botón al final */
+    min-height: 380px;
+    /* Altura mínima para que las tarjetas se vean uniformes */
+}
+
+.torneo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.torneo-card img {
+    width: 100%;
+    height: 200px;
+    /* Altura fija para las imágenes de las tarjetas */
+    object-fit: cover;
+    /* Recorta la imagen para cubrir el área sin distorsionar */
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.torneo-info {
+    padding: 15px;
+    flex-grow: 1;
+    /* Permite que el contenido crezca */
+}
+
+.torneo-info h3 {
+    font-size: 1.6em;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.torneo-info p {
+    font-size: 0.95em;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.torneo-info p strong {
+    color: #333;
+}
+
+.torneo-actions {
+    padding: 15px;
+    border-top: 1px solid #f0f0f0;
+    text-align: center;
+}
+
+.btn-detalle {
+    display: inline-block;
+    background-color: #3498db;
+    /* Azul del botón principal */
+    color: white;
+    padding: 10px 20px;
+    font-size: 1em;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-detalle:hover {
+    background-color: #2980b9;
+    /* Azul más oscuro al pasar el mouse */
+}
+
+/* Estilos para los filtros */
+.filter-container {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #eee;
+}
+
+.filter-container select,
+.filter-container input[type="number"],
+.filter-container button {
+    padding: 8px 12px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.filter-container button {
+    background-color: #28a745;
+    /* Botón verde para aplicar filtro */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-container button:hover {
+    background-color: #218838;
+}
+
+.filter-container a.reset-link {
+    color: #dc3545;
+    /* Rojo para resetear */
+    text-decoration: none;
+    margin-left: 10px;
+    font-size: 0.9em;
+}
+
+/* Estilos para los enlaces de redes sociales (ajustados para apilar el texto) */
+.social-links {
+    margin-top: 20px;
+    padding: 7px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    /* Alinea los ítems desde arriba */
+    gap: 15px;
+    /* Aumenta el espacio entre los "bloques" de logo+texto */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.social-links h3 {
+    margin: 0;
+    margin-right: 10px;
+    color: #333;
+    font-size: 0.8em;
+}
+
+.social-item {
+    display: flex;
+    flex-direction: column;
+    /* ¡CAMBIO CLAVE: Hace que los elementos se apilen! */
+    align-items: center;
+    /* Centra el icono y el texto horizontalmente */
+    text-decoration: none;
+    color: #333;
+    padding: 8px 12px;
+    /* Un poco más de padding para que se vea como un botón vertical */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    min-width: 90px;
+    /* Ancho mínimo para los bloques de red social */
+    text-align: center;
+    /* Centra el texto si es más ancho que la imagen */
+}
+
+.social-item:hover {
+    background-color: #e9e9e9;
+    transform: translateY(-2px);
+    /* Pequeño efecto de elevación al pasar el mouse */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.social-icon {
+    width: 30px;
+    /* Ligeramente más grande para que se vea mejor arriba del texto */
+    height: 30px;
+    margin-bottom: 5px;
+    /* Espacio entre el icono y el texto */
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+
+.social-text {
+    font-size: 0.7em;
+    /* Un poco más pequeño para que no ocupe tanto espacio */
+    white-space: nowrap;
+    /* Evitar que el texto se rompa en varias líneas */
+    color: #555;
+    font-weight: bold;
+    /* Hacer el texto un poco más legible */
+}

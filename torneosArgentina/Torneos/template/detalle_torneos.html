@@ -1,30 +1,57 @@
-<!DOCTYPE html>
-<html lang="es">
+{% extends "base.html" %}
+{% load static %}
 
-<head>
-    <!-- Metadatos, enlaces a CSS, scripts, etc. van aquí -->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Título de tu página</title>
-    <!-- Otros elementos del encabezado, como enlaces a estilos CSS -->
+{% block title %}Detalles de {{ torneo.nombre }}{% endblock %}
 
-    <!-- Enlaza tu archivo CSS -->
-    <link rel="stylesheet" type="text/css" href="../static/css/estilos.css">
-</head>
+{% block content %}
 
-<body>
-    <a>
-        <!-- Contenido de tu página va aquí -->
-        <h2>{{ torneo.nombre }}</h2>
-        <p>Tipo: {{ torneo.tipo }}</p>
-        <p>Fecha: {{ torneo.fecha }}</p>
-        <p>Ubicación: {{ torneo.ubicacion }}</p>
-        <img src="{{ torneo.imagen.url }}" alt="{{ torneo.nombre }}">
+<div class="torneo-detail-container">
+    <h2>{{ torneo.nombre }}</h2>
 
-        <!-- Agrega más detalles del torneo según tus necesidades -->
+    {% if torneo.imagen_torneo %}
+    <img src="{{ torneo.imagen_torneo.url }}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
+    {% endif %}
 
-        <a href="{% url 'lista_torneos' %}">Volver a la lista de torneos</a>
-    </a>
-</body>
+    <div class="detail-info-block">
+        <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
+        <p><strong>Ubicación General:</strong> {{ torneo.ubicacion }}</p>
+        {% if torneo.internacional %}
+        <p style="color: #e67e22;"><strong>(Torneo Internacional)</strong></p>
+        {% endif %}
+        {% if torneo.descripcion %}
+        <p><strong>Descripción:</strong> {{ torneo.descripcion|linebreaksbr }}</p>
+        {% endif %}
+    </div>
 
-</html>
+    <div class="ediciones-container">
+        <h3>Ediciones Anuales</h3>
+        {% if torneo.informacion_por_anio.all %}
+        {% for info_anio in torneo.informacion_por_anio.all %}
+        <div class="edicion-card">
+            <h4>Año: {{ info_anio.anio }}</h4>
+            {% if info_anio.fecha_exacta %}<p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>{%
+            endif %}
+            {% if info_anio.ubicacion_especifica %}<p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}
+            </p>{% endif %}
+            <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
+            {% if info_anio.subcampeon %}<p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>{% endif %}
+            {% if info_anio.participantes_cantidad %}<p><strong>Participantes:</strong> {{
+                info_anio.participantes_cantidad }}</p>{% endif %}
+            {% if info_anio.resumen %}<p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>{% endif %}
+
+            {% if info_anio.link_transmision %}
+            <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer"
+                class="link-transmision">
+                Ver Transmisión
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No hay información de ediciones anuales disponible para este torneo aún.</p>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a>
+</div>
+{% endblock %}

@@ -1,11 +1,91 @@
-<!-- Torneos/template/index.html -->
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Inicio - Torneos Argentina{% endblock %}
+{% block title %}Inicio - Street Fighter Champion Edition Argentina{% endblock %}
 
 {% block content %}
-<h2>Bienvenido a Torneos Argentina</h2>
-<p>Explora nuestros torneos y descubre más sobre la escena de los juegos de lucha.</p>
 
-<a href="{% url 'lista_torneos' %}">Ver Lista de Torneos</a>
+
+<div class="index-content">
+    <h2>Bienvenido a la página oficial de Street Fighter Champion Edition Argentina</h2>
+
+    {# --- INICIO DEL CARRUSEL --- #}
+    {% if imagenes_carrusel %} {# Solo muestra el carrusel si hay imágenes #}
+    <div class="carrusel-container">
+        <div class="carrusel-inner">
+            {% for imagen in imagenes_carrusel %}
+            <div class="carrusel-item">
+                <img src="{{ imagen.imagen.url }}" alt="{{ imagen.titulo|default:'Imagen del carrusel' }}">
+                {% if imagen.titulo or imagen.descripcion %}
+                <div class="carrusel-caption">
+                    {% if imagen.titulo %}<h3>{{ imagen.titulo }}</h3>{% endif %}
+                    {% if imagen.descripcion %}<p>{{ imagen.descripcion }}</p>{% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% if imagenes_carrusel|length > 1 %} {# Solo muestra botones si hay más de una imagen #}
+        <div class="carrusel-buttons">
+            <button class="carrusel-button" id="prevBtn">❮</button>
+            <button class="carrusel-button" id="nextBtn">❯</button>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const carruselInner = document.querySelector('.carrusel-inner');
+        const carruselItems = document.querySelectorAll('.carrusel-item');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+
+        if (carruselItems.length > 0) {
+            function updateCarrusel() {
+                const itemWidth = carruselItems[0] ? carruselItems[0].clientWidth : 0;
+                carruselInner.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
+            }
+
+            if (prevBtn && nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % carruselItems.length;
+                    updateCarrusel();
+                });
+
+                prevBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + carruselItems.length) % carruselItems.length;
+                    updateCarrusel();
+                });
+            }
+
+            window.addEventListener('resize', updateCarrusel);
+            window.addEventListener('load', updateCarrusel);
+        }
+    </script>
+    {% else %} {# Mensaje si no hay imágenes para el carrusel #}
+    <p>No hay imágenes disponibles para el carrusel en este momento.</p>
+    {% endif %}
+    {# --- FIN DEL CARRUSEL --- #}
+    {# --- ENLACES DE REDES SOCIALES (IMÁGENES Y TEXTO) --- #}
+    <div class="social-links">
+        <h3>Síguenos en nuestras redes:</h3>
+
+        <a href="https://www.facebook.com/groups/sf2ceargentina" target="_blank" aria-label="Síguenos en Facebook"
+            class="social-item">
+            <img src="{% static 'images/facebook_logo.png' %}" alt="Facebook" class="social-icon">
+            <span class="social-text">Grupo de facebook</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+
+                <a href="https://www.twitch.tv/mechakuma34" target="_blank" aria-label="Síguenos en Twitch"
+                    class="social-item">
+                    <img src="{% static 'images/twitch_logo.png' %}" alt="Twitch" class="social-icon">
+                    <span class="social-text">canal de Twitch</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                        {# Puedes añadir más iconos aquí si tienes Twitter, YouTube, etc. #}
+    </div>
+    {# --- FIN ENLACES DE REDES SOCIALES --- #}
+
+
+    <p>Explora nuestros torneos y descubre más sobre la escena de los juegos de lucha.</p>
+
+</div>
+
 {% endblock %}

@@ -1,22 +1,32 @@
-<!-- Torneos/templates/base.html -->
+{# Torneos/templates/base.html #}
+{% load static %} {# ¡Esta línea es crucial! #}
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Torneos Argentina{% endblock %}</title>
-    <!-- Agrega tus enlaces CSS, scripts, etc. aquí según sea necesario -->
-</head>
+    <title>{% block title %}Street Fighter CE Argentina{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> {# <-- ¡Esta es la línea clave! #} </head>
 
 <body>
-    <div>
-        <h1>Torneos Argentina</h1>
-        <hr>
-        <div>
-            {% block content %}{% endblock %}
-        </div>
-    </div>
+    <header>
+        <nav>
+            <a href="{% url 'index' %}">Inicio</a>
+            <a href="{% url 'lista_torneos' %}">Torneos</a>
+            {# Otros enlaces si tienes #}
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block content %}
+        {# El contenido de tus otras páginas irá aquí #}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Street Fighter CE Argentina. Todos los derechos reservados.</p>
+    </footer>
 </body>
 
 </html>
