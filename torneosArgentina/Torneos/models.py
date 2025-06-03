@@ -5,20 +5,23 @@ from django.db import models
 class Torneo(models.Model):
     nombre = models.CharField(max_length=200)
     tipo = models.CharField(max_length=50, choices=[
+
+        ('todas_las_competencias', 'Todas las competencias'),
+        ('Copa_America', 'Copa América'),   
         ('Copa', 'Copa'),
         ('Liga', 'Liga'),
         ('Superliga', 'Superliga'),
-        ('Desafío', 'Desafío'),
+        ('Desafio', 'Desafío'), # <-- NOTA: Si usas 'Desafío' en el admin y quieres que el filtro funcione, el valor interno debe ser 'Desafio' (sin tilde) para que coincida con el HTML y la vista. O usar 'Desafío' consistentemente en todas partes.
         ('Internacional', 'Internacional'),
     ])
-    fecha = models.DateField() # Esta fecha podría ser la fecha de la primera edición o la más reciente
+    fecha = models.DateField()
     ubicacion = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
     internacional = models.BooleanField(default=False)
     imagen_torneo = models.ImageField(upload_to='torneos_imagenes/', blank=True, null=True)
 
     def __str__(self):
-        return f"{self.nombre} ({self.fecha.year})" # O solo self.nombre si prefieres
+        return f"{self.nombre} ({self.fecha.year})"
 
     class Meta:
         verbose_name = "Torneo Principal"
@@ -51,29 +54,25 @@ class ImagenCarrusel(models.Model):
 class InformacionTorneoAnio(models.Model):
     torneo = models.ForeignKey(Torneo, on_delete=models.CASCADE, related_name='informacion_por_anio')
     anio = models.IntegerField()
-    # Los siguientes campos ya los tienes o los hemos tocado
-    campeon = models.CharField(max_length=100) # Este campo ahora no es nullable, por eso pedía default
+    campeon = models.CharField(max_length=100)
     subcampeon = models.CharField(max_length=100, blank=True, null=True)
     participantes_cantidad = models.IntegerField(blank=True, null=True)
-    resumen = models.TextField(blank=True, null=True) # Resumen del torneo en ese año
+    resumen = models.TextField(blank=True, null=True)
 
-    # --- NUEVOS CAMPOS ---
-    # Link de la transmisión (puede ser Twitch, YouTube, etc.)
     link_transmision = models.URLField(max_length=500, blank=True, null=True,
                                         help_text="Enlace a la transmisión del torneo (Twitch, YouTube, etc.)")
-    # Fecha exacta del torneo para este año (si es diferente a la fecha del Torneo general)
     fecha_exacta = models.DateField(blank=True, null=True,
                                     help_text="Fecha específica de esta edición anual del torneo.")
-    # Ubicación específica para este año (si cambia)
     ubicacion_especifica = models.CharField(max_length=100, blank=True, null=True,
                                             help_text="Ubicación específica para esta edición anual.")
-    # Otros detalles que podrías querer añadir por año
-    # Ej: link_bracket = models.URLField(max_length=500, blank=True, null=True, help_text="Enlace al bracket del torneo")
-    # Ej: logo_anio = models.ImageField(upload_to='logos_anio/', blank=True, null=True, help_text="Logo específico para esta edición anual")
+
+    # --- CAMPO NUEVO (PARA LA IMAGEN DE LA EDICIÓN) ---
+    imagen_edicion = models.ImageField(upload_to='ediciones_fotos/', blank=True, null=True,
+                                       help_text="Imagen representativa de esta edición anual del torneo.")
 
 
     class Meta:
-        unique_together = ('torneo', 'anio') # Un torneo solo puede tener una información por año
+        unique_together = ('torneo', 'anio')
         verbose_name_plural = "Información de Torneo por Año"
         ordering = ['-anio'] # Ordenar por año descendente en el admin
 

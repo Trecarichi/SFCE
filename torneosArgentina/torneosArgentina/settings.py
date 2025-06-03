@@ -3,15 +3,16 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "Torneos", "static")]
 
 
 SECRET_KEY = "django-insecure-+o(1nsm_h!8oaxig*s3o5w7tp!^vz0t5n)tp6d*8dz5^_$-war"
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['lucianotrecarichi.pythonanywhere.com', '127.0.0.1'] 
 
 INSTALLED_APPS = [
     "django.contrib.admin",

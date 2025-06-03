@@ -9,11 +9,13 @@
 <div class="filter-container">
     <form action="{% url 'lista_torneos' %}" method="GET">
         <select name="tipo" onchange="this.form.submit()">
-            <option value="" {% if selected_options.todos %}selected{% endif %}>Todos los Tipos</option>
+            <option value="todas_las_competencias" {% if selected_options.todas_las_competencias %}selected{% endif %}>
+                Todas las competencias</option>
+            <option value="Copa_America" {% if selected_options.copa_america %}selected{% endif %}>Copa América</option>
             <option value="Copa" {% if selected_options.copa %}selected{% endif %}>Copa</option>
             <option value="Liga" {% if selected_options.liga %}selected{% endif %}>Liga</option>
             <option value="Superliga" {% if selected_options.superliga %}selected{% endif %}>Superliga</option>
-            <option value="Desafío" {% if selected_options.desafio %}selected{% endif %}>Desafío</option>
+            <option value="Desafio" {% if selected_options.desafio %}selected{% endif %}>Desafío </option>
             <option value="Internacional" {% if selected_options.internacional %}selected{% endif %}>Internacional
             </option>
         </select>
@@ -25,7 +27,7 @@
         {% endif %}
     </form>
 </div>
-<button onclick="history.back()">← Volver</button>
+<button onclick="history.back()" class="btn-back">← Volver</button>
 <div class="torneos-container">
     {% if torneos %}
     {% for torneo in torneos %}

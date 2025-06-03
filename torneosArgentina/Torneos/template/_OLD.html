@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% load static %} {# Asegúrate de cargar static para las imágenes y CSS #}
+{% load static %} {# No olvides cargar static para las imágenes y CSS #}
 
-{% block title %}Detalles de {{ torneo.nombre }}{% endblock %}
+{% block title %}Detalles de {{ torneo.nombre }}{% endblock %} {# Título más dinámico #}
 
 {% block content %}
 
-<div class="torneo-detail-container">
+<div class="torneo-detail-container"> {# Usamos el mismo contenedor principal si aplica tus estilos #}
     <h2>{{ torneo.nombre }}</h2>
 
     {% if torneo.imagen_torneo %}
@@ -14,22 +14,22 @@
 
     <div class="detail-info-block">
         <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
-        <p><strong>Ubicación:</strong> {{ torneo.ubicacion }}</p>
+        <p><strong>Ubicación General:</strong> {{ torneo.ubicacion }}</p>
         {% if torneo.internacional %}
         <p style="color: #e67e22;"><strong>(Torneo Internacional)</strong></p>
         {% endif %}
         {% if torneo.descripcion %}
         <p><strong>Descripción:</strong> {{ torneo.descripcion|linebreaksbr }}</p>
         {% endif %}
-        {# Asumiendo que 'descripcion_personalizada' es un campo en tu modelo Torneo #}
+        {# Asumo que descripcion_personalizada es un campo de tu modelo Torneo #}
         {% if torneo.descripcion_personalizada %}
         <p><strong>Descripción Personalizada:</strong> {{ torneo.descripcion_personalizada|linebreaksbr }}</p>
         {% endif %}
     </div>
 
-    {# --- SECCIÓN DE EDICIONES --- #}
+    {# --- SECCIÓN DE EDICIONES ANUALES (EL CÓDIGO QUE HEMOS ESTADO TRABAJANDO) --- #}
     <div class="ediciones-container">
-        <h2>Ediciones</h2> {# Cambiado a 'Ediciones' para ser más genérico #}
+        <h2>Ediciones Anuales</h2>
         {% with torneo.informacion_por_anio.all as ediciones %}
         {% if ediciones %}
         <div class="ediciones-grid">
@@ -42,7 +42,7 @@
                 </div>
                 {% endif %}
                 <div class="edicion-content">
-                    <h4>Edición: {{ info_anio.anio }}</h4> {# Etiquetado como 'Edición' en lugar de 'Año' #}
+                    <h4>Año: {{ info_anio.anio }}</h4>
                     {% if info_anio.fecha_exacta %}
                     <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
                     {% endif %}
@@ -72,14 +72,19 @@
             {% endfor %}
         </div>
         {% else %}
-        <p class="no-data-message">No hay información de ediciones disponible para este torneo aún.</p>
+        <p class="no-data-message">No hay información de ediciones anuales disponible para este torneo aún.</p>
         {% endif %}
         {% endwith %}
     </div>
-    {# --- FIN DE SECCIÓN DE EDICIONES --- #}
+    {# --- FIN DE SECCIÓN DE EDICIONES ANUALES --- #}
 
-    {# Botones de navegación. Adaptados para funcionar si no hay 'selected_tipo' #}
-    <!-- <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a> -->
-    <button onclick="history.back()" class="btn-back">← Volver</button>
+    {# Los botones de navegación que tenías #}
+    {% if selected_tipo %} {# Esto solo aparecerá si tu vista pasa selected_tipo #}
+    <a href="{% url 'lista_torneos_por_tipo' tipo=selected_tipo %}" class="btn-back">Volver a la Lista por Tipo</a>
+    {% else %}
+    <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a> {# Alternativa si no viene de
+    una lista por tipo #}
+    {% endif %}
+    <button onclick="history.back()" class="btn-back">← Volver</button> {# Reutiliza el estilo btn-back #}
 </div>
 {% endblock %}
