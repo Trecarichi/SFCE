@@ -20,16 +20,16 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'tu-clave-secreta-de-desarrollo
 DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 # ALLOWED_HOSTS: Permite los dominios donde se desplegará tu aplicación.
-# Render inyecta RENDER_EXTERNAL_HOSTNAME automáticamente.
-# También puedes definir DJANGO_ALLOWED_HOSTS en las variables de entorno de Render
-# para incluir dominios personalizados, separados por comas.
-import os
+# Esta lógica es más robusta para manejar RENDER_EXTERNAL_HOSTNAME y DJANGO_ALLOWED_HOSTS.
+allowed_hosts_from_env = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+# Limpia las cadenas vacías que pueden resultar de un split de una cadena vacía o comas al final
+allowed_hosts_from_env = [host.strip() for host in allowed_hosts_from_env if host.strip()]
 
-ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'localhost')].split(',')
-# Si no hay DJANGO_ALLOWED_HOSTS, Render automáticamente inyecta RENDER_EXTERNAL_HOSTNAME.
-# Asegúrate de que RENDER_EXTERNAL_HOSTNAME esté incluido si no usas DJANGO_ALLOWED_HOSTS.
-if not ALLOWED_HOSTS and os.environ.get('RENDER_EXTERNAL_HOSTNAME'):
-    ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME')]
+render_hostname = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if render_hostname and render_hostname not in allowed_hosts_from_env:
+    allowed_hosts_from_env.append(render_hostname)
+
+ALLOWED_HOSTS = allowed_hosts_from_env
 
 # --- DEBUGGING PRINTS ---
 print(f"DEBUG: Final DEBUG value: {DEBUG}")
@@ -79,7 +79,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.messages",
             ],
         },
     },
