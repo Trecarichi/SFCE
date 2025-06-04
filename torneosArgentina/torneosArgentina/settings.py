@@ -29,6 +29,12 @@ ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
 if not ALLOWED_HOSTS and os.environ.get('RENDER_EXTERNAL_HOSTNAME'):
     ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME')]
 
+# --- DEBUGGING PRINTS ---
+print(f"DEBUG: Final DEBUG value: {DEBUG}")
+print(f"DEBUG: Final ALLOWED_HOSTS value: {ALLOWED_HOSTS}")
+print(f"DEBUG: RENDER_EXTERNAL_HOSTNAME: {os.environ.get('RENDER_EXTERNAL_HOSTNAME')}")
+# --- END DEBUGGING PRINTS ---
+
 # =======================================================================
 # APLICACIONES INSTALADAS
 # =======================================================================
