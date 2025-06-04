@@ -18,7 +18,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'tu-clave-secreta-de-desarrollo
 # DEBUG: Siempre False en producción.
 # Render inyectará 'False' si configuras DJANGO_DEBUG=False en sus variables de entorno.
 # ¡IMPORTANTE! Lo hemos vuelto a poner en False para producción.
-DEBUG = True # os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
+DEBUG = False # os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 # ALLOWED_HOSTS: Permite los dominios donde se desplegará tu aplicación.
 # Esta lógica es más robusta para manejar RENDER_EXTERNAL_HOSTNAME y DJANGO_ALLOWED_HOSTS.
