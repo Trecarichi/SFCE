@@ -23,7 +23,9 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 # Render inyecta RENDER_EXTERNAL_HOSTNAME automáticamente.
 # También puedes definir DJANGO_ALLOWED_HOSTS en las variables de entorno de Render
 # para incluir dominios personalizados, separados por comas.
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+import os
+
+ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME', 'localhost')].split(',')
 # Si no hay DJANGO_ALLOWED_HOSTS, Render automáticamente inyecta RENDER_EXTERNAL_HOSTNAME.
 # Asegúrate de que RENDER_EXTERNAL_HOSTNAME esté incluido si no usas DJANGO_ALLOWED_HOSTS.
 if not ALLOWED_HOSTS and os.environ.get('RENDER_EXTERNAL_HOSTNAME'):
