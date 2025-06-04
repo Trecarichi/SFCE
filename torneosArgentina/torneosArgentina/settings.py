@@ -1,82 +1,114 @@
-import os
-from pathlib import Path
+    from pathlib import Path
+    import os
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+    # Determina la ruta base del proyecto.
+    # Si settings.py está en 'SFCE/torneosArgentina/torneosArgentina/settings.py',
+    # entonces Path(__file__).resolve() es .../SFCE/torneosArgentina/torneosArgentina/settings.py
+    # .parent es .../SFCE/torneosArgentina/torneosArgentina/
+    # .parent.parent es .../SFCE/torneosArgentina/ (¡Esta es la raíz del proyecto, donde está manage.py!)
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
-# =======================================================================
-# SEGURIDAD Y HOSTS PERMITIDOS
-# =======================================================================
-# SECRET_KEY: ¡MUY IMPORTANTE! Usa una variable de entorno en producción.
-# NUNCA expongas tu SECRET_KEY directamente en el código.
-# En GitLab CI/CD la configurarás como una variable de CI/CD.
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'tu-clave-secreta-de-desarrollo-aqui-si-quieres')
+    # --- DEBUGGING PRINTS ---
+    print(f"DEBUG: BASE_DIR in settings.py: {BASE_DIR}")
+    print(f"DEBUG: DJANGO_SETTINGS_MODULE env var: {os.environ.get('DJANGO_SETTINGS_MODULE')}")
+    # --- END DEBUGGING PRINTS ---
 
-# DEBUG: Siempre False en producción.
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
+    # Quick-start development settings - unsuitable for production
+    # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# ALLOWED_HOSTS: Permite los dominios donde se desplegará tu aplicación.
-# En GitLab CI/CD, esto puede ser el dominio de tu servicio de hosting.
-# Para Render/Heroku, suelen inyectar un hostname.
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
-if not DEBUG:
-    # Asegúrate de que ALLOWED_HOSTS no esté vacío en producción.
-    # Si usas Render, Render automáticamente inyecta RENDER_EXTERNAL_HOSTNAME.
-    # Puedes añadirlo aquí si lo necesitas para otras plataformas.
-    pass
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = "django-insecure-+o(1nsm_h!8oaxig*s3o5w7tp!^vz0t5n)tp6d*8dz5^_$-war"
 
-# =======================================================================
-# BASE DE DATOS
-# =======================================================================
-# Para producción, es ALTAMENTE RECOMENDADO usar PostgreSQL o MySQL.
-# Las credenciales deben venir de variables de entorno.
-# Si sigues con SQLite, el archivo de la base de datos estará en tu repo,
-# lo cual NO es ideal para producción (no es escalable ni persistente).
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Puedes mantener SQLite para simplicidad inicial
-        'NAME': BASE_DIR / 'db.sqlite3',
+    # SECURITY WARNING: don't run with debug turned on in production!
+    DEBUG = True # ¡Correcto para desarrollo local!
+
+    ALLOWED_HOSTS = [] # Correcto para desarrollo local
+
+    # Application definition
+
+    INSTALLED_APPS = [
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "django.contrib.staticfiles",
+        "Torneos", # Asegúrate de que esta app esté registrada si es donde tienes tus modelos/vistas
+        "torneosArgentina", # Esta es tu app principal o la que contiene settings.py
+    ]
+
+    MIDDLEWARE = [
+        "django.middleware.security.SecurityMiddleware",
+        "django.contrib.sessions.middleware.SessionMiddleware",
+        "django.middleware.common.CommonMiddleware",
+        "django.middleware.csrf.CsrfViewMiddleware",
+        "django.contrib.auth.middleware.AuthenticationMiddleware",
+        "django.contrib.messages.middleware.MessageMiddleware",
+        "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    ]
+
+    ROOT_URLCONF = "torneosArgentina.urls"
+
+    TEMPLATES = [
+        {
+            "BACKEND": "django.template.backends.django.DjangoTemplates",
+            # Ruta a la carpeta 'templates' dentro de la app 'Torneos'
+            "DIRS": [os.path.join(BASE_DIR, "Torneos", "templates")],
+            "APP_DIRS": True,
+            "OPTIONS": {
+                "context_processors": [
+                    "django.template.context_processors.debug",
+                    "django.template.context_processors.request",
+                    "django.contrib.auth.context_processors.auth",
+                    "django.contrib.messages.context_processors.messages",
+                ],
+            },
+        },
+    ]
+
+    WSGI_APPLICATION = "torneosArgentina.wsgi.application"
+
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
-# Ejemplo para PostgreSQL (si decides usarlo más adelante):
-# import dj_database_url
-# DATABASE_URL = os.environ.get('DATABASE_URL')
-# if DATABASE_URL:
-#     DATABASES['default'] = dj_database_url.parse(DATABASE_URL)
+
+    AUTH_PASSWORD_VALIDATORS = [
+        {
+            "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        },
+        {
+            "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        },
+        {
+            "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        },
+        {
+            "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        },
+    ]
+
+    LANGUAGE_CODE = "en-us"
+    TIME_ZONE = "UTC"
+
+    USE_I18N = True
+
+    USE_TZ = True
 
 
-# =======================================================================
-# ARCHIVOS ESTÁTICOS Y MEDIA
-# =======================================================================
-# Instala 'whitenoise' (pip install whitenoise) para servir archivos estáticos en producción.
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Donde Django recolectará los estáticos
+    STATIC_URL = '/static/'
 
-# Directorios donde Django buscará archivos estáticos (en desarrollo)
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "Torneos", "static"), # Ajusta si tu app se llama diferente
-]
+    # Directorios donde Django buscará tus archivos estáticos (CSS, JS, imágenes)
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, "Torneos", "static"), # <-- ¡Esta es la ruta que debería funcionar!
+    ]
 
-# Configuración de WhiteNoise
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Media files (archivos subidos por usuarios, como imágenes de torneos)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-# En producción, MEDIA_ROOT debería ser un servicio de almacenamiento de objetos (AWS S3, Google Cloud Storage)
-# usando librerías como django-storages, ya que los archivos en el servidor pueden perderse en cada despliegue.
+    DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# =======================================================================
-# MIDDLEWARE
-# =======================================================================
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # <-- ¡Asegúrate de que esté aquí!
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-# ... el resto de tu settings.py
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    
