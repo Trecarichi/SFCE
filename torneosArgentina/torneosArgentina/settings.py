@@ -1,31 +1,37 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 # Determina la ruta base del proyecto.
 # Si settings.py está en 'SFCE/torneosArgentina/torneosArgentina/settings.py',
-# entonces Path(__file__).resolve() es .../SFCE/torneosArgentina/torneosArgentina/settings.py
-# .parent es .../SFCE/torneosArgentina/torneosArgentina/
-# .parent.parent es .../SFCE/torneosArgentina/ (¡Esta es la raíz del proyecto, donde está manage.py!)
+# y tu manage.py está en 'SFCE/torneosArgentina/',
+# entonces Path(__file__).resolve().parent.parent es la carpeta 'torneosArgentina'
+# (donde está manage.py).
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# --- DEBUGGING PRINTS ---
-print(f"DEBUG: BASE_DIR in settings.py: {BASE_DIR}")
-print(f"DEBUG: DJANGO_SETTINGS_MODULE env var: {os.environ.get('DJANGO_SETTINGS_MODULE')}")
-# --- END DEBUGGING PRINTS ---
+# =======================================================================
+# SEGURIDAD Y HOSTS PERMITIDOS (¡CRÍTICO PARA PRODUCCIÓN!)
+# =======================================================================
+# SECRET_KEY: ¡MUY IMPORTANTE! Usa una variable de entorno en producción.
+# NUNCA expongas tu SECRET_KEY directamente en el código.
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'tu-clave-secreta-de-desarrollo-aqui-si-quieres')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+# DEBUG: Siempre False en producción.
+# Render inyectará 'False' si configuras DJANGO_DEBUG=False en sus variables de entorno.
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-+o(1nsm_h!8oaxig*s3o5w7tp!^vz0t5n)tp6d*8dz5^_$-war"
+# ALLOWED_HOSTS: Permite los dominios donde se desplegará tu aplicación.
+# Render inyecta RENDER_EXTERNAL_HOSTNAME automáticamente.
+# También puedes definir DJANGO_ALLOWED_HOSTS en las variables de entorno de Render
+# para incluir dominios personalizados, separados por comas.
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+# Si no hay DJANGO_ALLOWED_HOSTS, Render automáticamente inyecta RENDER_EXTERNAL_HOSTNAME.
+# Asegúrate de que RENDER_EXTERNAL_HOSTNAME esté incluido si no usas DJANGO_ALLOWED_HOSTS.
+if not ALLOWED_HOSTS and os.environ.get('RENDER_EXTERNAL_HOSTNAME'):
+    ALLOWED_HOSTS = [os.environ.get('RENDER_EXTERNAL_HOSTNAME')]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # ¡Correcto para desarrollo local!
-
-ALLOWED_HOSTS = [] # Correcto para desarrollo local
-
-# Application definition
-
+# =======================================================================
+# APLICACIONES INSTALADAS
+# =======================================================================
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -33,12 +39,17 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "Torneos", # Asegúrate de que esta app esté registrada si es donde tienes tus modelos/vistas
-    "torneosArgentina", # Esta es tu app principal o la que contiene settings.py
+    "Torneos", # Tu aplicación de torneos
+    "torneosArgentina", # Tu aplicación principal
 ]
 
+# =======================================================================
+# MIDDLEWARE (¡Añadir WhiteNoise aquí!)
+# =======================================================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # WhiteNoise debe ir justo después de SecurityMiddleware
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -68,13 +79,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "torneosArgentina.wsgi.application"
 
+# =======================================================================
+# BASE DE DATOS
+# =======================================================================
+# Render inyecta las variables de entorno para PostgreSQL (DB_NAME, DB_USER, etc.)
+# Si usas SQLite, asegúrate de que el archivo db.sqlite3 no esté en .gitignore para producción.
+# Para producción, se recomienda PostgreSQL.
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Mantener SQLite para simplicidad inicial
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# Si usas PostgreSQL de Render, puedes descomentar y usar dj_database_url:
+# import dj_database_url
+# DATABASE_URL = os.environ.get('DATABASE_URL')
+# if DATABASE_URL:
+#     DATABASES['default'] = dj_database_url.parse(DATABASE_URL)
 
+
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -92,22 +116,29 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
-
+# =======================================================================
+# ARCHIVOS ESTÁTICOS Y MEDIA (¡Configuración de WhiteNoise!)
+# =======================================================================
 STATIC_URL = '/static/'
-
-# Directorios donde Django buscará tus archivos estáticos (CSS, JS, imágenes)
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "Torneos", "static"), # <-- ¡Esta es la ruta que debería funcionar!
-]
-
+# STATIC_ROOT es donde 'collectstatic' copiará todos tus archivos estáticos
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# STATICFILES_DIRS es donde Django buscará tus archivos estáticos durante el desarrollo
+# y donde 'collectstatic' los encontrará para copiarlos a STATIC_ROOT.
+# Si tus archivos estáticos están en 'Torneos/static/', esta es la ruta correcta.
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "Torneos", "static"),
+]
 
+# Configuración de WhiteNoise para servir archivos estáticos comprimidos y con caché
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Media files (para archivos subidos por usuarios, como imágenes de torneos)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Aquí se guardarán las imágenes subidas
+
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
