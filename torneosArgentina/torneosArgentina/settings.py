@@ -73,8 +73,8 @@ ROOT_URLCONF = "torneosArgentina.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        # Ruta a la carpeta 'templates' dentro de la app 'Torneos'
-        "DIRS": [os.path.join(BASE_DIR, "Torneos", "templates")],
+        # Ruta a la carpeta 'template' (singular) dentro de la app 'Torneos'
+        "DIRS": [os.path.join(BASE_DIR, "Torneos", "template")], # <-- ¡CAMBIO AQUÍ!
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
