@@ -17,9 +17,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'tu-clave-secreta-de-desarrollo
 
 # DEBUG: Siempre False en producción.
 # Render inyectará 'False' si configuras DJANGO_DEBUG=False en sus variables de entorno.
-# TEMPORALMENTE LO PONDREMOS EN TRUE PARA VER EL ERROR 500.
-# ¡RECUERDA CAMBIARLO A FALSE DESPUÉS DE DEPURAR!
-DEBUG = True # os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
+# ¡IMPORTANTE! Lo hemos vuelto a poner en False para producción.
+DEBUG = False # os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 # ALLOWED_HOSTS: Permite los dominios donde se desplegará tu aplicación.
 # Esta lógica es más robusta para manejar RENDER_EXTERNAL_HOSTNAME y DJANGO_ALLOWED_HOSTS.
@@ -34,9 +33,11 @@ if render_hostname and render_hostname not in allowed_hosts_from_env:
 ALLOWED_HOSTS = allowed_hosts_from_env
 
 # --- DEBUGGING PRINTS ---
-print(f"DEBUG: Final DEBUG value: {DEBUG}")
-print(f"DEBUG: Final ALLOWED_HOSTS value: {ALLOWED_HOSTS}")
-print(f"DEBUG: RENDER_EXTERNAL_HOSTNAME: {os.environ.get('RENDER_EXTERNAL_HOSTNAME')}")
+# Estas líneas de depuración ya no son necesarias en producción, pero las mantengo comentadas
+# por si las necesitas en el futuro. En producción, los logs detallados no deben ser públicos.
+# print(f"DEBUG: Final DEBUG value: {DEBUG}")
+# print(f"DEBUG: Final ALLOWED_HOSTS value: {ALLOWED_HOSTS}")
+# print(f"DEBUG: RENDER_EXTERNAL_HOSTNAME: {os.environ.get('RENDER_EXTERNAL_HOSTNAME')}")
 # --- END DEBUGGING PRINTS ---
 
 # =======================================================================
@@ -81,7 +82,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages", # <-- ¡CORRECCIÓN AQUÍ!
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
