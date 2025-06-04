@@ -1,0 +1,60 @@
+# Archivos de Python
+*.pyc
+__pycache__/
+.Python
+.env
+.venv/
+venv/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg-info/
+.pytest_cache/
+
+# Base de datos SQLite (si la usas)
+db.sqlite3
+*.sqlite3-journal
+
+# Archivos de media (subidos por usuarios)
+media/
+
+# Archivos estáticos recolectados (para producción)
+staticfiles/
+
+# Archivos de configuración sensibles (¡NO SUBIR NUNCA!)
+*.env
+.flaskenv
+.DS_Store # macOS
+.vscode/ # Configuración de VS Code (opcional, si no la compartes)
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de logs
+*.log
+celerybeat.pid
+
+# Archivos de pruebas
+.coverage
+.coverage.*
+/htmlcov/
+
+# Archivos de IDEs (ej. PyCharm)
+.idea/
+
+# Archivos de sistema operativo
+Thumbs.db # Windows
+ehthumbs.db # Windows
+Desktop.ini # Windows
+
+# Archivos de Docker (si usas Docker)
+Dockerfile.backup
+docker-compose.yml.backup
+
+# Archivos de compilación
+build/
+dist/
+
+# Archivos de datos temporales
+*.csv
+*.json
+*.xml
