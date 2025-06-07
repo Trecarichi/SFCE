@@ -3,27 +3,17 @@ from pathlib import Path
 import dj_database_url # Importar dj_database_url
 
 # Determina la ruta base del proyecto.
-# Asume que manage.py está en la carpeta 'torneosArgentina',
-# y settings.py está en 'torneosArgentina/torneosArgentina/settings.py'.
-# Entonces, BASE_DIR debe apuntar a la carpeta 'torneosArgentina' (donde está manage.py).
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # =======================================================================
 # SEGURIDAD Y HOSTS PERMITIDOS (¡CRÍTICO PARA PRODUCCIÓN!)
 # =======================================================================
-# Utiliza una variable de entorno para SECRET_KEY.
-# En Render, esto se configura en 'Environment'.
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'tu-clave-secreta-de-desarrollo-aqui-si-quieres')
+DEBUG = False # ¡DEBUG debe ser False en producción por seguridad!
 
-# DEBUG debe ser False en producción por seguridad.
-# Render también puede inyectar esto vía 'DJANGO_DEBUG' environment variable.
-DEBUG = False
-
-# Configura los hosts permitidos.
-# Render inyecta 'RENDER_EXTERNAL_HOSTNAME' automáticamente.
-# También puedes definir 'DJANGO_ALLOWED_HOSTS' en las variables de entorno de Render,
-# con dominios separados por comas (ej. 'mi-dominio.com,www.mi-dominio.com').
+# Primero, define allowed_hosts_from_env desde las variables de entorno
 allowed_hosts_from_env = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+# Luego, refina la lista (esto ya opera sobre la variable definida)
 allowed_hosts_from_env = [host.strip() for host in allowed_hosts_from_env if host.strip()]
 
 render_hostname = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -39,7 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
-    "django.contrib.messages", # ¡Asegúrate de que esta línea esté presente!
+    "django.contrib.messages",
     "django.contrib.staticfiles",
     "Torneos", # Tu aplicación de torneos
     "torneosArgentina", # Tu aplicación principal
@@ -49,7 +39,6 @@ INSTALLED_APPS = [
 # =======================================================================
 # MIDDLEWARE
 # =======================================================================
-# WhiteNoise debe ir justo después de SecurityMiddleware para servir estáticos.
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -63,24 +52,17 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "torneosArgentina.urls"
 
-# =======================================================================
-# CONFIGURACIÓN DE TEMPLATES (¡CRÍTICO PARA EL ADMIN!)
-# =======================================================================
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        # Define dónde Django buscará tus templates.
-        # Asumiendo que tus templates están en 'tu_proyecto_django/Torneos/template/'.
-        # Es decir, la carpeta 'template' (singular) dentro de la app 'Torneos'.
         "DIRS": [os.path.join(BASE_DIR, "Torneos", "template")],
-        "APP_DIRS": True, # Permite a Django buscar templates en las carpetas 'templates' de cada app.
-                          # Aunque 'DIRS' apunta explícitamente, 'APP_DIRS' es útil para templates de apps de Django.
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages", # <--- ¡ESTA LÍNEA DEBE ESTAR SÍ O SÍ!
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
@@ -89,9 +71,9 @@ TEMPLATES = [
 WSGI_APPLICATION = "torneosArgentina.wsgi.application"
 
 # =======================================================================
-# BASE DE DATOS (¡CONFIGURACIÓN PARA POSTGRESQL O SQLITE!)
+# BASE DE DATOS (¡CONFIGURACIÓN PARA POSTGRESQL!)
 # =======================================================================
-# Si la variable de entorno DATABASE_URL existe (provista por Render para PostgreSQL)
+# Si la variable de entorno DATABASE_URL existe (provista por Render PostgreSQL)
 if os.environ.get('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
@@ -99,8 +81,8 @@ if os.environ.get('DATABASE_URL'):
 else: # Si no, usa SQLite localmente (para desarrollo)
     DATABASES = {
         'default': {
-            'ENGINE': "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
 
@@ -123,15 +105,18 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "Torneos", "static"), # Ruta a la carpeta 'static' de tu app 'Torneos'
+    os.path.join(BASE_DIR, "Torneos", "static"),
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # =======================================================================
-# ARCHIVOS MEDIA (Para archivos subidos por el usuario, si los hay)
+# ARCHIVOS MEDIA (Imágenes subidas por el admin - ¡Ahora serán persistentes si configuras S3!)
 # =======================================================================
-# Si todos tus campos de imagen en los modelos son CharField (para estáticas),
-# esta sección es menos crítica, pero es buena práctica tenerla.
+# Estas líneas son para archivos media que se suben por el admin (como el modelo ImagenCarrusel si no lo cambiaste a static).
+# Si estás usando ImageField y *quieres que persistan*, necesitas configurar django-storages con AWS S3.
+# Si estás usando CharField para las rutas de imagen estática (como acordamos),
+# entonces MEDIA_URL y MEDIA_ROOT son menos críticos para esas imágenes,
+# pero aún pueden ser necesarios para otras funcionalidades de Django.
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
