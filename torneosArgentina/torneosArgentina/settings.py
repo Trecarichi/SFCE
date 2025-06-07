@@ -41,7 +41,7 @@ INSTALLED_APPS = [
 # =======================================================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteHouseMiddleware", # <-- Corregido a WhiteNoiseMiddleware si era un typo
+    "whitenoise.middleware.WhiteNoiseMiddleware", # <-- ¡CORREGIDO AQUÍ!
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
