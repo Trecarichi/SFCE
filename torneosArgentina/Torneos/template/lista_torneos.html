@@ -32,8 +32,9 @@
     {% if torneos %}
     {% for torneo in torneos %}
     <div class="torneo-card">
-        {% if torneo.imagen_torneo %}
-        <img src="{{ torneo.imagen_torneo.url }}" alt="Imagen de {{ torneo.nombre }}">
+        {# CAMBIO CRÍTICO AQUÍ: Usamos el campo imagen_estatica y la etiqueta {% static %} #}
+        {% if torneo.imagen_estatica %}
+        <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}">
         {% else %}
         {# Imagen por defecto si el torneo no tiene una imagen cargada #}
         <img src="{% static 'images/default_tournament.png' %}" alt="Imagen por defecto de torneo">
