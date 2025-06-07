@@ -164,7 +164,7 @@
                 <img src="{% static imagen.imagen_estatica %}" alt="{{ imagen.titulo|default:'Imagen del carrusel' }}">
                 {% else %}
                 {# Opcional: una imagen por defecto para el carrusel si no tiene una estática #}
-                <img src="{% static 'images/default_carrusel_placeholder.png' %}" alt="Imagen por defecto del carrusel">
+                <img src="{% static 'images/carrusel.png' %}" alt="Imagen por defecto del carrusel">
                 {% endif %}
             </div>
             {% endfor %}

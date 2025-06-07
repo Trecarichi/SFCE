@@ -10,7 +10,7 @@ class Torneo(models.Model):
         ('Copa', 'Copa'),
         ('Liga', 'Liga'),
         ('Superliga', 'Superliga'),
-        ('Desafio', 'Desafío'), # <-- NOTA: Si usas 'Desafío' en el admin y quieres que el filtro funcione, el valor interno debe ser 'Desafio' (sin tilde) para que coincida con el HTML y la vista. O usar 'Desafío' consistentemente en todas partes.
+        ('Desafio', 'Desafío'),
         ('Internacional', 'Internacional'),
     ])
     fecha = models.DateField()
@@ -18,7 +18,6 @@ class Torneo(models.Model):
     descripcion = models.TextField(blank=True, null=True)
     internacional = models.BooleanField(default=False)
     
-    # CAMBIO CRÍTICO AQUÍ: 'imagen_torneo' ahora es 'imagen_estatica' y es CharField
     imagen_estatica = models.CharField(
         max_length=255,
         blank=True,
@@ -36,11 +35,11 @@ class Torneo(models.Model):
 
 class ImagenCarrusel(models.Model):
     titulo = models.CharField(max_length=200, blank=True, null=True)
-    # Este campo sigue siendo ImageField porque las imágenes del carrusel
-    # suelen subirse y gestionarse de forma diferente, y no están ligadas
-    # a un objeto específico que se edite constantemente.
-    # Si estas imágenes también quieres que sean estáticas, deberías cambiarlo.
-    imagen = models.ImageField(upload_to='carrusel_imagenes/')
+    # ¡CAMBIO CRÍTICO AQUÍ! De ImageField a CharField
+    imagen_estatica = models.CharField( # CAMBIADO EL NOMBRE A imagen_estatica para coherencia
+        max_length=255,
+        help_text="Ruta a la imagen estática del carrusel (ej. 'images/carrusel/imagen1.jpg'). Debe estar en Torneos/static/images/carrusel/"
+    )
     descripcion = models.TextField(blank=True, null=True)
     orden = models.IntegerField(default=0, help_text="Define el orden en el carrusel")
     activo = models.BooleanField(default=True)
@@ -53,10 +52,12 @@ class ImagenCarrusel(models.Model):
     def __str__(self):
         return self.titulo if self.titulo else f"Imagen {self.id}"
 
+    # La previsualización ahora usará la ruta estática
     def imagen_preview(self):
-        if self.imagen:
-            from django.utils.html import mark_safe
-            return mark_safe(f'<img src="{self.imagen.url}" style="width: 50px; height: auto;" />')
+        from django.utils.html import mark_safe
+        from django.templatetags.static import static
+        if self.imagen_estatica:
+            return mark_safe(f'<img src="{static(self.imagen_estatica)}" style="width: 50px; height: auto;" />')
         return ""
     imagen_preview.short_description = 'Previsualización'
 
@@ -76,7 +77,6 @@ class InformacionTorneoAnio(models.Model):
     ubicacion_especifica = models.CharField(max_length=100, blank=True, null=True,
                                             help_text="Ubicación específica para esta edición anual.")
 
-    # CAMBIO CRÍTICO AQUÍ: 'imagen_edicion' ahora es 'imagen_edicion_estatica' y es CharField
     imagen_edicion_estatica = models.CharField(
         max_length=255,
         blank=True,
