@@ -9,7 +9,6 @@
     <h2>{{ torneo.nombre }}</h2>
 
     {# ESTO ES CORRECTO: Usamos el campo imagen_estatica y la etiqueta {% static %} #}
-    {# Asegúrate de que 'torneo.imagen_estatica' contenga solo la ruta relativa (ej. 'images/mi_torneo.png') #}
     {% if torneo.imagen_estatica %}
     <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
     {% else %}
@@ -27,6 +26,7 @@
         {% if torneo.descripcion %}
         <p><strong>Descripción:</strong> {{ torneo.descripcion|linebreaksbr }}</p>
         {% endif %}
+        {# Asumiendo que 'descripcion_personalizada' es un campo en tu modelo Torneo #}
         {% if torneo.descripcion_personalizada %}
         <p><strong>Descripción Personalizada:</strong> {{ torneo.descripcion_personalizada|linebreaksbr }}</p>
         {% endif %}
@@ -40,16 +40,13 @@
         <div class="ediciones-grid">
             {% for info_anio in ediciones %}
             <div class="edicion-card">
-                {# ESTO ES CORRECTO: Usamos el campo imagen_edicion_estatica y la etiqueta {% static %} #}
-                {# Asegúrate de que 'info_anio.imagen_edicion_estatica' contenga solo la ruta relativa (ej.
-                'images/edicion_2023.png') #}
+                {# IMAGEN DE EDICIÓN: Chequeo de nulos #}
                 {% if info_anio.imagen_edicion_estatica %}
                 <div class="edicion-image-wrapper">
                     <img src="{% static info_anio.imagen_edicion_estatica %}"
                         alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
                 </div>
                 {% else %}
-                {# Imagen por defecto si la edición no tiene una imagen cargada o la ruta es inválida #}
                 <div class="edicion-image-wrapper">
                     <img src="{% static 'images/default_edition.png' %}"
                         alt="Imagen por defecto de la edición {{ info_anio.anio }}" class="edicion-image">
@@ -57,24 +54,30 @@
                 {% endif %}
                 <div class="edicion-content">
                     <h4>Edición: {{ info_anio.anio }}</h4>
+                    {# FECHA EXACTA: Chequeo de nulos antes de usar el filtro |date #}
                     {% if info_anio.fecha_exacta %}
                     <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
                     {% endif %}
+                    {# UBICACIÓN ESPECÍFICA: Chequeo de nulos #}
                     {% if info_anio.ubicacion_especifica %}
                     <p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}</p>
                     {% endif %}
                     <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
+                    {# SUBCAMPEÓN: Chequeo de nulos #}
                     {% if info_anio.subcampeon %}
                     <p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>
                     {% endif %}
+                    {# PARTICIPANTES CANTIDAD: Chequeo de nulos #}
                     {% if info_anio.participantes_cantidad %}
                     <p><strong>Participantes:</strong> {{ info_anio.participantes_cantidad }}</p>
                     {% endif %}
+                    {# RESUMEN: Chequeo de nulos antes de usar el filtro |linebreaksbr #}
                     {% if info_anio.resumen %}
                     <div class="edicion-resumen">
                         <p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>
                     </div>
                     {% endif %}
+                    {# LINK TRANSMISIÓN: Chequeo de nulos #}
                     {% if info_anio.link_transmision %}
                     <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer"
                         class="link-transmision">
