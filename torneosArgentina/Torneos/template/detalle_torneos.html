@@ -8,8 +8,14 @@
 <div class="torneo-detail-container">
     <h2>{{ torneo.nombre }}</h2>
 
-    {% if torneo.imagen_torneo %}
-    <img src="{{ torneo.imagen_torneo.url }}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
+    {# ESTO ES CORRECTO: Usamos el campo imagen_estatica y la etiqueta {% static %} #}
+    {# Asegúrate de que 'torneo.imagen_estatica' contenga solo la ruta relativa (ej. 'images/mi_torneo.png') #}
+    {% if torneo.imagen_estatica %}
+    <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
+    {% else %}
+    {# Imagen por defecto si el torneo no tiene una imagen cargada o la ruta es inválida #}
+    <img src="{% static 'images/default_tournament.png' %}" alt="Imagen por defecto de torneo"
+        class="torneo-detail-image">
     {% endif %}
 
     <div class="detail-info-block">
@@ -21,7 +27,6 @@
         {% if torneo.descripcion %}
         <p><strong>Descripción:</strong> {{ torneo.descripcion|linebreaksbr }}</p>
         {% endif %}
-        {# Asumiendo que 'descripcion_personalizada' es un campo en tu modelo Torneo #}
         {% if torneo.descripcion_personalizada %}
         <p><strong>Descripción Personalizada:</strong> {{ torneo.descripcion_personalizada|linebreaksbr }}</p>
         {% endif %}
@@ -29,20 +34,29 @@
 
     {# --- SECCIÓN DE EDICIONES --- #}
     <div class="ediciones-container">
-        <h2>Ediciones</h2> {# Cambiado a 'Ediciones' para ser más genérico #}
+        <h2>Ediciones</h2>
         {% with torneo.informacion_por_anio.all as ediciones %}
         {% if ediciones %}
         <div class="ediciones-grid">
             {% for info_anio in ediciones %}
             <div class="edicion-card">
-                {% if info_anio.imagen_edicion %}
+                {# ESTO ES CORRECTO: Usamos el campo imagen_edicion_estatica y la etiqueta {% static %} #}
+                {# Asegúrate de que 'info_anio.imagen_edicion_estatica' contenga solo la ruta relativa (ej.
+                'images/edicion_2023.png') #}
+                {% if info_anio.imagen_edicion_estatica %}
                 <div class="edicion-image-wrapper">
-                    <img src="{{ info_anio.imagen_edicion.url }}" alt="Imagen de la edición {{ info_anio.anio }}"
-                        class="edicion-image">
+                    <img src="{% static info_anio.imagen_edicion_estatica %}"
+                        alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
+                </div>
+                {% else %}
+                {# Imagen por defecto si la edición no tiene una imagen cargada o la ruta es inválida #}
+                <div class="edicion-image-wrapper">
+                    <img src="{% static 'images/default_edition.png' %}"
+                        alt="Imagen por defecto de la edición {{ info_anio.anio }}" class="edicion-image">
                 </div>
                 {% endif %}
                 <div class="edicion-content">
-                    <h4>Edición: {{ info_anio.anio }}</h4> {# Etiquetado como 'Edición' en lugar de 'Año' #}
+                    <h4>Edición: {{ info_anio.anio }}</h4>
                     {% if info_anio.fecha_exacta %}
                     <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
                     {% endif %}
@@ -78,8 +92,6 @@
     </div>
     {# --- FIN DE SECCIÓN DE EDICIONES --- #}
 
-    {# Botones de navegación. Adaptados para funcionar si no hay 'selected_tipo' #}
-    <!-- <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a> -->
     <button onclick="history.back()" class="btn-back">← Volver</button>
 </div>
 {% endblock %}

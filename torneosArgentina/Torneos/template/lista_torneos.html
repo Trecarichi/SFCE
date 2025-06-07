@@ -32,11 +32,12 @@
     {% if torneos %}
     {% for torneo in torneos %}
     <div class="torneo-card">
-        {# CAMBIO CRÍTICO AQUÍ: Usamos el campo imagen_estatica y la etiqueta {% static %} #}
+        {# ESTO ES CORRECTO: Usamos el campo imagen_estatica y la etiqueta {% static %} #}
+        {# Asegúrate de que 'torneo.imagen_estatica' contenga solo la ruta relativa (ej. 'images/mi_torneo.png') #}
         {% if torneo.imagen_estatica %}
         <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}">
         {% else %}
-        {# Imagen por defecto si el torneo no tiene una imagen cargada #}
+        {# Imagen por defecto si el torneo no tiene una imagen cargada o la ruta es inválida #}
         <img src="{% static 'images/default_tournament.png' %}" alt="Imagen por defecto de torneo">
         {% endif %}
         <div class="torneo-info">
