@@ -5,6 +5,11 @@
 
 {% block content %}
 <style>
+    /* Regla global para facilitar el diseño responsivo */
+    * {
+        box-sizing: border-box;
+    }
+
     /* Estilos para el carrusel */
     .carrusel-container {
         position: relative;
@@ -136,13 +141,137 @@
 
     /* Estilos para el logo principal en index.html */
     .index-logo {
-        max-width: 600px;
-        /* ¡Ajustado a 600px para que se vea más grande! */
+        width: auto;
+        max-width: 90%;
+        /* Ajustado para mayor flexibilidad */
         height: auto;
         margin: 0 auto 30px auto;
-        /* Centra y añade margen inferior */
         display: block;
-        /* Asegura que ocupe su propia línea para el margen auto */
+    }
+
+    /* Estilos para los enlaces de redes sociales */
+    .social-links {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .social-links h3 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .social-item {
+        display: inline-flex;
+        /* Usar inline-flex para alinear el icono y el texto */
+        align-items: center;
+        /* Centrar verticalmente icono y texto */
+        margin: 0 15px;
+        /* Espacio entre los enlaces */
+        text-decoration: none;
+        color: #3498db;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .social-item:hover {
+        color: #2980b9;
+    }
+
+    .social-icon {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        border-radius: 50%;
+        /* Iconos circulares */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .social-text {
+        font-size: 1.1em;
+    }
+
+
+    /* --- Media Queries para Responsividad --- */
+
+    /* Para pantallas medianas (tablets y algunos laptops) */
+    @media (max-width: 992px) {
+        .index-content h2 {
+            font-size: 2em;
+        }
+
+        .social-item {
+            margin: 0 10px;
+            /* Menos espacio entre iconos en pantallas más pequeñas */
+        }
+    }
+
+    /* Para pantallas pequeñas (móviles) */
+    @media (max-width: 768px) {
+        .index-content {
+            padding: 10px;
+            /* Reduce el padding del contenido principal */
+        }
+
+        .index-logo {
+            max-width: 95%;
+            /* Da un poco más de espacio al logo */
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .carrusel-container {
+            margin-left: 5px;
+            /* Ajusta márgenes para evitar desbordamiento */
+            margin-right: 5px;
+        }
+
+        .carrusel-caption {
+            font-size: 0.9em;
+            /* Fuente más pequeña para los subtítulos */
+            padding: 10px;
+        }
+
+        .carrusel-button {
+            padding: 8px 12px;
+            /* Botones más pequeños */
+            font-size: 1.2em;
+        }
+
+        .btn-large {
+            padding: 10px 20px;
+            font-size: 1.2em;
+        }
+
+        .social-item {
+            display: block;
+            /* Hace que los enlaces de redes sociales se apilen verticalmente */
+            margin: 0 auto 10px auto;
+            /* Centra y añade margen inferior */
+        }
+
+        .social-icon {
+            width: 40px;
+            /* Iconos de redes sociales más pequeños */
+            height: 40px;
+        }
+
+        .social-text {
+            font-size: 0.9em;
+            /* Texto más pequeño para enlaces de redes sociales */
+        }
+    }
+
+    /* Para pantallas muy pequeñas (móviles pequeños) */
+    @media (max-width: 480px) {
+        .index-content h2 {
+            font-size: 1.8em;
+            /* Encabezado principal más pequeño */
+        }
+
+        .index-content p {
+            font-size: 1em;
+        }
     }
 </style>
 
@@ -164,7 +293,7 @@
                 <img src="{% static imagen.imagen_estatica %}" alt="{{ imagen.titulo|default:'Imagen del carrusel' }}">
                 {% else %}
                 {# Opcional: una imagen por defecto para el carrusel si no tiene una estática #}
-                <img src="{% static 'images/carrusel.png' %}" alt="Imagen por defecto del carrusel">
+                <img src="{% static 'images/default_carrusel_placeholder.png' %}" alt="Imagen por defecto del carrusel">
                 {% endif %}
             </div>
             {% endfor %}
