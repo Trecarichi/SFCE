@@ -1,17 +1,15 @@
 # Torneos/admin.py
 
 from django.contrib import admin
-from .models import Torneo, InformacionTorneoAnio, ImagenCarrusel, ImagenTorneo # Importa el nuevo modelo ImagenTorneo
+from .models import Torneo, InformacionTorneoAnio, ImagenCarrusel, ImagenTorneo
 
 # Inline para InformacionTorneoAnio para que se pueda agregar/editar directamente desde el Torneo
 class InformacionTorneoAnioInline(admin.TabularInline):
     model = InformacionTorneoAnio
     extra = 1 # Cuántos formularios vacíos se muestran por defecto
-    # Solo si los campos son opcionales y pueden tener valores nulos
-    # fields = ['anio', 'campeon', 'subcampeon', 'participantes_cantidad', 'resumen', 'link_transmision', 'fecha_exacta', 'ubicacion_especifica', 'imagen_edicion_estatica']
 
 
-# NUEVO INLINE PARA IMAGENESTORNEO
+# INLINE PARA IMAGENESTORNEO
 class ImagenTorneoInline(admin.TabularInline):
     model = ImagenTorneo
     extra = 1 # Cuántos formularios vacíos se muestran por defecto
@@ -27,7 +25,7 @@ class TorneoAdmin(admin.ModelAdmin):
     ordering = ('-fecha',) # Ordenar por fecha descendente
 
     # Inlines para poder agregar InformacionTorneoAnio e ImagenTorneo desde el detalle del Torneo
-    inlines = [InformacionTorneoAnioInline, ImagenTorneoInline] # Añade ImagenTorneoInline aquí
+    inlines = [InformacionTorneoAnioInline, ImagenTorneoInline] # Ya tenías ImagenTorneoInline aquí
 
     # Mostrar previsualización de la imagen principal en la lista de torneos
     def imagen_preview(self, obj):
@@ -50,11 +48,12 @@ class ImagenCarruselAdmin(admin.ModelAdmin):
 
     # Ya tienes el método imagen_preview en el modelo, el admin.ModelAdmin ya lo usa
 
-# InformacionTorneoAnio ya no se registra directamente si solo se usa como inline
-# Si necesitas un admin separado para InformacionTorneoAnio, puedes descomentar y ajustar:
-# @admin.register(InformacionTorneoAnio)
-# class InformacionTorneoAnioAdmin(admin.ModelAdmin):
-#     list_display = ('torneo', 'anio', 'campeon', 'subcampeon')
-#     list_filter = ('anio', 'torneo')
-#     search_fields = ('torneo__nombre', 'campeon', 'subcampeon')
-#     ordering = ('-anio',)
+
+# REGISTRAR EXPLICITAMENTE INFORMACIONTORNEOANIO EN EL ADMIN
+# Esto es necesario incluso si también se usa como Inline, para evitar el error 500
+@admin.register(InformacionTorneoAnio)
+class InformacionTorneoAnioAdmin(admin.ModelAdmin):
+    list_display = ('torneo', 'anio', 'campeon', 'subcampeon')
+    list_filter = ('anio', 'torneo')
+    search_fields = ('torneo__nombre', 'campeon', 'subcampeon')
+    ordering = ('-anio',) # Ordenar por año descendente
