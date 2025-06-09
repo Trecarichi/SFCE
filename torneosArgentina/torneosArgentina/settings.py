@@ -21,9 +21,6 @@ if render_hostname and render_hostname not in allowed_hosts_from_env:
     allowed_hosts_from_env.append(render_hostname)
 ALLOWED_HOSTS = allowed_hosts_from_env
 
-# Configuración de CSRF_TRUSTED_ORIGINS para Render (necesario para formularios y admin)
-CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com'] # <-- ¡Línea agregada aquí!
-
 # =======================================================================
 # APLICACIONES INSTALADAS
 # =======================================================================
@@ -58,9 +55,7 @@ ROOT_URLCONF = "torneosArgentina.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        # ¡Ojo aquí! "template" está en singular. Si tu carpeta es "templates" (plural),
-        # esto causará un TemplateDoesNotExist.
-        "DIRS": [os.path.join(BASE_DIR, "Torneos", "template")], 
+        "DIRS": [os.path.join(BASE_DIR, "Torneos", "template")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -90,7 +85,7 @@ else: # Si no, usa SQLite localmente (para desarrollo)
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-        
+    
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     { "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator", },
@@ -112,7 +107,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "Torneos", "static"),
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestFilesStorage' # Usar CompressedManifestFilesStorage
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # =======================================================================
 # ARCHIVOS MEDIA (Imágenes subidas por el admin - ¡Ahora serán persistentes si configuras S3!)
