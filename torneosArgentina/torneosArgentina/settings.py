@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tu-clave-secreta-por-defecto') 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('RENDER') != 'true'
+DEBUG = True
 
 # Configuración de ALLOWED_HOSTS
 ALLOWED_HOSTS = []
