@@ -1,119 +1,100 @@
-# Torneos/models.py
-
 from django.db import models
 
 class Torneo(models.Model):
-    nombre = models.CharField(max_length=200)
-    tipo = models.CharField(max_length=50, choices=[
-        ('todas_las_competencias', 'Todas las competencias'),
-        ('Copa_America', 'Copa América'),   
-        ('Copa', 'Copa'),
-        ('Liga', 'Liga'),
-        ('Superliga', 'Superliga'),
-        ('Desafio', 'Desafío'),
-        ('Internacional', 'Internacional'),
-    ])
+    nombre = models.CharField(max_length=200, unique=True)
+    tipo = models.CharField(max_length=100)
     fecha = models.DateField()
-    ubicacion = models.CharField(max_length=100)
+    ubicacion = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
     internacional = models.BooleanField(default=False)
-    
+    # Cambiamos ImageField por CharField para usar rutas estáticas
     imagen_estatica = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Ruta a la imagen estática principal del torneo (ej. 'images/nombre_torneo.png'). Debe estar en Torneos/static/images/"
+        max_length=255, 
+        blank=True, 
+        null=True, 
+        help_text="Ruta a la imagen principal del torneo (ej. images/nombre_torneo.png). Debe estar en torneos/static/images/"
     )
 
     def __str__(self):
         return f"{self.nombre} ({self.fecha.year})"
 
+    # Añade un related_name si aún no lo tienes para facilitar la relación inversa
+    # Si ya existe, puedes dejarlo como está.
+    # class Meta:
+    #     ordering = ['-fecha'] # Puedes añadir un ordenamiento por defecto
+
+class InformacionTorneoAnio(models.Model):
+    torneo = models.ForeignKey(Torneo, on_delete=models.CASCADE, related_name='informacion_por_anio')
+    anio = models.IntegerField()
+    campeon = models.CharField(max_length=200, blank=True, null=True)
+    subcampeon = models.CharField(max_length=200, blank=True, null=True)
+    participantes_cantidad = models.IntegerField(blank=True, null=True)
+    resumen = models.TextField(blank=True, null=True)
+    link_transmision = models.URLField(blank=True, null=True)
+    fecha_exacta = models.DateField(blank=True, null=True)
+    ubicacion_especifica = models.CharField(max_length=200, blank=True, null=True)
+    # Campo para la imagen estática de la edición anual
+    imagen_edicion_estatica = models.CharField(
+        max_length=255, 
+        blank=True, 
+        null=True, 
+        help_text="Ruta a la imagen de la edición anual (ej. images/edicion_2023.png)"
+    )
+
     class Meta:
-        verbose_name = "Torneo Principal"
-        verbose_name_plural = "Torneos Principales"
+        unique_together = ('torneo', 'anio')
+        ordering = ['-anio']
+
+    def __str__(self):
+        return f"{self.torneo.nombre} - Edición {self.anio}"
+
+
+# ===========================================================================
+# NUEVO MODELO: ImagenAdicionalTorneo
+# Para permitir múltiples imágenes asociadas a un mismo Torneo
+# ===========================================================================
+class ImagenAdicionalTorneo(models.Model):
+    torneo = models.ForeignKey(Torneo, on_delete=models.CASCADE, related_name='imagenes_adicionales')
+    # Campo para la ruta estática de la imagen adicional
+    imagen_estatica = models.CharField(
+        max_length=255, 
+        help_text="Ruta a la imagen adicional (ej. images/galeria/torneo_foto1.png). Debe estar en torneos/static/images/galeria/"
+    )
+    descripcion = models.CharField(max_length=255, blank=True, null=True)
+    orden = models.IntegerField(default=0) # Para controlar el orden de visualización
+
+    class Meta:
+        ordering = ['orden']
+
+    def __str__(self):
+        return f"Imagen adicional para {self.torneo.nombre} - {self.descripcion or self.imagen_estatica}"
 
 
 class ImagenCarrusel(models.Model):
-    titulo = models.CharField(max_length=200, blank=True, null=True)
-    imagen_estatica = models.CharField( 
-        max_length=255,
-        help_text="Ruta a la imagen estática del carrusel (ej. 'images/carrusel/imagen1.jpg'). Debe estar en Torneos/static/images/carrusel/"
+    titulo = models.CharField(max_length=200)
+    # Campo para la ruta estática de la imagen del carrusel
+    imagen_estatica = models.CharField(
+        max_length=255, 
+        help_text="Ruta a la imagen del carrusel (ej. images/carrusel/imagen1.png). Debe estar en torneos/static/images/carrusel/"
     )
     descripcion = models.TextField(blank=True, null=True)
-    orden = models.IntegerField(default=0, help_text="Define el orden en el carrusel")
+    orden = models.IntegerField(default=0)
     activo = models.BooleanField(default=True)
     fecha_subida = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['orden']
-        verbose_name_plural = "Imágenes de Carrusel"
+        verbose_name_plural = "Imágenes del Carrusel"
 
     def __str__(self):
-        return self.titulo if self.titulo else f"Imagen {self.id}"
-
+        return self.titulo
+    
+    # Método para previsualizar la imagen en el admin
+    from django.utils.html import format_html
     def imagen_preview(self):
-        from django.utils.html import mark_safe
-        from django.templatetags.static import static
         if self.imagen_estatica:
-            return mark_safe(f'<img src="{static(self.imagen_estatica)}" style="width: 50px; height: auto;" />')
-        return ""
+            # Asegúrate de que esta ruta coincida con tu configuración de STATIC_URL
+            return format_html('<img src="/static/{}" style="width: 100px; height: auto;" />', self.imagen_estatica)
+        return "(Sin imagen)"
     imagen_preview.short_description = 'Previsualización'
 
-
-class InformacionTorneoAnio(models.Model):
-    torneo = models.ForeignKey(Torneo, on_delete=models.CASCADE, related_name='informacion_por_anio')
-    anio = models.IntegerField()
-    campeon = models.CharField(max_length=100)
-    subcampeon = models.CharField(max_length=100, blank=True, null=True)
-    participantes_cantidad = models.IntegerField(blank=True, null=True)
-    resumen = models.TextField(blank=True, null=True)
-
-    link_transmision = models.URLField(max_length=500, blank=True, null=True,
-                                        help_text="Enlace a la transmisión del torneo (Twitch, YouTube, etc.)")
-    fecha_exacta = models.DateField(blank=True, null=True,
-                                    help_text="Fecha específica de esta edición anual del torneo.")
-    ubicacion_especifica = models.CharField(max_length=100, blank=True, null=True,
-                                            help_text="Ubicación específica para esta edición anual.")
-
-    imagen_edicion_estatica = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Ruta a la imagen estática de esta edición (ej. 'images/edicion_2023.png'). Debe estar en Torneos/static/images/"
-    )
-
-
-    class Meta:
-        unique_together = ('torneo', 'anio')
-        verbose_name_plural = "Información de Torneo por Año"
-        ordering = ['-anio'] # Ordenar por año descendente en el admin
-
-    def __str__(self):
-        return f"{self.torneo.nombre} - {self.anio}"
-
-
-# NUEVO MODELO PARA IMÁGENES ADICIONALES DEL TORNEO PRINCIPAL
-class ImagenTorneo(models.Model):
-    torneo = models.ForeignKey(Torneo, on_delete=models.CASCADE, related_name='imagenes_adicionales')
-    imagen_estatica_adicional = models.CharField(
-        max_length=255,
-        help_text="Ruta a la imagen estática adicional (ej. 'images/galeria/foto1.jpg'). Debe estar en Torneos/static/images/galeria/"
-    )
-    descripcion = models.CharField(max_length=255, blank=True, null=True, help_text="Descripción o pie de foto de la imagen.")
-    orden = models.IntegerField(default=0, help_text="Orden en que se mostrará la imagen en la galería.")
-
-    class Meta:
-        ordering = ['orden']
-        verbose_name = "Imagen Adicional del Torneo"
-        verbose_name_plural = "Imágenes Adicionales del Torneo"
-
-    def __str__(self):
-        return f"Imagen para {self.torneo.nombre} ({self.orden})"
-
-    def imagen_preview(self):
-        from django.utils.html import mark_safe
-        from django.templatetags.static import static
-        if self.imagen_estatica_adicional:
-            return mark_safe(f'<img src="{static(self.imagen_estatica_adicional)}" style="width: 50px; height: auto;" />')
-        return ""
-    imagen_preview.short_description = 'Previsualización'

@@ -8,13 +8,76 @@
 <div class="torneo-detail-container">
     <h2>{{ torneo.nombre }}</h2>
 
-    {# CORRECCIÓN: Usa 'imagen_estatica' y la etiqueta {% static %} #}
+    {# Imagen principal del torneo #}
     {% if torneo.imagen_estatica %}
     <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
     {% else %}
-    {# Placeholder si no hay imagen estática asignada al torneo #}
     <img src="https://placehold.co/800x450/cccccc/333333?text=Imagen+no+disponible" alt="Imagen no disponible" class="torneo-detail-image">
     {% endif %}
+
+    {# SECCIÓN PARA IMÁGENES ADICIONALES #}
+    {% with torneo.imagenes_adicionales.all as imagenes_adicionales %}
+    {% if imagenes_adicionales %}
+        <div class="additional-images-gallery">
+            <h3>Galería de Imágenes</h3>
+            <div class="gallery-grid">
+                {% for img_adic in imagenes_adicionales %}
+                    <div class="gallery-item">
+                        <img src="{% static img_adic.imagen_estatica %}" alt="{{ img_adic.descripcion|default:'Imagen adicional' }}" class="gallery-image">
+                        {% if img_adic.descripcion %}
+                            <p class="gallery-description">{{ img_adic.descripcion }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {# Estilo básico para la galería, puedes expandirlo en tu CSS #}
+        <style>
+            .additional-images-gallery {
+                margin-top: 30px;
+                padding: 20px;
+                background-color: #f9f9f9;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .additional-images-gallery h3 {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #2c3e50;
+            }
+            .gallery-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            .gallery-item {
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                transition: transform 0.2s ease-in-out;
+            }
+            .gallery-item:hover {
+                transform: translateY(-5px);
+            }
+            .gallery-image {
+                width: 100%;
+                height: 200px; /* Altura fija para consistencia */
+                object-fit: cover; /* Recorta la imagen para que quepa */
+                display: block;
+            }
+            .gallery-description {
+                padding: 10px;
+                background-color: #f2f2f2;
+                font-size: 0.9em;
+                color: #555;
+                text-align: center;
+            }
+        </style>
+    {% endif %}
+    {% endwith %}
+    {# FIN DE SECCIÓN PARA IMÁGENES ADICIONALES #}
+
 
     <div class="detail-info-block">
         <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
@@ -30,19 +93,16 @@
     {# --- SECCIÓN DE EDICIONES --- #}
     <div class="ediciones-container">
         <h2>Ediciones</h2>
-        {# CORRECCIÓN: Accede a las ediciones a través de related_name 'informacion_por_anio' #}
         {% with torneo.informacion_por_anio.all as ediciones %}
         {% if ediciones %}
             <div class="ediciones-grid">
                 {% for info_anio in ediciones %}
                 <div class="edicion-card">
-                    {# CORRECCIÓN: Usa 'imagen_edicion_estatica' y la etiqueta {% static %} #}
                     {% if info_anio.imagen_edicion_estatica %}
                         <div class="edicion-image-wrapper">
                             <img src="{% static info_anio.imagen_edicion_estatica %}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
                         </div>
                     {% else %}
-                        {# Placeholder si no hay imagen estática para la edición #}
                         <div class="edicion-image-wrapper">
                             <img src="https://placehold.co/300x200/eeeeee/333333?text=Edición+{{ info_anio.anio }}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
                         </div>
@@ -83,7 +143,6 @@
     </div>
     {# --- FIN DE SECCIÓN DE EDICIONES --- #}
 
-    {# Botones de navegación. Adaptados para funcionar si no hay 'selected_tipo' #}
     <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a>
     <button onclick="history.back()" class="btn-back">← Volver</button>
 </div>
