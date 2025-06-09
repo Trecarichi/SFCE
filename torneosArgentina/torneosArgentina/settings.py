@@ -7,7 +7,7 @@ For more information on this file, see
 https://docs.djangoproject.com/en/4.2/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/4.2/ref/settings/
+https://docs.djangoproject.com/en/4.2/ref/settings/#database
 """
 
 import os
@@ -15,6 +15,7 @@ from pathlib import Path
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR es /opt/render/project/src/torneosArgentina
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -22,26 +23,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tu-clave-secreta-por-defecto') 
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tu-clave-secreta-por-defecto')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('RENDER') != 'true' # Esto debe volver a False en Render
 
 # Configuración de ALLOWED_HOSTS
 ALLOWED_HOSTS = []
-# Obtén el hostname externo de Render si está disponible
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 else:
-    # Para desarrollo local
     ALLOWED_HOSTS.append('localhost')
     ALLOWED_HOSTS.append('127.0.0.1')
-
-# AÑADE AQUÍ EXPLÍCITAMENTE LA URL DE TU APLICACIÓN EN RENDER (sin https://)
-# REEMPLAZA 'sfce-zk0w.onrender.com' CON TU DOMINIO REAL DE RENDER
-ALLOWED_HOSTS.append('sfce-zk0w.onrender.com') 
+# Añadir explícitamente el hostname de Render (¡reemplázalo con el tuyo si es diferente!)
+ALLOWED_HOSTS.append('sfce-zk0w.onrender.com')
 
 
 # Application definition
@@ -53,7 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Torneos',
+    'Torneos', # Tu aplicación Django
     'rest_framework',
 ]
 
@@ -73,8 +69,15 @@ ROOT_URLCONF = 'torneosArgentina.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
+        # Aquí la corrección. BASE_DIR es torneosArgentina.
+        # Si tienes una carpeta 'templates' justo dentro de 'torneosArgentina', úsala.
+        # Si NO tienes una carpeta 'templates' en 'torneosArgentina' y todos tus templates están en 'Torneos/templates/',
+        # entonces puedes eliminar 'BASE_DIR / 'templates'' de 'DIRS'.
+        'DIRS': [
+            BASE_DIR / 'templates', # Si tienes templates directamente en torneosArgentina/templates/
+            BASE_DIR / 'Torneos' / 'templates', # Asegúrate de que esta línea esté, si tus templates de Torneos están allí
+        ],
+        'APP_DIRS': True, # Esto ya busca en 'Torneos/templates/' automáticamente
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
