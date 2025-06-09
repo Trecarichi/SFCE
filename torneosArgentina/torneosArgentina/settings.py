@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-import dj_database_url # Importa dj_database_url
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,25 +22,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# Usa una variable de entorno para SECRET_KEY en producción
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tu-clave-secreta-por-defecto') # ¡IMPORTANTE: Cambia esto por una clave real en Render!
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tu-clave-secreta-por-defecto') 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# Determina DEBUG basado en la variable de entorno RENDER
-# Si la variable RENDER existe y es 'true' o '1', entonces no estamos en producción de Render.
-# Si estás en Render, os.environ.get('RENDER') debería ser 'true' o similar, y DEBUG debería ser False.
-# Si estás en desarrollo local (fuera de Render), RENDER no existirá, y DEBUG será True.
 DEBUG = os.environ.get('RENDER') != 'true'
 
 # Configuración de ALLOWED_HOSTS
-# Para Render, toma la URL de Render. Para desarrollo local, permite 'localhost' y '127.0.0.1'.
 ALLOWED_HOSTS = []
+# Obtén el hostname externo de Render si está disponible
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 else:
+    # Para desarrollo local
     ALLOWED_HOSTS.append('localhost')
     ALLOWED_HOSTS.append('127.0.0.1')
+
+# AÑADE AQUÍ EXPLÍCITAMENTE LA URL DE TU APLICACIÓN EN RENDER (sin https://)
+# REEMPLAZA 'sfce-zk0w.onrender.com' CON TU DOMINIO REAL DE RENDER
+ALLOWED_HOSTS.append('sfce-zk0w.onrender.com') 
 
 
 # Application definition
@@ -52,13 +53,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Torneos', # Tu aplicación Django
-    'rest_framework', # Si usas Django REST Framework
+    'Torneos',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Para servir archivos estáticos en producción
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -72,7 +73,7 @@ ROOT_URLCONF = 'torneosArgentina.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], # Agregué tu carpeta global de templates
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,10 +92,9 @@ WSGI_APPLICATION = 'torneosArgentina.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# Configuración de la base de datos para PostgreSQL en Render
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'), # Fallback a SQLite para desarrollo local
+        default=os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3'),
         conn_max_age=600
     )
 }
@@ -122,9 +122,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'es-ar' # Configurado para español de Argentina
+LANGUAGE_CODE = 'es-ar'
 
-TIME_ZONE = 'America/Argentina/Buenos_Aires' # Configurado para tu zona horaria
+TIME_ZONE = 'America/Argentina/Buenos_Aires'
 
 USE_I18N = True
 
@@ -135,24 +135,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/ref/settings/#static-files
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles' # Directorio donde collectstatic recolectará los archivos
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
-    BASE_DIR / 'Torneos' / 'static', # Agrega la carpeta static de tu app Torneos
+    BASE_DIR / 'Torneos' / 'static',
 ]
 
-# Configuración de WhiteNoise para servir archivos estáticos comprimidos
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuración de MEDIA_ROOT (para archivos subidos por el usuario, si los hubiera)
-# Si planeas subir imágenes a través del admin, necesitarás un servicio de almacenamiento en la nube (AWS S3, Google Cloud Storage)
-# Si no usas almacenamiento en la nube, estos archivos se perderán en Render.
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = BASE_DIR / 'media'
-
-# Configuración de CSRF_TRUSTED_ORIGINS para Render
 CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
