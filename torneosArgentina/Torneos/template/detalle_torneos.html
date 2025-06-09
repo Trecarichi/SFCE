@@ -8,11 +8,12 @@
 <div class="torneo-detail-container">
     <h2>{{ torneo.nombre }}</h2>
 
-    {# IMAGEN PRINCIPAL DEL TORNEO #}
+    {# CORRECCIÓN: Usa 'imagen_estatica' y la etiqueta {% static %} #}
     {% if torneo.imagen_estatica %}
     <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
     {% else %}
-    <img src="{% static 'images/default_tournament.png' %}" alt="Imagen por defecto de torneo" class="torneo-detail-image">
+    {# Placeholder si no hay imagen estática asignada al torneo #}
+    <img src="https://placehold.co/800x450/cccccc/333333?text=Imagen+no+disponible" alt="Imagen no disponible" class="torneo-detail-image">
     {% endif %}
 
     <div class="detail-info-block">
@@ -24,385 +25,66 @@
         {% if torneo.descripcion %}
         <p><strong>Descripción:</strong> {{ torneo.descripcion|linebreaksbr }}</p>
         {% endif %}
-        {% if torneo.descripcion_personalizada %}
-        <p><strong>Descripción Personalizada:</strong> {{ torneo.descripcion_personalizada|linebreaksbr }}</p>
-        {% endif %}
     </div>
-
-    {# --- NUEVA SECCIÓN: GALERÍA DE IMÁGENES ADICIONALES --- #}
-    {% if torneo.imagenes_adicionales.all %}
-    <div class="gallery-container">
-        <h3>Galería de Fotos</h3>
-        <div class="gallery-grid">
-            {% for extra_image in torneo.imagenes_adicionales.all %}
-            <div class="gallery-item">
-                <img src="{% static extra_image.imagen_estatica_adicional %}" alt="{{ extra_image.descripcion|default:'Imagen de galería' }}">
-                {% if extra_image.descripcion %}
-                    <p class="gallery-caption">{{ extra_image.descripcion }}</p>
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-    {# --- FIN NUEVA SECCIÓN --- #}
 
     {# --- SECCIÓN DE EDICIONES --- #}
     <div class="ediciones-container">
         <h2>Ediciones</h2>
+        {# CORRECCIÓN: Accede a las ediciones a través de related_name 'informacion_por_anio' #}
         {% with torneo.informacion_por_anio.all as ediciones %}
         {% if ediciones %}
-        <div class="ediciones-grid">
-            {% for info_anio in ediciones %}
-            <div class="edicion-card">
-                {% if info_anio.imagen_edicion_estatica %}
-                <div class="edicion-image-wrapper">
-                    <img src="{% static info_anio.imagen_edicion_estatica %}" alt="Imagen de la edición {{ info_anio.anio }}"
-                        class="edicion-image">
-                </div>
-                {% else %}
-                <div class="edicion-image-wrapper">
-                    <img src="{% static 'images/default_edition.png' %}" alt="Imagen por defecto de la edición {{ info_anio.anio }}"
-                        class="edicion-image">
-                </div>
-                {% endif %}
-                <div class="edicion-content">
-                    <h4>Edición: {{ info_anio.anio }}</h4>
-                    {% if info_anio.fecha_exacta %}
-                    <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
+            <div class="ediciones-grid">
+                {% for info_anio in ediciones %}
+                <div class="edicion-card">
+                    {# CORRECCIÓN: Usa 'imagen_edicion_estatica' y la etiqueta {% static %} #}
+                    {% if info_anio.imagen_edicion_estatica %}
+                        <div class="edicion-image-wrapper">
+                            <img src="{% static info_anio.imagen_edicion_estatica %}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
+                        </div>
+                    {% else %}
+                        {# Placeholder si no hay imagen estática para la edición #}
+                        <div class="edicion-image-wrapper">
+                            <img src="https://placehold.co/300x200/eeeeee/333333?text=Edición+{{ info_anio.anio }}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
+                        </div>
                     {% endif %}
-                    {% if info_anio.ubicacion_especifica %}
-                    <p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}</p>
-                    {% endif %}
-                    <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
-                    {% if info_anio.subcampeon %}
-                    <p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>
-                    {% endif %}
-                    {% if info_anio.participantes_cantidad %}
-                    <p><strong>Participantes:</strong> {{ info_anio.participantes_cantidad }}</p>
-                    {% endif %}
-                    {% if info_anio.resumen %}
-                    <div class="edicion-resumen">
-                        <p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>
+                    <div class="edicion-content">
+                        <h4>Edición: {{ info_anio.anio }}</h4>
+                        {% if info_anio.fecha_exacta %}
+                        <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
+                        {% endif %}
+                        {% if info_anio.ubicacion_especifica %}
+                        <p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}</p>
+                        {% endif %}
+                        <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
+                        {% if info_anio.subcampeon %}
+                        <p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>
+                        {% endif %}
+                        {% if info_anio.participantes_cantidad %}
+                        <p><strong>Participantes:</strong> {{ info_anio.participantes_cantidad }}</p>
+                        {% endif %}
+                        {% if info_anio.resumen %}
+                        <div class="edicion-resumen">
+                            <p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>
+                        </div>
+                        {% endif %}
+                        {% if info_anio.link_transmision %}
+                        <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer" class="link-transmision">
+                            Ver Transmisión
+                        </a>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                    {% if info_anio.link_transmision %}
-                    <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer"
-                        class="link-transmision">
-                        Ver Transmisión
-                    </a>
-                    {% endif %}
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
         {% else %}
-        <p class="no-data-message">No hay información de ediciones disponible para este torneo aún.</p>
+            <p class="no-data-message">No hay información de ediciones disponible para este torneo aún.</p>
         {% endif %}
         {% endwith %}
     </div>
     {# --- FIN DE SECCIÓN DE EDICIONES --- #}
 
+    {# Botones de navegación. Adaptados para funcionar si no hay 'selected_tipo' #}
+    <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a>
     <button onclick="history.back()" class="btn-back">← Volver</button>
 </div>
-<style>
-    /* ------------------------------------------- */
-    /* --- ESTILOS PARA LA PÁGINA DE DETALLES DE UN TORNEO ESPECÍFICO --- */
-    /* ------------------------------------------- */
-
-    /* Contenedor principal de la página de detalles del torneo */
-    .torneo-detail-container {
-        width: 100%;
-        max-width: 938px;
-        margin: 20px auto;
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        text-align: center;
-    }
-
-    .torneo-detail-container h2 {
-        color: #2c3e50;
-        margin-bottom: 25px;
-        font-size: 2.5em;
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 10px;
-        display: inline-block;
-        width: auto;
-    }
-
-    /* Estilos para la imagen principal del torneo en la página de detalles */
-    .torneo-detail-image {
-        width: 100%;
-        max-width: 800px;
-        height: auto;
-        display: block;
-        margin: 20px auto;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    /* Estilos para el bloque de información general del torneo */
-    .detail-info-block {
-        text-align: left;
-        margin-top: 30px;
-        padding: 0 20px;
-        border-top: 1px solid #f0f0f0;
-        padding-top: 20px;
-    }
-
-    .detail-info-block p {
-        margin-bottom: 10px;
-        font-size: 1.1em;
-        color: #444;
-    }
-
-    .detail-info-block strong {
-        color: #222;
-    }
-
-    /* Estilos para los botones de volver (consistentes con .btn-large) */
-    .btn-back {
-        display: inline-block;
-        background-color: #3498db;
-        color: white !important;
-        padding: 10px 20px;
-        font-size: 1em;
-        text-decoration: none;
-        border-radius: 8px;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        margin: 20px 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        border: 2px solid #2980b9;
-        min-width: 134px;
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .btn-back:hover {
-        background-color: #2980b9;
-        transform: translateY(-2px);
-    }
-
-
-    /* ------------------------------------------- */
-    /* --- ESTILOS PARA LAS EDICIONES ANUALES --- */
-    /* ------------------------------------------- */
-
-    /* Estilos para el contenedor principal de ediciones */
-    .ediciones-container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .ediciones-container h2 {
-        text-align: center;
-        color: #2c3e50;
-        margin-bottom: 30px;
-        font-size: 2.2em;
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 10px;
-        display: inline-block;
-        width: auto;
-    }
-
-    /* Estilos para el grid de las ediciones (diseño responsive) */
-    .ediciones-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-        gap: 30px;
-        justify-content: center;
-    }
-
-    /* Estilos para cada tarjeta de edición anual */
-    .edicion-card {
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .edicion-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Estilos para la imagen de la edición */
-    .edicion-image-wrapper {
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-        overflow: hidden;
-        background-color: #eee;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .edicion-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    /* Estilos para el contenido de texto de la edición */
-    .edicion-content {
-        padding: 20px;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .edicion-content h4 {
-        color: #34495e;
-        margin-top: 0;
-        margin-bottom: 15px;
-        font-size: 1.6em;
-        border-bottom: 1px dashed #cccccc;
-        padding-bottom: 10px;
-    }
-
-    .edicion-content p {
-        margin-bottom: 8px;
-        font-size: 0.95em;
-        line-height: 1.5;
-        color: #555;
-    }
-
-    .edicion-content strong {
-        color: #2c3e50;
-    }
-
-    /* Estilos para el resumen (si es largo) */
-    .edicion-resumen {
-        margin-top: 15px;
-        border-top: 1px solid #f0f0f0;
-        padding-top: 15px;
-    }
-
-    .edicion-resumen p {
-        font-style: italic;
-        color: #666;
-    }
-
-    /* Estilos para el botón/enlace de transmisión */
-    .link-transmision {
-        display: block;
-        width: fit-content;
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: #2ecc71;
-        color: white;
-        text-align: center;
-        text-decoration: none;
-        border-radius: 5px;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        align-self: flex-start;
-    }
-
-    .link-transmision:hover {
-        background-color: #27ae60;
-        transform: translateY(-2px);
-    }
-
-    /* Estilos para el mensaje "no hay datos" */
-    .no-data-message {
-        text-align: center;
-        font-style: italic;
-        color: #7f8c8d;
-        padding: 30px;
-        border: 1px dashed #bdc3c7;
-        border-radius: 5px;
-        margin-top: 20px;
-    }
-
-    /* Media Queries para responsividad (opcional pero muy recomendado) */
-    @media (max-width: 992px) {
-        .ediciones-grid {
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        }
-
-        .torneo-detail-container {
-            padding: 15px;
-        }
-
-        .torneo-detail-container h2 {
-            font-size: 2em;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .ediciones-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .ediciones-container {
-            padding: 15px;
-            margin: 20px auto;
-        }
-
-        .ediciones-container h2 {
-            font-size: 1.8em;
-        }
-
-        .edicion-content h4 {
-            font-size: 1.4em;
-        }
-
-        .container,
-        .torneo-detail-container {
-            padding: 10px;
-            margin: 10px auto;
-        }
-
-        .torneo-detail-container h2 {
-            font-size: 1.8em;
-            margin-bottom: 20px;
-        }
-
-        .detail-info-block {
-            padding: 0 10px;
-            padding-top: 15px;
-        }
-
-        .detail-info-block p {
-            font-size: 1em;
-        }
-
-        .btn-back {
-            padding: 8px 15px;
-            font-size: 0.9em;
-            margin: 15px 5px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .ediciones-container h2 {
-            font-size: 1.6em;
-            margin-bottom: 20px;
-        }
-
-        .edicion-content {
-            padding: 15px;
-        }
-
-        .link-transmision {
-            padding: 8px 15px;
-            font-size: 0.9em;
-        }
-
-        .torneo-detail-container h2 {
-            font-size: 1.6em;
-        }
-    }
-</style>
+{% endblock %}
