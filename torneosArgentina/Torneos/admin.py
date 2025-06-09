@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Torneo, ImagenCarrusel, InformacionTorneoAnio, ImagenAdicionalTorneo # Importa el nuevo modelo
+# Asegúrate de importar todos los modelos necesarios
+from .models import Torneo, ImagenCarrusel, InformacionTorneoAnio, ImagenAdicionalTorneo
 
 # ===========================================================================
 # INLINE para InformacionTorneoAnio
-# Permite agregar y editar ediciones anuales directamente desde el formulario de Torneo.
 # ===========================================================================
 class InformacionTorneoAnioInline(admin.TabularInline):
     model = InformacionTorneoAnio
@@ -16,19 +16,18 @@ class InformacionTorneoAnioInline(admin.TabularInline):
     ]
 
 # ===========================================================================
-# NUEVO INLINE: ImagenAdicionalTorneoInline
-# Permite agregar múltiples imágenes a un Torneo desde su formulario de edición.
+# INLINE: ImagenAdicionalTorneoInline
 # ===========================================================================
-class ImagenAdicionalTorneoInline(admin.TabularInline): # O admin.StackedInline para una vista más expansiva
+class ImagenAdicionalTorneoInline(admin.TabularInline):
     model = ImagenAdicionalTorneo
-    extra = 1 # Cuántos formularios vacíos se muestran por defecto
+    extra = 1
     fields = ['imagen_estatica', 'descripcion', 'orden']
-    # Opcional: para mostrar una previsualización en el admin
     readonly_fields = ['imagen_preview_admin']
 
     def imagen_preview_admin(self, obj):
+        from django.templatetags.static import static # Importar static aquí si es necesario
         if obj.imagen_estatica:
-            return format_html('<img src="/static/{}" style="width: 80px; height: auto;" />', obj.imagen_estatica)
+            return format_html('<img src="{}" style="width: 80px; height: auto;" />', static(obj.imagen_estatica))
         return "(Sin imagen)"
     imagen_preview_admin.short_description = 'Previsualización'
 
@@ -42,13 +41,12 @@ class TorneoAdmin(admin.ModelAdmin):
     search_fields = ('nombre', 'tipo', 'ubicacion')
     list_filter = ('fecha', 'tipo', 'internacional')
     fields = ['nombre', 'tipo', 'fecha', 'ubicacion', 'descripcion', 'internacional', 'imagen_estatica']
-
-    # ¡IMPORTANTE: Agrega el nuevo Inline aquí!
-    inlines = [InformacionTorneoAnioInline, ImagenAdicionalTorneoInline]
+    inlines = [InformacionTorneoAnioInline, ImagenAdicionalTorneoInline] # Asegúrate de que ImagenAdicionalTorneoInline esté aquí
 
     def imagen_estatica_display(self, obj):
+        from django.templatetags.static import static # Importar static aquí si es necesario
         if obj.imagen_estatica:
-            return format_html('<img src="/static/{}" style="width: 50px; height: auto;" />', obj.imagen_estatica)
+            return format_html('<img src="{}" style="width: 50px; height: auto;" />', static(obj.imagen_estatica))
         return "(Sin imagen)"
     imagen_estatica_display.short_description = 'Imagen Principal'
 
@@ -67,22 +65,24 @@ class InformacionTorneoAnioAdmin(admin.ModelAdmin):
     ]
 
     def imagen_edicion_estatica_display(self, obj):
+        from django.templatetags.static import static # Importar static aquí si es necesario
         if obj.imagen_edicion_estatica:
-            return format_html('<img src="/static/{}" style="width: 50px; height: auto;" />', obj.imagen_edicion_estatica)
+            return format_html('<img src="{}" style="width: 50px; height: auto;" />', static(obj.imagen_edicion_estatica))
         return "(Sin imagen)"
     imagen_edicion_estatica_display.short_description = 'Imagen Edición'
 
 
 # ===========================================================================
 # Admin para el modelo ImagenCarrusel
-# (No se modifica para esta funcionalidad)
 # ===========================================================================
 @admin.register(ImagenCarrusel)
 class ImagenCarruselAdmin(admin.ModelAdmin):
+    # Asegúrate de que 'imagen_preview' es el nombre del método en el modelo
     list_display = ('titulo', 'orden', 'activo', 'imagen_preview', 'fecha_subida')
-    list_editable = ('orden', 'activo')
+    list_editable = ('orden', 'activo') # Permite editar orden y activo directamente en la lista
     search_fields = ('titulo', 'descripcion')
     list_filter = ('activo',)
     readonly_fields = ('imagen_preview', 'fecha_subida') 
+    # Asegúrate de que 'imagen_estatica' es el campo aquí y no 'imagen'
     fields = ('titulo', 'imagen_estatica', 'descripcion', 'orden', 'activo', 'fecha_subida')
 

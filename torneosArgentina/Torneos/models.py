@@ -1,4 +1,8 @@
+# Torneos/models.py
+
 from django.db import models
+from django.utils.html import format_html # Importa format_html aquí
+from django.templatetags.static import static # Importa static aquí
 
 class Torneo(models.Model):
     nombre = models.CharField(max_length=200, unique=True)
@@ -7,7 +11,6 @@ class Torneo(models.Model):
     ubicacion = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
     internacional = models.BooleanField(default=False)
-    # Cambiamos ImageField por CharField para usar rutas estáticas
     imagen_estatica = models.CharField(
         max_length=255, 
         blank=True, 
@@ -17,11 +20,6 @@ class Torneo(models.Model):
 
     def __str__(self):
         return f"{self.nombre} ({self.fecha.year})"
-
-    # Añade un related_name si aún no lo tienes para facilitar la relación inversa
-    # Si ya existe, puedes dejarlo como está.
-    # class Meta:
-    #     ordering = ['-fecha'] # Puedes añadir un ordenamiento por defecto
 
 class InformacionTorneoAnio(models.Model):
     torneo = models.ForeignKey(Torneo, on_delete=models.CASCADE, related_name='informacion_por_anio')
@@ -33,7 +31,6 @@ class InformacionTorneoAnio(models.Model):
     link_transmision = models.URLField(blank=True, null=True)
     fecha_exacta = models.DateField(blank=True, null=True)
     ubicacion_especifica = models.CharField(max_length=200, blank=True, null=True)
-    # Campo para la imagen estática de la edición anual
     imagen_edicion_estatica = models.CharField(
         max_length=255, 
         blank=True, 
@@ -48,20 +45,14 @@ class InformacionTorneoAnio(models.Model):
     def __str__(self):
         return f"{self.torneo.nombre} - Edición {self.anio}"
 
-
-# ===========================================================================
-# NUEVO MODELO: ImagenAdicionalTorneo
-# Para permitir múltiples imágenes asociadas a un mismo Torneo
-# ===========================================================================
 class ImagenAdicionalTorneo(models.Model):
     torneo = models.ForeignKey(Torneo, on_delete=models.CASCADE, related_name='imagenes_adicionales')
-    # Campo para la ruta estática de la imagen adicional
     imagen_estatica = models.CharField(
         max_length=255, 
         help_text="Ruta a la imagen adicional (ej. images/galeria/torneo_foto1.png). Debe estar en torneos/static/images/galeria/"
     )
     descripcion = models.CharField(max_length=255, blank=True, null=True)
-    orden = models.IntegerField(default=0) # Para controlar el orden de visualización
+    orden = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['orden']
@@ -71,11 +62,10 @@ class ImagenAdicionalTorneo(models.Model):
 
 
 class ImagenCarrusel(models.Model):
-    titulo = models.CharField(max_length=200)
-    # Campo para la ruta estática de la imagen del carrusel
+    titulo = models.CharField(max_length=200, blank=True, null=True) # Agregué blank=True, null=True para evitar errores al migrar si hay nulos
     imagen_estatica = models.CharField(
         max_length=255, 
-        help_text="Ruta a la imagen del carrusel (ej. images/carrusel/imagen1.png). Debe estar en torneos/static/images/carrusel/"
+        help_text="Ruta a la imagen estática del carrusel (ej. images/carrusel/imagen1.png). Debe estar en torneos/static/images/carrusel/"
     )
     descripcion = models.TextField(blank=True, null=True)
     orden = models.IntegerField(default=0)
@@ -87,14 +77,15 @@ class ImagenCarrusel(models.Model):
         verbose_name_plural = "Imágenes del Carrusel"
 
     def __str__(self):
-        return self.titulo
+        return self.titulo if self.titulo else f"Imagen {self.id}"
     
     # Método para previsualizar la imagen en el admin
-    from django.utils.html import format_html
     def imagen_preview(self):
+        # Asegúrate de que 'static' y 'format_html' están importados al principio del archivo
         if self.imagen_estatica:
-            # Asegúrate de que esta ruta coincida con tu configuración de STATIC_URL
-            return format_html('<img src="/static/{}" style="width: 100px; height: auto;" />', self.imagen_estatica)
-        return "(Sin imagen)"
+            # Construye la URL estática usando la función static() y luego format_html
+            # La función static() de Django es la forma correcta de resolver rutas estáticas
+            return format_html('<img src="{}" style="width: 50px; height: auto;" />', static(self.imagen_estatica))
+        return "(Sin imagen)" # Retorna un texto o un placeholder si no hay imagen_estatica
     imagen_preview.short_description = 'Previsualización'
 
