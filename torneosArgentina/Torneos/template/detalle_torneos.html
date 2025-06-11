@@ -410,10 +410,10 @@
         }
     }
 
-    /* --- ESTILOS DEL MODAL (AJUSTES PARA CENTRADO) --- */
+    /* --- ESTILOS DEL MODAL (AJUSTES PARA OCULTAR 'x' inicial y CENTRAR) --- */
     .modal {
         display: none;
-        /* Oculto por defecto, JS lo hace visible */
+        /* ¡CRÍTICO! Oculto por defecto. JS lo hará 'flex' cuando se abra. */
         position: fixed;
         /* Permanece en su lugar */
         z-index: 1000;
@@ -429,9 +429,7 @@
         background-color: rgba(0, 0, 0, 0.9);
         /* Fondo negro semitransparente */
 
-        /* Propiedades para CENTRADO FLEXBOX reforzado */
-        display: flex;
-        /* Habilitar flexbox */
+        /* Propiedades para CENTRADO FLEXBOX reforzado (solo aplican cuando display es flex) */
         align-items: center;
         /* Centrar verticalmente */
         justify-content: center;
