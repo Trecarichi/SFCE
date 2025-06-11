@@ -7,26 +7,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Street Fighter CE Argentina{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> {# <-- ¡Esta es la línea clave! #} </head>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> {# <-- ¡Mantenemos tu referencia a styles.css! #}
+
+    <style>
+        /* Estilos globales para el body y la fuente */
+        body {
+            font-family: 'Inter', sans-serif; /* Fuente recomendada, puedes cambiarla si lo deseas */
+            margin: 0;
+            padding: 0;
+            background-color: #000000; /* Fondo negro puro para los "bordes" */
+            color: #E0EBF5; /* Color de texto general claro para todo el sitio */
+        }
+
+        /* Contenedor principal que centra el contenido y tiene el fondo azul oscuro */
+        .page-wrapper {
+            max-width: 1200px; /* Ancho máximo de tu contenido */
+            margin: 0 auto; /* Centra el contenido en la pantalla, dejando el body negro a los costados */
+            background-color: #0A1D37; /* Azul oscuro profundo para el contenido principal */
+            min-height: 100vh; /* Asegura que ocupe al menos toda la altura de la pantalla */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7); /* Sombra para resaltar los bordes */
+            border-radius: 8px; /* Bordes redondeados para el contenedor principal */
+            overflow: hidden; /* Asegura que la sombra se vea bien y los bordes se mantengan */
+        }
+
+        /* Estilos del encabezado */
+        header {
+            background-color: #0A1D37; /* Azul oscuro para la barra de navegación */
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            border-radius: 0 0 8px 8px; /* Bordes redondeados en la parte inferior */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #87CEEB; /* Azul cielo claro para el logo/nombre */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo:hover {
+            color: #ADD8E6;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 25px; /* Espacio entre los elementos de navegación */
+        }
+
+        nav ul li a {
+            color: #ADD8E6; /* Azul claro para los enlaces de navegación */
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #E0EBF5; /* Texto más claro en hover */
+        }
+
+        /* Estilos del pie de página */
+        footer {
+            background-color: #0A1D37; /* Azul oscuro para el pie de página */
+            padding: 20px;
+            text-align: center;
+            color: #ADD8E6; /* Azul claro para el texto del footer */
+            margin-top: auto; /* Empuja el footer al final de la página */
+            border-radius: 8px 8px 0 0; /* Bordes redondeados en la parte superior */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Asegura que el contenido principal tenga un padding para no pegarse a los bordes */
+        .container { /* Usamos tu clase 'container' en main */
+            padding: 20px; /* Padding interno para el contenido de la página */
+            flex-grow: 1; /* Permite que el contenido principal ocupe el espacio disponible */
+        }
+
+        /* Estilos de responsividad para el menú */
+        @media (max-width: 768px) {
+            .page-wrapper {
+                margin: 0; /* Elimina el margen en móviles para que ocupe todo el ancho */
+                border-radius: 0; /* Sin bordes redondeados en vista móvil */
+                box-shadow: none; /* Sin sombra en vista móvil */
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            nav ul li {
+                width: 100%;
+                text-align: center;
+            }
+
+            .container {
+                padding: 10px; /* Menor padding en móviles */
+            }
+        }
+    </style>
+</head>
 
 <body>
-    <header>
-        <nav>
-            <a href="{% url 'index' %}">Inicio</a>
-            <a href="{% url 'lista_torneos' %}">Torneos</a>
-            {# Otros enlaces si tienes #}
-        </nav>
-    </header>
+    {# El page-wrapper ahora envuelve todo el contenido visual de la página #}
+    <div class="page-wrapper">
+        <header>
+            <a href="{% url 'index' %}" class="logo">SFCE ARG</a>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'index' %}">Inicio</a></li>
+                    <li><a href="{% url 'lista_torneos' %}">Torneos</a></li>
+                    {# Otros enlaces que puedas tener #}
+                    <li><a href="#">Desafíos</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </nav>
+        </header>
 
-    <main class="container">
-        {% block content %}
-        {# El contenido de tus otras páginas irá aquí #}
-        {% endblock %}
-    </main>
+        <main class="container"> {# Mantenemos tu clase 'container' aquí #}
+            {% block content %}
+            {# El contenido de tus otras páginas irá aquí #}
+            {% endblock %}
+        </main>
 
-    <footer>
-        <p>&copy; 2025 Street Fighter CE Argentina. Todos los derechos reservados.</p>
-    </footer>
+        <footer>
+            <p>&copy; 2025 Street Fighter CE Argentina. Todos los derechos reservados.</p>
+        </footer>
+    </div>
 </body>
 
 </html>

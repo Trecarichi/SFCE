@@ -5,26 +5,18 @@
 
 {% block content %}
 <style>
-    /* Regla global para facilitar el diseño responsivo */
-    * {
-        box-sizing: border-box;
-    }
+    /* El body ya tiene el fondo negro desde base.html */
 
-    /* Estilos para el cuerpo de la página (fondo azul oscuro) */
-    body {
-        background-color: #0A1D37; /* Un azul muy oscuro */
-        color: #E0EBF5; /* Color de texto general claro para contraste */
-    }
-
-    /* Estilos para el contenido principal (la "parte de adentro") */
+    /* Estilos para el contenido principal (la "parte de adentro" azul) */
     .index-content {
         text-align: center;
         padding: 20px;
-        background-color: #1A3258; /* Un azul oscuro ligeramente más claro */
-        border-radius: 8px; /* Bordes redondeados para el contenedor principal */
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6); /* Sombra sutil para darle profundidad */
-        margin: 20px auto; /* Centra el contenido y añade margen */
-        max-width: 90%; /* Ancho máximo para que no ocupe todo el espacio en pantallas grandes */
+        background-color: #0A1D37; /* Azul oscuro profundo */
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+        margin: 20px auto; /* Centra el contenido, dejando los bordes negros */
+        max-width: 90%; /* Ajuste para que se vea bien en pantallas grandes */
+        color: #E0EBF5; /* Color de texto general claro para esta sección */
     }
 
     /* Estilos para el carrusel */
@@ -35,8 +27,8 @@
         margin: 20px auto;
         overflow: hidden;
         border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra ajustada para fondo oscuro */
-        background-color: #2A4068; /* Un azul un poco más claro para el carrusel */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        background-color: #1A3258; /* Azul oscuro ligeramente más claro para el carrusel */
     }
 
     .carrusel-inner {
@@ -61,7 +53,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: rgba(0, 0, 0, 0.7); /* Fondo semitransparente para el texto */
+        background: rgba(0, 0, 0, 0.7);
         color: white;
         padding: 15px;
         text-align: center;
@@ -80,7 +72,7 @@
     }
 
     .carrusel-button {
-        background-color: rgba(0, 0, 0, 0.6); /* Botones más oscuros y semitransparentes */
+        background-color: rgba(0, 0, 0, 0.6);
         color: white;
         border: none;
         padding: 10px 15px;
@@ -97,7 +89,7 @@
     /* Estilos para el botón principal "Ver Lista de Torneos" */
     .btn-large {
         display: inline-block;
-        background-color: #3498DB; /* Azul fuerte para el botón */
+        background-color: #3498DB; /* Azul vibrante para el botón */
         color: white !important;
         padding: 15px 30px;
         font-size: 1.5em;
@@ -105,8 +97,8 @@
         border-radius: 8px;
         transition: background-color 0.3s ease, transform 0.2s ease;
         margin-top: 30px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra ajustada */
-        border: 2px solid #2980B9; /* Borde de un azul más oscuro */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        border: 2px solid #2980B9;
         min-width: 200px;
         text-align: center;
         cursor: pointer;
@@ -144,7 +136,7 @@
         margin-top: 30px;
         margin-bottom: 30px;
         text-align: center;
-        background-color: #2A4068; /* Fondo similar al carrusel */
+        background-color: #1A3258; /* Fondo similar al contenedor principal */
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -157,10 +149,11 @@
 
     .social-item {
         display: inline-flex;
+        flex-direction: column; /* Organiza ícono y texto en columna */
         align-items: center;
         margin: 0 15px;
         text-decoration: none;
-        color: #E0EBF5; /* CORRECCIÓN: Color de texto claro para los enlaces de redes */
+        color: #E0EBF5; /* ¡CORRECCIÓN AQUÍ! Color de texto claro para los enlaces de redes */
         font-weight: bold;
         transition: color 0.3s ease;
     }
@@ -172,33 +165,28 @@
     .social-icon {
         width: 50px;
         height: 50px;
-        margin-right: 10px;
+        margin-bottom: 8px; /* Espacio entre el ícono y el texto */
         border-radius: 50%;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Sombra ajustada */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     }
 
     .social-text {
-        font-size: 1.1em;
+        font-size: 0.9em;
+        text-align: center;
     }
 
     /* --- Media Queries para Responsividad --- */
 
-    /* Para pantallas medianas (tablets y algunos laptops) */
     @media (max-width: 992px) {
         .index-content h2 {
             font-size: 2em;
         }
-
-        .social-item {
-            margin: 0 10px;
-        }
     }
 
-    /* Para pantallas pequeñas (móviles) */
     @media (max-width: 768px) {
         .index-content {
             padding: 10px;
-            margin: 10px auto; /* Ajusta márgenes para pantallas pequeñas */
+            margin: 10px auto;
         }
 
         .index-logo {
@@ -228,21 +216,21 @@
         }
 
         .social-item {
-            display: block;
-            margin: 0 auto 10px auto;
+            display: inline-flex; /* Vuelven a ser inline-flex para móviles para permitir más en una fila */
+            margin: 10px 5px; /* Ajusta márgenes para espacio entre ellos */
         }
 
         .social-icon {
             width: 40px;
             height: 40px;
+            margin-bottom: 5px;
         }
 
         .social-text {
-            font-size: 0.9em;
+            font-size: 0.8em;
         }
     }
 
-    /* Para pantallas muy pequeñas (móviles pequeños) */
     @media (max-width: 480px) {
         .index-content h2 {
             font-size: 1.8em;
@@ -250,6 +238,10 @@
 
         .index-content p {
             font-size: 1em;
+        }
+
+        .social-item {
+             margin: 8px 3px;
         }
     }
 </style>
@@ -262,22 +254,20 @@
     <h2>Bienvenido a la página oficial de Street Fighter Champion Edition Argentina</h2>
 
     {# --- INICIO DEL CARRUSEL --- #}
-    {% if imagenes_carrusel %} {# Solo muestra el carrusel si hay imágenes #}
+    {% if imagenes_carrusel %}
     <div class="carrusel-container">
         <div class="carrusel-inner">
             {% for imagen in imagenes_carrusel %}
             <div class="carrusel-item">
-                {# ¡CORRECCIÓN CRÍTICA AQUÍ! Usar imagen_estatica del modelo y la etiqueta {% static %} #}
                 {% if imagen.imagen_estatica %}
                 <img src="{% static imagen.imagen_estatica %}" alt="{{ imagen.titulo|default:'Imagen del carrusel' }}">
                 {% else %}
-                {# Opcional: una imagen por defecto para el carrusel si no tiene una estática #}
-                <img src="https://placehold.co/800x400/333333/FFFFFF?text=Imagen+por+defecto+del+carrusel" alt="Imagen por defecto del carrusel">
+                <img src="https://placehold.co/800x400/1A3258/E0EBF5?text=Imagen+por+defecto+del+carrusel" alt="Imagen por defecto del carrusel">
                 {% endif %}
             </div>
             {% endfor %}
         </div>
-        {% if imagenes_carrusel|length > 1 %} {# Solo muestra botones si hay más de una imagen #}
+        {% if imagenes_carrusel|length > 1 %}
         <div class="carrusel-buttons">
             <button class="carrusel-button" id="prevBtn">❮</button>
             <button class="carrusel-button" id="nextBtn">❯</button>
@@ -314,7 +304,7 @@
             window.addEventListener('load', updateCarrusel);
         }
     </script>
-    {% else %} {# Mensaje si no hay imágenes para el carrusel #}
+    {% else %}
     <p>No hay imágenes disponibles para el carrusel en este momento.</p>
     {% endif %}
     {# --- FIN DEL CARRUSEL --- #}
@@ -326,33 +316,37 @@
         <a href="https://www.facebook.com/groups/sf2ceargentina" target="_blank" aria-label="Síguenos en Facebook"
             class="social-item">
             <img src="{% static 'images/facebook_logo.png' %}" alt="Facebook" class="social-icon">
-            <span class="social-text">Grupo de facebook de SFCE Argentina</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+            <span class="social-text">Grupo de facebook de SFCE Argentina</span>
+        </a>
 
-                <a href="https://www.twitch.tv/mechakuma34" target="_blank" aria-label="Síguenos en Twitch"
-                    class="social-item">
-                    <img src="{% static 'images/twitch_logo.png' %}" alt="Twitch" class="social-icon">
-                    <span class="social-text">mechakuma34</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+        <a href="https://www.twitch.tv/mechakuma34" target="_blank" aria-label="Síguenos en Twitch"
+            class="social-item">
+            <img src="{% static 'images/twitch_logo.png' %}" alt="Twitch" class="social-icon">
+            <span class="social-text">mechakuma34</span>
+        </a>
 
-                        <a href="https://www.youtube.com/@mechakuma34" target="_blank" aria-label="Síguenos en Youtube"
-                            class="social-item">
-                            <img src="{% static 'images/youtube_logo.png' %}" alt="YouTube" class="social-icon">
-                            <span class="social-text">Mech-Akuma34</span> {# <-- ¡NUEVO: Texto visible! #} </a>
-                        <a href="https://www.youtube.com/@fighterlatinos" target="_blank" aria-label="Síguenos en Youtube"
-                            class="social-item">
-                            <img src="{% static 'images/youtube_logo.png' %}" alt="YouTube" class="social-icon">
-                            <span class="social-text">fighterlatinos</span> {# <-- ¡NUEVO: Texto visible! #} </a>
-                        <a href="https://www.tiktok.com/@nostraxlive" target="_blank" aria-label="Síguenos en Youtube"
-                            class="social-item">
-                            <img src="{% static 'images/tiktok_logo.png' %}" alt="Tiktok" class="social-icon">
-                            <span class="social-text">Nostrax Live</span> {# <-- ¡NUEVO: Texto visible! #} </a>
-                        <a href="https://www.tiktok.com/@mechakuma" target="_blank" aria-label="Síguenos en Tiktok"
-                            class="social-item">
-                            <img src="{% static 'images/tiktok_logo.png' %}" alt="Tiktok" class="social-icon">
-                            <span class="social-text">mechakuma</span> {# <-- ¡NUEVO: Texto visible! #} </a>
-                            {# Puedes añadir más iconos aquí si tienes Twitter, YouTube, etc. #}
+        <a href="https://www.youtube.com/@mechakuma34" target="_blank" aria-label="Síguenos en Youtube"
+            class="social-item">
+            <img src="{% static 'images/youtube_logo.png' %}" alt="YouTube" class="social-icon">
+            <span class="social-text">Mech-Akuma34</span>
+        </a>
+        <a href="https://www.youtube.com/@fighterlatinos" target="_blank" aria-label="Síguenos en Youtube"
+            class="social-item">
+            <img src="{% static 'images/youtube_logo.png' %}" alt="YouTube" class="social-icon">
+            <span class="social-text">fighterlatinos</span>
+        </a>
+        <a href="https://www.tiktok.com/@nostraxlive" target="_blank" aria-label="Síguenos en Youtube"
+            class="social-item">
+            <img src="{% static 'images/tiktok_logo.png' %}" alt="Tiktok" class="social-icon">
+            <span class="social-text">Nostrax Live</span>
+        </a>
+        <a href="https://www.tiktok.com/@mechakuma" target="_blank" aria-label="Síguenos en Tiktok"
+            class="social-item">
+            <img src="{% static 'images/tiktok_logo.png' %}" alt="Tiktok" class="social-icon">
+            <span class="social-text">mechakuma</span>
+        </a>
     </div>
     {# --- FIN ENLACES DE REDES SOCIALES --- #}
-
 
     <p>Explora nuestros torneos y descubre más sobre la escena de los juegos de lucha.</p>
 
