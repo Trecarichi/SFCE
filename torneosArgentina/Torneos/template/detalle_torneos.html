@@ -24,7 +24,7 @@
         <div class="gallery-grid">
             {% for img_adic in imagenes_adicionales %}
             <div class="gallery-item">
-                {# Añadir data-src para el zoom #}
+                {# Añadir data-src para la URL de la imagen en grande, útil para el zoom #}
                 <img src="{% static img_adic.imagen_estatica %}" data-src="{% static img_adic.imagen_estatica %}"
                     alt="{{ img_adic.descripcion|default:'Imagen adicional' }}" class="gallery-image clickable-image">
                 {% if img_adic.descripcion %}
@@ -410,14 +410,14 @@
         }
     }
 
-    /* --- MODAL STYLES --- */
+    /* --- ESTILOS DEL MODAL (AJUSTES PARA CENTRADO) --- */
     .modal {
         display: none;
-        /* Oculto por defecto */
+        /* Oculto por defecto, JS lo hace visible */
         position: fixed;
-        /* Permanece en su lugar incluso al desplazar */
+        /* Permanece en su lugar */
         z-index: 1000;
-        /* Se superpone a todo lo demás */
+        /* Se superpone a todo */
         left: 0;
         top: 0;
         width: 100%;
@@ -428,8 +428,10 @@
         /* Habilitar desplazamiento si es necesario */
         background-color: rgba(0, 0, 0, 0.9);
         /* Fondo negro semitransparente */
+
+        /* Propiedades para CENTRADO FLEXBOX reforzado */
         display: flex;
-        /* Usar flexbox para centrar contenido */
+        /* Habilitar flexbox */
         align-items: center;
         /* Centrar verticalmente */
         justify-content: center;
@@ -437,25 +439,27 @@
     }
 
     .modal-content {
-        margin: auto;
         display: block;
+        /* Asegurarse de que es un bloque */
         max-width: 90%;
         /* Limitar el tamaño de la imagen */
         max-height: 90vh;
-        /* Limitar la altura de la imagen al 90% del viewport height */
+        /* Limitar la altura de la imagen */
+        object-fit: contain;
+        /* Asegura que la imagen se ajuste sin recortarse */
         border-radius: 8px;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     }
 
     .modal-caption {
         margin: auto;
+        /* Sigue siendo útil para centrar el texto dentro de su propio bloque */
         display: block;
         width: 80%;
         max-width: 700px;
         text-align: center;
         color: #ccc;
         padding: 10px 0;
-        height: 150px;
     }
 
     /* Botón de cerrar */
@@ -509,38 +513,46 @@
     /* Responsive para el modal en pantallas muy pequeñas */
     @media only screen and (max-width: 700px) {
         .modal-content {
-            width: 100%;
+            width: 95%;
+            /* Usar un porcentaje más alto */
+            max-width: 95%;
+            max-height: 85vh;
+            /* Ajustar altura para móvil */
         }
     }
 </style>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Obtener el modal y el botón de cerrar
+        // Obtener elementos del DOM relacionados con el modal
         var modal = document.getElementById("imageModal");
         var modalImg = document.getElementById("modalImage");
         var captionText = document.getElementById("caption");
         var closeButton = document.getElementsByClassName("close-button")[0];
 
-        // Obtener todas las imágenes de la galería que son clickables
+        // Seleccionar todas las imágenes de la galería que tienen la clase 'clickable-image'
         var galleryImages = document.querySelectorAll(".gallery-image.clickable-image");
 
-        // Asignar evento click a cada imagen de la galería
+        // Asignar un evento de clic a cada imagen de la galería
         galleryImages.forEach(function (img) {
             img.onclick = function () {
-                modal.style.display = "flex"; // Usar flex para centrar
-                modalImg.src = this.dataset.src || this.src; // Usar data-src si está definido
-                captionText.innerHTML = this.alt; // Mostrar la descripción de la imagen
+                modal.style.display = "flex"; // Mostrar el modal usando flexbox para centrado
+                // Establecer la fuente de la imagen del modal: primero intenta con data-src, si no, usa src
+                modalImg.src = this.dataset.src || this.src;
+                // Establecer el texto del pie de foto con el atributo 'alt' de la imagen
+                captionText.innerHTML = this.alt;
             }
         });
 
-        // Cuando se hace clic en el botón de cerrar o fuera de la imagen (en el overlay)
+        // Cuando se hace clic en el botón de cerrar
         closeButton.onclick = function () {
-            modal.style.display = "none";
+            modal.style.display = "none"; // Ocultar el modal
         }
+
+        // Cuando el usuario hace clic fuera de la imagen (en el overlay del modal)
         modal.onclick = function (event) {
-            if (event.target === modal) { // Solo si se hace clic en el overlay, no en la imagen
-                modal.style.display = "none";
+            if (event.target === modal) { // Si el clic fue directamente en el fondo del modal (no en la imagen)
+                modal.style.display = "none"; // Ocultar el modal
             }
         }
     });
