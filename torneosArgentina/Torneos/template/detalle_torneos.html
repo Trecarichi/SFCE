@@ -411,11 +411,19 @@
     }
 
     /* --- ESTILOS DEL MODAL (AJUSTES PARA OCULTAR 'x' inicial y CENTRAR) --- */
-    .modal {
-        display: none;
-        /* ¡CRÍTICO! Oculto por defecto. JS lo hará 'flex' cuando se abra. */
+    #imageModal {
+        /* Usar ID para mayor especificidad y asegurar ocultamiento */
+        visibility: hidden;
+        /* Oculto por defecto */
+        opacity: 0;
+        /* Completamente transparente por defecto */
+        pointer-events: none;
+        /* No interactuable cuando está oculto */
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        /* Transición suave */
+
         position: fixed;
-        /* Permanece en su lugar */
+        /* Permanece en su lugar en el viewport */
         z-index: 1000;
         /* Se superpone a todo */
         left: 0;
@@ -424,16 +432,24 @@
         /* Ancho completo */
         height: 100%;
         /* Altura completa */
-        overflow: auto;
-        /* Habilitar desplazamiento si es necesario */
         background-color: rgba(0, 0, 0, 0.9);
         /* Fondo negro semitransparente */
 
-        /* Propiedades para CENTRADO FLEXBOX reforzado (solo aplican cuando display es flex) */
+        /* Propiedades para CENTRADO FLEXBOX (solo aplican cuando visibility es visible) */
+        display: flex;
+        /* Mantener flexbox para centrado, ocultado por visibility/opacity */
         align-items: center;
         /* Centrar verticalmente */
         justify-content: center;
         /* Centrar horizontalmente */
+    }
+
+    /* Clase que JavaScript añadirá para mostrar el modal */
+    #imageModal.is-visible {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+        /* Permite interacciones cuando es visible */
     }
 
     .modal-content {
@@ -442,7 +458,7 @@
         max-width: 90%;
         /* Limitar el tamaño de la imagen */
         max-height: 90vh;
-        /* Limitar la altura de la imagen */
+        /* Limitar la altura de la imagen al 90% del viewport height */
         object-fit: contain;
         /* Asegura que la imagen se ajuste sin recortarse */
         border-radius: 8px;
@@ -450,26 +466,41 @@
     }
 
     .modal-caption {
-        margin: auto;
-        /* Sigue siendo útil para centrar el texto dentro de su propio bloque */
-        display: block;
-        width: 80%;
-        max-width: 700px;
+        position: absolute;
+        /* Posicionado absolutamente dentro del modal */
+        bottom: 5vh;
+        /* Se ubica a 5% del alto del viewport desde abajo */
+        left: 0;
+        width: 100%;
+        /* Ancho completo */
         text-align: center;
         color: #ccc;
         padding: 10px 0;
+        font-size: 1.2em;
+        /* Tamaño de fuente más visible */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Fondo semitransparente para legibilidad */
+        box-sizing: border-box;
+        /* Incluye padding en el ancho total */
     }
 
     /* Botón de cerrar */
     .close-button {
         position: absolute;
-        top: 20px;
-        right: 35px;
-        color: #f1f1f1;
-        font-size: 40px;
+        /* Posicionado absolutamente dentro del modal */
+        top: 15px;
+        /* Margen desde arriba */
+        right: 25px;
+        /* Margen desde la derecha */
+        color: #fff;
+        /* Color blanco para contraste */
+        font-size: 50px;
+        /* Tamaño más grande para facilidad de toque */
         font-weight: bold;
         transition: 0.3s;
         cursor: pointer;
+        z-index: 1001;
+        /* Asegura que esté por encima de la imagen del modal */
     }
 
     .close-button:hover,
@@ -534,7 +565,7 @@
         // Asignar un evento de clic a cada imagen de la galería
         galleryImages.forEach(function (img) {
             img.onclick = function () {
-                modal.style.display = "flex"; // Mostrar el modal usando flexbox para centrado
+                modal.classList.add('is-visible'); // Añadir clase para mostrar el modal
                 // Establecer la fuente de la imagen del modal: primero intenta con data-src, si no, usa src
                 modalImg.src = this.dataset.src || this.src;
                 // Establecer el texto del pie de foto con el atributo 'alt' de la imagen
@@ -544,13 +575,13 @@
 
         // Cuando se hace clic en el botón de cerrar
         closeButton.onclick = function () {
-            modal.style.display = "none"; // Ocultar el modal
+            modal.classList.remove('is-visible'); // Remover clase para ocultar el modal
         }
 
         // Cuando el usuario hace clic fuera de la imagen (en el overlay del modal)
         modal.onclick = function (event) {
             if (event.target === modal) { // Si el clic fue directamente en el fondo del modal (no en la imagen)
-                modal.style.display = "none"; // Ocultar el modal
+                modal.classList.remove('is-visible'); // Remover clase para ocultar el modal
             }
         }
     });
