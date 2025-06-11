@@ -10,44 +10,39 @@
         box-sizing: border-box;
     }
 
+    /* Estilos para el cuerpo de la página (fondo oscuro) */
+    body {
+        background-color: #1a1a1a; /* Fondo gris muy oscuro */
+        color: #e0e0e0; /* Color de texto general claro para contraste */
+    }
+
     /* Estilos para el carrusel */
     .carrusel-container {
         position: relative;
         width: 100%;
         max-width: 800px;
-        /* Ancho máximo del carrusel */
         margin: 20px auto;
-        /* Centra el carrusel y añade margen */
         overflow: hidden;
-        /* Oculta partes de las imágenes que se salgan */
         border-radius: 8px;
-        /* Bordes redondeados */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        /* Sombra suave */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra ajustada para fondo oscuro */
+        background-color: #2a2a2a; /* Fondo ligeramente más claro para el carrusel */
     }
 
     .carrusel-inner {
         display: flex;
-        /* Permite que los elementos del carrusel se coloquen en fila */
         transition: transform 0.5s ease-in-out;
-        /* Transición suave para el movimiento del carrusel */
     }
 
     .carrusel-item {
         min-width: 100%;
-        /* Cada imagen ocupa el 100% del ancho del contenedor */
         box-sizing: border-box;
-        /* Incluye padding y borde en el ancho total */
     }
 
     .carrusel-item img {
         width: 100%;
-        /* La imagen ocupa todo el ancho del item */
         height: auto;
-        /* Mantiene la proporción de la imagen */
         display: block;
         border-radius: 8px;
-        /* Bordes redondeados para la imagen */
     }
 
     .carrusel-caption {
@@ -55,8 +50,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: rgba(0, 0, 0, 0.5);
-        /* Fondo semitransparente para el texto */
+        background: rgba(0, 0, 0, 0.6); /* Fondo semitransparente para el texto */
         color: white;
         padding: 15px;
         text-align: center;
@@ -66,50 +60,41 @@
     .carrusel-buttons {
         position: absolute;
         top: 50%;
-        /* Centra verticalmente los botones */
         width: 100%;
         display: flex;
         justify-content: space-between;
-        /* Espacia los botones a los extremos */
         transform: translateY(-50%);
-        /* Ajuste fino para centrado vertical */
         padding: 0 10px;
         box-sizing: border-box;
     }
 
     .carrusel-button {
         background-color: rgba(0, 0, 0, 0.5);
-        /* Fondo semitransparente para los botones */
         color: white;
         border: none;
         padding: 10px 15px;
         cursor: pointer;
         border-radius: 50%;
-        /* Botones circulares */
         font-size: 1.5em;
         transition: background-color 0.3s;
-        /* Transición suave al pasar el mouse */
     }
 
     .carrusel-button:hover {
         background-color: rgba(0, 0, 0, 0.8);
-        /* Fondo más oscuro al pasar el mouse */
     }
 
     /* Estilos para el botón principal "Ver Lista de Torneos" */
     .btn-large {
         display: inline-block;
         background-color: #3498db;
-        /* Azul vibrante */
         color: white !important;
-        /* Texto blanco y visible por defecto */
         padding: 15px 30px;
         font-size: 1.5em;
         text-decoration: none;
         border-radius: 8px;
         transition: background-color 0.3s ease, transform 0.2s ease;
         margin-top: 30px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra ajustada */
         border: 2px solid #2980b9;
         min-width: 200px;
         text-align: center;
@@ -128,7 +113,7 @@
     }
 
     .index-content h2 {
-        color: #2c3e50;
+        color: #ADD8E6; /* Azul claro para los encabezados */
         font-size: 2.2em;
         margin-bottom: 15px;
     }
@@ -137,13 +122,13 @@
         font-size: 1.1em;
         line-height: 1.6;
         margin-bottom: 25px;
+        color: #e0e0e0; /* Asegura que el párrafo también sea claro */
     }
 
     /* Estilos para el logo principal en index.html */
     .index-logo {
         width: auto;
         max-width: 90%;
-        /* Ajustado para mayor flexibilidad */
         height: auto;
         margin: 0 auto 30px auto;
         display: block;
@@ -154,28 +139,29 @@
         margin-top: 30px;
         margin-bottom: 30px;
         text-align: center;
+        background-color: #2a2a2a; /* Fondo ligeramente más claro para la sección de redes */
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
     .social-links h3 {
-        color: #2c3e50;
+        color: #ADD8E6; /* Azul claro para el encabezado de redes */
         margin-bottom: 20px;
     }
 
     .social-item {
         display: inline-flex;
-        /* Usar inline-flex para alinear el icono y el texto */
         align-items: center;
-        /* Centrar verticalmente icono y texto */
         margin: 0 15px;
-        /* Espacio entre los enlaces */
         text-decoration: none;
-        color: #3498db;
+        color: #87CEEB; /* Azul cielo más claro para los enlaces de redes */
         font-weight: bold;
         transition: color 0.3s ease;
     }
 
     .social-item:hover {
-        color: #2980b9;
+        color: #6495ED; /* Azul rey en hover */
     }
 
     .social-icon {
@@ -183,14 +169,12 @@
         height: 50px;
         margin-right: 10px;
         border-radius: 50%;
-        /* Iconos circulares */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra ajustada */
     }
 
     .social-text {
         font-size: 1.1em;
     }
-
 
     /* --- Media Queries para Responsividad --- */
 
@@ -202,7 +186,6 @@
 
         .social-item {
             margin: 0 10px;
-            /* Menos espacio entre iconos en pantallas más pequeñas */
         }
     }
 
@@ -210,31 +193,26 @@
     @media (max-width: 768px) {
         .index-content {
             padding: 10px;
-            /* Reduce el padding del contenido principal */
         }
 
         .index-logo {
             max-width: 95%;
-            /* Da un poco más de espacio al logo */
             margin-top: 15px;
             margin-bottom: 20px;
         }
 
         .carrusel-container {
             margin-left: 5px;
-            /* Ajusta márgenes para evitar desbordamiento */
             margin-right: 5px;
         }
 
         .carrusel-caption {
             font-size: 0.9em;
-            /* Fuente más pequeña para los subtítulos */
             padding: 10px;
         }
 
         .carrusel-button {
             padding: 8px 12px;
-            /* Botones más pequeños */
             font-size: 1.2em;
         }
 
@@ -245,20 +223,16 @@
 
         .social-item {
             display: block;
-            /* Hace que los enlaces de redes sociales se apilen verticalmente */
             margin: 0 auto 10px auto;
-            /* Centra y añade margen inferior */
         }
 
         .social-icon {
             width: 40px;
-            /* Iconos de redes sociales más pequeños */
             height: 40px;
         }
 
         .social-text {
             font-size: 0.9em;
-            /* Texto más pequeño para enlaces de redes sociales */
         }
     }
 
@@ -266,7 +240,6 @@
     @media (max-width: 480px) {
         .index-content h2 {
             font-size: 1.8em;
-            /* Encabezado principal más pequeño */
         }
 
         .index-content p {
@@ -293,7 +266,7 @@
                 <img src="{% static imagen.imagen_estatica %}" alt="{{ imagen.titulo|default:'Imagen del carrusel' }}">
                 {% else %}
                 {# Opcional: una imagen por defecto para el carrusel si no tiene una estática #}
-                <img src="{% static 'images/default_carrusel_placeholder.png' %}" alt="Imagen por defecto del carrusel">
+                <img src="https://placehold.co/800x400/333333/FFFFFF?text=Imagen+por+defecto+del+carrusel" alt="Imagen por defecto del carrusel">
                 {% endif %}
             </div>
             {% endfor %}
@@ -352,24 +325,24 @@
                 <a href="https://www.twitch.tv/mechakuma34" target="_blank" aria-label="Síguenos en Twitch"
                     class="social-item">
                     <img src="{% static 'images/twitch_logo.png' %}" alt="Twitch" class="social-icon">
-                    <span class="social-text">MechAkuma</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                    <span class="social-text">mechakuma34</span> {# <-- ¡NUEVO: Texto visible! #} </a>
 
                         <a href="https://www.youtube.com/@mechakuma34" target="_blank" aria-label="Síguenos en Youtube"
                             class="social-item">
                             <img src="{% static 'images/youtube_logo.png' %}" alt="YouTube" class="social-icon">
-                            <span class="social-text">MechAkuma</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                            <span class="social-text">Mech-Akuma34</span> {# <-- ¡NUEVO: Texto visible! #} </a>
                         <a href="https://www.youtube.com/@fighterlatinos" target="_blank" aria-label="Síguenos en Youtube"
                             class="social-item">
                             <img src="{% static 'images/youtube_logo.png' %}" alt="YouTube" class="social-icon">
-                            <span class="social-text">Errenoob</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                            <span class="social-text">fighterlatinos</span> {# <-- ¡NUEVO: Texto visible! #} </a>
                         <a href="https://www.tiktok.com/@nostraxlive" target="_blank" aria-label="Síguenos en Youtube"
                             class="social-item">
                             <img src="{% static 'images/tiktok_logo.png' %}" alt="Tiktok" class="social-icon">
-                            <span class="social-text">Nostrax</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                            <span class="social-text">Nostrax Live</span> {# <-- ¡NUEVO: Texto visible! #} </a>
                         <a href="https://www.tiktok.com/@mechakuma" target="_blank" aria-label="Síguenos en Tiktok"
                             class="social-item">
                             <img src="{% static 'images/tiktok_logo.png' %}" alt="Tiktok" class="social-icon">
-                            <span class="social-text">MechAkuma</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                            <span class="social-text">mechakuma</span> {# <-- ¡NUEVO: Texto visible! #} </a>
                             {# Puedes añadir más iconos aquí si tienes Twitter, YouTube, etc. #}
     </div>
     {# --- FIN ENLACES DE REDES SOCIALES --- #}
