@@ -6,6 +6,7 @@
 {% block content %}
 <style>
     /* El body ya tiene el fondo negro desde base.html */
+    /* .page-wrapper tiene el fondo azul principal */
 
     /* Estilos para el contenedor de filtros */
     .filter-container {
@@ -54,13 +55,14 @@
 
     .filter-container button[type="submit"] {
         padding: 10px 20px;
-        background-color: #3498DB; /* Azul fuerte para el botón */
+        background-color: #3498DB; /* Azul vibrante para el botón */
         color: white;
         border: none;
         border-radius: 5px;
         font-size: 1em;
         cursor: pointer;
         transition: background-color 0.3s ease;
+        touch-action: manipulation;
     }
 
     .filter-container button[type="submit"]:hover {
@@ -76,6 +78,7 @@
         border-radius: 5px;
         font-size: 0.9em;
         transition: background-color 0.3s ease;
+        touch-action: manipulation;
     }
 
     .filter-container .reset-link:hover {
@@ -95,6 +98,7 @@
         transition: background-color 0.3s ease;
         border: none;
         cursor: pointer;
+        touch-action: manipulation;
     }
 
     .btn-back:hover {
@@ -177,6 +181,7 @@
         border-radius: 5px;
         transition: background-color 0.3s ease;
         font-weight: bold;
+        touch-action: manipulation;
     }
 
     .btn-detalle:hover {
@@ -201,14 +206,18 @@
         }
 
         .filter-container form {
-            flex-direction: column;
+            flex-direction: column; /* Apila los elementos del formulario */
         }
 
         .filter-container select,
         .filter-container input[type="number"],
         .filter-container button[type="submit"],
         .filter-container .reset-link {
-            width: 100%;
+            width: 100%; /* Hacen que ocupen todo el ancho disponible */
+        }
+
+        .torneo-card img {
+            height: 180px; /* Ajusta la altura de la imagen de la tarjeta */
         }
     }
 
@@ -216,13 +225,22 @@
     @media (max-width: 768px) {
         .filter-container,
         .torneos-container {
-            margin: 10px auto;
-            padding: 10px;
+            margin: 10px auto; /* Márgenes más pequeños */
+            padding: 10px; /* Padding más pequeño */
             gap: 15px;
         }
 
+        .btn-back {
+            width: 90%; /* Botón de volver más ancho */
+            margin: 15px auto 10px auto; /* Ajuste de margen para centrar */
+        }
+
+        .torneos-container {
+            grid-template-columns: 1fr; /* Una sola columna para las tarjetas */
+        }
+
         .torneo-card img {
-            height: 180px;
+            height: 150px; /* Altura de imagen más pequeña para móviles */
         }
 
         .torneo-info h3 {
@@ -239,10 +257,36 @@
         }
     }
 
-    /* Para pantallas extra pequeñas */
+    /* Para pantallas extra pequeñas (móviles pequeños) */
     @media (max-width: 480px) {
+        .filter-container select,
+        .filter-container input[type="number"],
+        .filter-container button[type="submit"],
+        .filter-container .reset-link {
+            font-size: 0.9em; /* Texto más pequeño en los filtros */
+            padding: 8px 12px;
+        }
+
+        .btn-back {
+            font-size: 0.9em; /* Texto de botón más pequeño */
+            padding: 8px 15px;
+        }
+
         .torneo-card img {
-            height: 150px;
+            height: 120px; /* Imágenes aún más pequeñas */
+        }
+
+        .torneo-info h3 {
+            font-size: 1.1em;
+        }
+
+        .torneo-info p {
+            font-size: 0.8em;
+        }
+
+        .btn-detalle {
+            font-size: 0.85em;
+            padding: 7px 12px;
         }
     }
 </style>

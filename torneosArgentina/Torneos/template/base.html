@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Street Fighter CE Argentina{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}"> {# <-- ¡Mantenemos tu referencia a styles.css! #}
+    {# OPCIONAL: Enlace a Font Awesome para iconos, si quieres usarlos #}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <style>
         /* Estilos globales para el body y la fuente */
@@ -41,6 +43,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
         }
 
         .logo {
@@ -49,10 +52,15 @@
             color: #87CEEB; /* Azul cielo claro para el logo/nombre */
             text-decoration: none;
             transition: color 0.3s ease;
+            margin-right: 20px; /* Espacio a la derecha del logo */
         }
 
         .logo:hover {
             color: #ADD8E6;
+        }
+
+        nav {
+            flex-grow: 1; /* Permite que la navegación ocupe el espacio restante */
         }
 
         nav ul {
@@ -61,6 +69,8 @@
             padding: 0;
             display: flex;
             gap: 25px; /* Espacio entre los elementos de navegación */
+            flex-wrap: wrap; /* Permite que los elementos de la lista se envuelvan */
+            justify-content: flex-end; /* Alinea los elementos a la derecha por defecto */
         }
 
         nav ul li a {
@@ -69,6 +79,7 @@
             font-weight: bold;
             font-size: 1.1em;
             transition: color 0.3s ease;
+            padding: 5px 0; /* Pequeño padding para el área de clic */
         }
 
         nav ul li a:hover {
@@ -92,7 +103,7 @@
             flex-grow: 1; /* Permite que el contenido principal ocupe el espacio disponible */
         }
 
-        /* Estilos de responsividad para el menú */
+        /* Estilos de responsividad */
         @media (max-width: 768px) {
             .page-wrapper {
                 margin: 0; /* Elimina el margen en móviles para que ocupe todo el ancho */
@@ -101,25 +112,52 @@
             }
 
             header {
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: column; /* Apila el logo y la nav */
+                align-items: center; /* Centra los ítems */
                 padding: 10px;
             }
 
+            .logo {
+                margin-bottom: 10px; /* Espacio debajo del logo */
+                margin-right: 0;
+            }
+
+            nav {
+                width: 100%; /* La navegación ocupa todo el ancho */
+            }
+
             nav ul {
-                flex-direction: column;
+                flex-direction: column; /* Apila los elementos de la lista */
                 width: 100%;
-                gap: 10px;
+                gap: 5px; /* Espacio más pequeño entre los elementos */
                 margin-top: 10px;
+                align-items: center; /* Centra los enlaces */
             }
 
             nav ul li {
-                width: 100%;
+                width: 100%; /* Cada enlace ocupa el 100% de ancho */
                 text-align: center;
+            }
+
+            nav ul li a {
+                padding: 8px 0; /* Mayor área de clic */
+                display: block; /* Para que el padding funcione en todo el ancho del li */
             }
 
             .container {
                 padding: 10px; /* Menor padding en móviles */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.5em; /* Logo un poco más pequeño en pantallas muy pequeñas */
+            }
+            nav ul li a {
+                font-size: 1em; /* Enlaces de nav un poco más pequeños */
+            }
+            footer p {
+                font-size: 0.9em;
             }
         }
     </style>
@@ -136,7 +174,7 @@
                     <li><a href="{% url 'lista_torneos' %}">Torneos</a></li>
                     {# Otros enlaces que puedas tener #}
                     <li><a href="#">Desafíos</a></li>
-                     <li><a href="https://wa.me/+5492216132252" target="_blank">Contacto</a></li> {# Cambia el número de teléfono aquí #}
+                    <li><a href="https://wa.me/+5492216132252" target="_blank">Contacto</a></li> {# Cambia el número de teléfono aquí #}
                 </ul>
             </nav>
         </header>

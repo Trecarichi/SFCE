@@ -6,6 +6,7 @@
 {% block content %}
 <style>
     /* El body ya tiene el fondo negro desde base.html */
+    /* .page-wrapper tiene el fondo azul principal */
 
     /* Estilos para el contenido principal (la "parte de adentro" azul) */
     .index-content {
@@ -14,8 +15,9 @@
         background-color: #0A1D37; /* Azul oscuro profundo */
         border-radius: 8px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
-        margin: 20px auto; /* Centra el contenido, dejando los bordes negros */
-        max-width: 90%; /* Ajuste para que se vea bien en pantallas grandes */
+        /* Margin automático para centrar. El page-wrapper ya gestiona los bordes negros */
+        margin: 0 auto; 
+        max-width: 100%; /* Asegura que ocupe todo el ancho disponible dentro del page-wrapper */
         color: #E0EBF5; /* Color de texto general claro para esta sección */
     }
 
@@ -23,7 +25,7 @@
     .carrusel-container {
         position: relative;
         width: 100%;
-        max-width: 800px;
+        max-width: 800px; /* Se mantiene para escritorio, en móvil se ajusta */
         margin: 20px auto;
         overflow: hidden;
         border-radius: 8px;
@@ -43,7 +45,7 @@
 
     .carrusel-item img {
         width: 100%;
-        height: auto;
+        height: auto; /* Mantener altura automática para relación de aspecto */
         display: block;
         border-radius: 8px;
     }
@@ -80,6 +82,7 @@
         border-radius: 50%;
         font-size: 1.5em;
         transition: background-color 0.3s;
+        touch-action: manipulation; /* Mejora la respuesta táctil */
     }
 
     .carrusel-button:hover {
@@ -102,6 +105,7 @@
         min-width: 200px;
         text-align: center;
         cursor: pointer;
+        touch-action: manipulation;
     }
 
     .btn-large:hover {
@@ -151,11 +155,12 @@
         display: inline-flex;
         flex-direction: column; /* Organiza ícono y texto en columna */
         align-items: center;
-        margin: 0 15px;
+        margin: 0 15px; /* Espacio entre los elementos sociales */
         text-decoration: none;
-        color: #E0EBF5; /* ¡CORRECCIÓN AQUÍ! Color de texto claro para los enlaces de redes */
+        color: #E0EBF5; /* Color de texto claro para los enlaces de redes */
         font-weight: bold;
         transition: color 0.3s ease;
+        touch-action: manipulation;
     }
 
     .social-item:hover {
@@ -173,6 +178,10 @@
     .social-text {
         font-size: 0.9em;
         text-align: center;
+        white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+        overflow: hidden;
+        text-overflow: ellipsis; /* Añade puntos suspensivos si el texto es demasiado largo */
+        max-width: 100px; /* Limita el ancho del texto del canal */
     }
 
     /* --- Media Queries para Responsividad --- */
@@ -181,12 +190,15 @@
         .index-content h2 {
             font-size: 2em;
         }
+        .social-item {
+            margin: 0 10px; /* Ajusta márgenes para pantallas medianas */
+        }
     }
 
     @media (max-width: 768px) {
         .index-content {
-            padding: 10px;
-            margin: 10px auto;
+            padding: 15px; /* Ajusta padding para móviles */
+            margin: 0 auto; /* Ocupa todo el ancho del page-wrapper */
         }
 
         .index-logo {
@@ -196,52 +208,84 @@
         }
 
         .carrusel-container {
-            margin-left: 5px;
-            margin-right: 5px;
+            margin-left: 0;
+            margin-right: 0;
+            border-radius: 0; /* Sin bordes redondeados en vista móvil */
+            box-shadow: none; /* Sin sombra en vista móvil */
         }
 
         .carrusel-caption {
-            font-size: 0.9em;
-            padding: 10px;
+            font-size: 0.85em; /* Texto de carrusel más pequeño */
+            padding: 8px;
         }
 
         .carrusel-button {
-            padding: 8px 12px;
-            font-size: 1.2em;
+            padding: 6px 10px; /* Botones más pequeños */
+            font-size: 1.1em;
         }
 
         .btn-large {
-            padding: 10px 20px;
+            padding: 12px 25px; /* Botón principal un poco más pequeño */
             font-size: 1.2em;
+            width: 90%; /* Hace el botón casi de ancho completo */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .index-content h2 {
+            font-size: 1.8em; /* Encabezado más pequeño */
+        }
+
+        .index-content p {
+            font-size: 1em; /* Párrafos un poco más pequeños */
+        }
+
+        .social-links {
+            padding: 15px; /* Reduce padding de redes sociales */
         }
 
         .social-item {
-            display: inline-flex; /* Vuelven a ser inline-flex para móviles para permitir más en una fila */
-            margin: 10px 5px; /* Ajusta márgenes para espacio entre ellos */
+            /* Vuelven a ser inline-flex para permitir más en una fila */
+            display: inline-flex;
+            margin: 8px 5px; /* Ajusta márgenes para espacio entre ellos */
         }
 
         .social-icon {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 5px;
+            width: 35px; /* Iconos más pequeños */
+            height: 35px;
+            margin-bottom: 4px;
         }
 
         .social-text {
-            font-size: 0.8em;
+            font-size: 0.75em; /* Texto de canal más pequeño */
+            max-width: 80px; /* Limita el ancho del texto del canal para evitar desbordamientos */
         }
     }
 
     @media (max-width: 480px) {
         .index-content h2 {
-            font-size: 1.8em;
+            font-size: 1.5em; /* Encabezado aún más pequeño */
         }
 
         .index-content p {
-            font-size: 1em;
+            font-size: 0.95em; /* Párrafos aún más pequeños */
+        }
+
+        .btn-large {
+            font-size: 1.1em; /* Botón principal un poco más pequeño */
+            padding: 10px 20px;
         }
 
         .social-item {
-             margin: 8px 3px;
+             margin: 5px 3px; /* Más compacto en pantallas muy pequeñas */
+        }
+        .social-icon {
+            width: 30px; /* Iconos muy pequeños */
+            height: 30px;
+        }
+        .social-text {
+            font-size: 0.7em; /* Texto de canal muy pequeño */
+            max-width: 60px;
         }
     }
 </style>
@@ -287,6 +331,26 @@
                 const itemWidth = carruselItems[0] ? carruselItems[0].clientWidth : 0;
                 carruselInner.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
             }
+
+            // Añadir soporte para eventos táctiles para el carrusel
+            let touchStartX = 0;
+            carruselInner.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+            });
+
+            carruselInner.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].clientX;
+                const deltaX = touchEndX - touchStartX;
+
+                if (deltaX > 50) { // Deslizar a la derecha (anterior)
+                    currentIndex = (currentIndex - 1 + carruselItems.length) % carruselItems.length;
+                    updateCarrusel();
+                } else if (deltaX < -50) { // Deslizar a la izquierda (siguiente)
+                    currentIndex = (currentIndex + 1) % carruselItems.length;
+                    updateCarrusel();
+                }
+            });
+
 
             if (prevBtn && nextBtn) {
                 nextBtn.addEventListener('click', () => {
@@ -349,6 +413,7 @@
     {# --- FIN ENLACES DE REDES SOCIALES --- #}
 
     <p>Explora nuestros torneos y descubre más sobre la escena de los juegos de lucha.</p>
+    <a href="{% url 'lista_torneos' %}" class="btn-large">Ver Lista de Torneos</a>
     
 </div>
 

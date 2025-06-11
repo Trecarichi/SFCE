@@ -6,6 +6,7 @@
 {% block content %}
 <style>
     /* El body ya tiene el fondo negro desde base.html */
+    /* .page-wrapper tiene el fondo azul principal */
 
     /* Estilos generales para el contenedor de detalles */
     .torneo-detail-container {
@@ -90,6 +91,7 @@
     .clickable-image {
         cursor: pointer;
         transition: transform 0.2s ease-in-out;
+        touch-action: manipulation;
     }
     .clickable-image:hover {
         transform: scale(1.02); /* Pequeño zoom al pasar el ratón */
@@ -185,6 +187,7 @@
         text-decoration: none;
         border-radius: 5px;
         transition: background-color 0.3s ease;
+        touch-action: manipulation;
     }
 
     .link-transmision:hover {
@@ -196,7 +199,7 @@
         color: #E0EBF5; /* Texto claro */
         font-style: italic;
         padding: 20px;
-        background-color: #1A3258; /* Fondo similar al carrusel */
+        background-color: #1A3258; /* Fondo similar al contenedor principal */
         border-radius: 8px;
     }
 
@@ -212,6 +215,7 @@
         transition: background-color 0.3s ease;
         border: none;
         cursor: pointer;
+        touch-action: manipulation;
     }
 
     .btn-back:hover {
@@ -220,36 +224,55 @@
 
     /* --- ESTILOS RESPONSIVOS --- */
 
-    /* Pantallas pequeñas (dispositivos móviles) */
+    /* Para pantallas medianas (tablets) */
+    @media screen and (max-width: 992px) {
+        .torneo-detail-container {
+            margin: 15px auto; /* Ajuste de margen */
+            padding: 15px; /* Ajuste de padding */
+        }
+        .gallery-grid,
+        .ediciones-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Más espacio para columnas */
+            gap: 15px;
+        }
+        .gallery-image,
+        .edicion-image-wrapper {
+            height: 180px;
+        }
+    }
+
+    /* Para pantallas pequeñas (móviles) */
     @media screen and (max-width: 768px) {
         .torneo-detail-container {
-            margin: 10px;
-            padding: 15px;
-            border-radius: 5px;
+            margin: 10px auto; /* Márgenes más pequeños */
+            padding: 10px; /* Padding más pequeño */
+            border-radius: 0; /* Sin bordes redondeados */
+            box-shadow: none; /* Sin sombra */
         }
 
         .torneo-detail-container h2 {
-            font-size: 1.8em;
+            font-size: 1.8em; /* Tamaño de encabezado más pequeño */
         }
 
-        .detail-info-block {
-            padding: 10px;
+        .detail-info-block,
+        .additional-images-gallery,
+        .ediciones-container {
+            padding: 15px; /* Reducir padding de secciones */
         }
 
         .gallery-grid,
         .ediciones-grid {
-            /* Fuerza un diseño de una sola columna en pantallas más pequeñas */
-            grid-template-columns: 1fr;
-            gap: 10px;
+            grid-template-columns: 1fr; /* Una sola columna para grids */
+            gap: 10px; /* Espacio más pequeño */
         }
 
         .gallery-image,
         .edicion-image-wrapper {
-            height: 180px; /* Ajusta la altura para móviles */
+            height: 150px; /* Altura de imagen más pequeña */
         }
 
         .edicion-content {
-            padding: 10px;
+            padding: 10px; /* Reduce padding de contenido de edición */
         }
 
         .edicion-content h4 {
@@ -260,26 +283,36 @@
             font-size: 0.9em;
         }
 
+        .link-transmision, .btn-back {
+            padding: 10px 20px; /* Botones más grandes para dedos */
+            font-size: 1em;
+            width: 90%; /* Ancho completo */
+            margin-left: auto;
+            margin-right: auto;
+        }
         .btn-back {
-            width: 100%; /* Botones de ancho completo */
-            margin-top: 10px;
-            margin-left: 0 !important; /* Anula el margen para apilar */
+             margin-top: 15px; /* Ajuste de margen para el botón de volver */
         }
     }
 
-    /* Pantallas extra pequeñas (ej. teléfonos antiguos o viewports estrechos) */
+    /* Para pantallas extra pequeñas (móviles muy pequeños) */
     @media screen and (max-width: 480px) {
         .torneo-detail-container h2 {
             font-size: 1.5em;
         }
 
-        .detail-info-block p {
-            font-size: 0.9em;
+        .detail-info-block p, .gallery-description, .edicion-content p, .edicion-resumen {
+            font-size: 0.85em; /* Texto más pequeño */
         }
 
         .gallery-image,
         .edicion-image-wrapper {
-            height: 150px; /* Reduce aún más la altura de la imagen en pantallas muy pequeñas */
+            height: 120px; /* Imágenes aún más pequeñas */
+        }
+
+        .link-transmision, .btn-back {
+            padding: 8px 15px; /* Botones aún más pequeños */
+            font-size: 0.9em;
         }
     }
 
@@ -344,6 +377,7 @@
         transition: 0.3s;
         cursor: pointer;
         z-index: 1001; /* Asegura que esté por encima de la imagen del modal */
+        touch-action: manipulation;
     }
 
     .close-button:hover,
@@ -377,6 +411,14 @@
             width: 95%; /* Usar un porcentaje más alto */
             max-width: 95%;
             max-height: 85vh; /* Ajustar altura para móvil */
+        }
+        .modal-caption {
+            font-size: 1em; /* Texto de caption más pequeño */
+        }
+        .close-button {
+            font-size: 40px; /* Botón de cerrar más pequeño */
+            top: 10px;
+            right: 15px;
         }
     }
 </style>
@@ -477,7 +519,7 @@
     </div>
     {# --- FIN DE SECCIÓN DE EDICIONES --- #}
 
-    <button onclick="history.back()" class="btn-back">← Volver</button>
+    <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a>
 </div>
 
 {# MODAL DE IMAGEN (oculto por defecto) #}
@@ -535,6 +577,5 @@
         }
     });
 </script>
-
 
 {% endblock %}
