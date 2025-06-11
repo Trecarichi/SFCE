@@ -12,28 +12,26 @@
     {% if torneo.imagen_estatica %}
     <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
     {% else %}
-    <img src="https://placehold.co/800x450/cccccc/333333?text=Imagen+no+disponible" alt="Imagen no disponible"
-        class="torneo-detail-image">
+    <img src="https://placehold.co/800x450/cccccc/333333?text=Imagen+no+disponible" alt="Imagen no disponible" class="torneo-detail-image">
     {% endif %}
 
     {# SECCIÓN PARA IMÁGENES ADICIONALES #}
     {% with torneo.imagenes_adicionales.all as imagenes_adicionales %}
     {% if imagenes_adicionales %}
-    <div class="additional-images-gallery">
-        <h3>Galería de Imágenes</h3>
-        <div class="gallery-grid">
-            {% for img_adic in imagenes_adicionales %}
-            <div class="gallery-item">
-                {# Añadir data-src para la URL de la imagen en grande, útil para el zoom #}
-                <img src="{% static img_adic.imagen_estatica %}" data-src="{% static img_adic.imagen_estatica %}"
-                    alt="{{ img_adic.descripcion|default:'Imagen adicional' }}" class="gallery-image clickable-image">
-                {% if img_adic.descripcion %}
-                <p class="gallery-description">{{ img_adic.descripcion }}</p>
-                {% endif %}
+        <div class="additional-images-gallery">
+            <h3>Galería de Imágenes</h3>
+            <div class="gallery-grid">
+                {% for img_adic in imagenes_adicionales %}
+                    <div class="gallery-item">
+                        {# El alt attribute ahora usa solo la descripción si existe, de lo contrario está vacío #}
+                        <img src="{% static img_adic.imagen_estatica %}" data-src="{% static img_adic.imagen_estatica %}" alt="{{ img_adic.descripcion|default:'' }}" class="gallery-image clickable-image">
+                        {% if img_adic.descripcion %}
+                            <p class="gallery-description">{{ img_adic.descripcion }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-    </div>
     {% endif %}
     {% endwith %}
     {# FIN DE SECCIÓN PARA IMÁGENES ADICIONALES #}
@@ -55,59 +53,56 @@
         <h2>Ediciones</h2>
         {% with torneo.informacion_por_anio.all as ediciones %}
         {% if ediciones %}
-        <div class="ediciones-grid">
-            {% for info_anio in ediciones %}
-            <div class="edicion-card">
-                {% if info_anio.imagen_edicion_estatica %}
-                <div class="edicion-image-wrapper">
-                    <img src="{% static info_anio.imagen_edicion_estatica %}"
-                        alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
-                </div>
-                {% else %}
-                <div class="edicion-image-wrapper">
-                    <img src="https://placehold.co/300x200/eeeeee/333333?text=Edición+{{ info_anio.anio }}"
-                        alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
-                </div>
-                {% endif %}
-                <div class="edicion-content">
-                    <h4>Edición: {{ info_anio.anio }}</h4>
-                    {% if info_anio.fecha_exacta %}
-                    <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
+            <div class="ediciones-grid">
+                {% for info_anio in ediciones %}
+                <div class="edicion-card">
+                    {% if info_anio.imagen_edicion_estatica %}
+                        <div class="edicion-image-wrapper">
+                            <img src="{% static info_anio.imagen_edicion_estatica %}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
+                        </div>
+                    {% else %}
+                        <div class="edicion-image-wrapper">
+                            <img src="https://placehold.co/300x200/eeeeee/333333?text=Edición+{{ info_anio.anio }}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
+                        </div>
                     {% endif %}
-                    {% if info_anio.ubicacion_especifica %}
-                    <p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}</p>
-                    {% endif %}
-                    <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
-                    {% if info_anio.subcampeon %}
-                    <p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>
-                    {% endif %}
-                    {% if info_anio.participantes_cantidad %}
-                    <p><strong>Participantes:</strong> {{ info_anio.participantes_cantidad }}</p>
-                    {% endif %}
-                    {% if info_anio.resumen %}
-                    <div class="edicion-resumen">
-                        <p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>
+                    <div class="edicion-content">
+                        <h4>Edición: {{ info_anio.anio }}</h4>
+                        {% if info_anio.fecha_exacta %}
+                        <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
+                        {% endif %}
+                        {% if info_anio.ubicacion_especifica %}
+                        <p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}</p>
+                        {% endif %}
+                        <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
+                        {% if info_anio.subcampeon %}
+                        <p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>
+                        {% endif %}
+                        {% if info_anio.participantes_cantidad %}
+                        <p><strong>Participantes:</strong> {{ info_anio.participantes_cantidad }}</p>
+                        {% endif %}
+                        {% if info_anio.resumen %}
+                        <div class="edicion-resumen">
+                            <p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>
+                        </div>
+                        {% endif %}
+                        {% if info_anio.link_transmision %}
+                        <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer" class="link-transmision">
+                            Ver Transmisión
+                        </a>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                    {% if info_anio.link_transmision %}
-                    <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer"
-                        class="link-transmision">
-                        Ver Transmisión
-                    </a>
-                    {% endif %}
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
         {% else %}
-        <p class="no-data-message">No hay información de ediciones disponible para este torneo aún.</p>
+            <p class="no-data-message">No hay información de ediciones disponible para este torneo aún.</p>
         {% endif %}
         {% endwith %}
     </div>
     {# --- FIN DE SECCIÓN DE EDICIONES --- #}
 
+    {# Se ha eliminado el botón 'Volver' con history.back() para dejar solo el que va a la lista de torneos #}
     <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a>
-    <button onclick="history.back()" class="btn-back">← Volver</button>
 </div>
 
 {# MODAL DE IMAGEN (oculto por defecto) #}
@@ -166,51 +161,41 @@
         padding: 20px;
         background-color: #f9f9f9;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-
     .additional-images-gallery h3 {
         text-align: center;
         margin-bottom: 20px;
         color: #2c3e50;
     }
-
     .gallery-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 15px;
     }
-
     .gallery-item {
         border: 1px solid #ddd;
         border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         transition: transform 0.2s ease-in-out;
     }
-
     .gallery-item:hover {
         transform: translateY(-5px);
     }
-
     .gallery-image {
         width: 100%;
-        height: 200px;
-        /* Altura fija para consistencia */
-        object-fit: cover;
-        /* Recorta la imagen para que quepa */
+        height: 200px; /* Altura fija para consistencia */
+        object-fit: cover; /* Recorta la imagen para que quepa */
         display: block;
     }
-
     /* Estilo para imágenes clickables en la galería */
     .clickable-image {
         cursor: pointer;
         transition: transform 0.2s ease-in-out;
     }
-
     .clickable-image:hover {
-        transform: scale(1.02);
-        /* Pequeño zoom al pasar el ratón */
+        transform: scale(1.02); /* Pequeño zoom al pasar el ratón */
     }
 
     .gallery-description {
@@ -256,16 +241,14 @@
 
     .edicion-image-wrapper {
         width: 100%;
-        height: 200px;
-        /* Altura fija para consistencia */
+        height: 200px; /* Altura fija para consistencia */
         overflow: hidden;
     }
 
     .edicion-image {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        /* Asegura que las imágenes cubran el área sin distorsión */
+        object-fit: cover; /* Asegura que las imágenes cubran el área sin distorsión */
         display: block;
     }
 
@@ -326,14 +309,11 @@
         text-decoration: none;
         border-radius: 5px;
         transition: background-color 0.3s ease;
-        border: none;
-        /* Para el elemento button */
-        cursor: pointer;
-        /* Para el elemento button */
+        border: none; /* Para el elemento button, aunque aquí es un <a> */
+        cursor: pointer; /* Para el elemento <a> */
     }
 
-    .btn-back+.btn-back {
-        /* Agrega espacio entre botones */
+    .btn-back + .btn-back { /* Esto se mantiene aunque ahora solo haya uno, no afecta */
         margin-left: 10px;
     }
 
@@ -368,8 +348,7 @@
 
         .gallery-image,
         .edicion-image-wrapper {
-            height: 180px;
-            /* Ajusta la altura para móviles */
+            height: 180px; /* Ajusta la altura para móviles */
         }
 
         .edicion-content {
@@ -385,11 +364,9 @@
         }
 
         .btn-back {
-            width: 100%;
-            /* Botones de ancho completo */
+            width: 100%; /* Botones de ancho completo */
             margin-top: 10px;
-            margin-left: 0 !important;
-            /* Anula el margen para apilar */
+            margin-left: 0 !important; /* Anula el margen para apilar */
         }
     }
 
@@ -405,102 +382,71 @@
 
         .gallery-image,
         .edicion-image-wrapper {
-            height: 150px;
-            /* Reduce aún más la altura de la imagen en pantallas muy pequeñas */
+            height: 150px; /* Reduce aún más la altura de la imagen en pantallas muy pequeñas */
         }
     }
 
     /* --- ESTILOS DEL MODAL (AJUSTES PARA OCULTAR 'x' inicial y CENTRAR) --- */
-    #imageModal {
-        /* Usar ID para mayor especificidad y asegurar ocultamiento */
-        visibility: hidden;
-        /* Oculto por defecto */
-        opacity: 0;
-        /* Completamente transparente por defecto */
-        pointer-events: none;
-        /* No interactuable cuando está oculto */
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-        /* Transición suave */
+    #imageModal { /* Usar ID para mayor especificidad y asegurar ocultamiento */
+        visibility: hidden; /* Oculto por defecto */
+        opacity: 0;        /* Completamente transparente por defecto */
+        pointer-events: none; /* No interactuable cuando está oculto */
+        transition: opacity 0.3s ease, visibility 0.3s ease; /* Transición suave */
 
-        position: fixed;
-        /* Permanece en su lugar en el viewport */
-        z-index: 1000;
-        /* Se superpone a todo */
+        position: fixed; /* Permanece en su lugar en el viewport */
+        z-index: 1000; /* Se superpone a todo */
         left: 0;
         top: 0;
-        width: 100%;
-        /* Ancho completo */
-        height: 100%;
-        /* Altura completa */
-        background-color: rgba(0, 0, 0, 0.9);
-        /* Fondo negro semitransparente */
+        width: 100%; /* Ancho completo */
+        height: 100%; /* Altura completa */
+        background-color: rgba(0,0,0,0.9); /* Fondo negro semitransparente */
 
         /* Propiedades para CENTRADO FLEXBOX (solo aplican cuando visibility es visible) */
-        display: flex;
-        /* Mantener flexbox para centrado, ocultado por visibility/opacity */
-        align-items: center;
-        /* Centrar verticalmente */
-        justify-content: center;
-        /* Centrar horizontalmente */
+        display: flex; /* Mantener flexbox para centrado, ocultado por visibility/opacity */
+        align-items: center; /* Centrar verticalmente */
+        justify-content: center; /* Centrar horizontalmente */
     }
 
     /* Clase que JavaScript añadirá para mostrar el modal */
     #imageModal.is-visible {
         visibility: visible;
         opacity: 1;
-        pointer-events: auto;
-        /* Permite interacciones cuando es visible */
+        pointer-events: auto; /* Permite interacciones cuando es visible */
     }
 
     .modal-content {
-        display: block;
-        /* Asegurarse de que es un bloque */
-        max-width: 90%;
-        /* Limitar el tamaño de la imagen */
-        max-height: 90vh;
-        /* Limitar la altura de la imagen al 90% del viewport height */
-        object-fit: contain;
-        /* Asegura que la imagen se ajuste sin recortarse */
+        display: block; /* Asegurarse de que es un bloque */
+        max-width: 90%; /* Limitar el tamaño de la imagen */
+        max-height: 90vh; /* Limitar la altura de la imagen al 90% del viewport height */
+        object-fit: contain; /* Asegura que la imagen se ajuste sin recortarse */
         border-radius: 8px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
     }
 
     .modal-caption {
-        position: absolute;
-        /* Posicionado absolutamente dentro del modal */
-        bottom: 5vh;
-        /* Se ubica a 5% del alto del viewport desde abajo */
+        position: absolute; /* Posicionado absolutamente dentro del modal */
+        bottom: 5vh; /* Se ubica a 5% del alto del viewport desde abajo */
         left: 0;
-        width: 100%;
-        /* Ancho completo */
+        width: 100%; /* Ancho completo */
         text-align: center;
         color: #ccc;
         padding: 10px 0;
-        font-size: 1.2em;
-        /* Tamaño de fuente más visible */
-        background-color: rgba(0, 0, 0, 0.5);
-        /* Fondo semitransparente para legibilidad */
-        box-sizing: border-box;
-        /* Incluye padding en el ancho total */
+        font-size: 1.2em; /* Tamaño de fuente más visible */
+        background-color: rgba(0,0,0,0.5); /* Fondo semitransparente para legibilidad */
+        box-sizing: border-box; /* Incluye padding en el ancho total */
     }
 
     /* Botón de cerrar */
     .close-button {
-        position: absolute;
-        /* Posicionado absolutamente dentro del modal */
-        top: 15px;
-        /* Margen desde arriba */
-        right: 25px;
-        /* Margen desde la derecha */
-        color: #fff;
-        /* Color blanco para contraste */
-        font-size: 50px;
-        /* Tamaño más grande para facilidad de toque */
+        position: absolute; /* Posicionado absolutamente dentro del modal */
+        top: 15px; /* Margen desde arriba */
+        right: 25px; /* Margen desde la derecha */
+        color: #fff; /* Color blanco para contraste */
+        font-size: 50px; /* Tamaño más grande para facilidad de toque */
         font-weight: bold;
         transition: 0.3s;
         cursor: pointer;
-        z-index: 1001;
-        /* Asegura que esté por encima de la imagen del modal */
+        z-index: 1001; /* Asegura que esté por encima de la imagen del modal */
     }
 
     .close-button:hover,
@@ -511,8 +457,7 @@
     }
 
     /* Animación del modal */
-    .modal-content,
-    #caption {
+    .modal-content, #caption {
         -webkit-animation-name: zoom;
         -webkit-animation-duration: 0.6s;
         animation-name: zoom;
@@ -520,39 +465,27 @@
     }
 
     @-webkit-keyframes zoom {
-        from {
-            -webkit-transform: scale(0)
-        }
-
-        to {
-            -webkit-transform: scale(1)
-        }
+        from {-webkit-transform:scale(0)}
+        to {-webkit-transform:scale(1)}
     }
 
     @keyframes zoom {
-        from {
-            transform: scale(0)
-        }
-
-        to {
-            transform: scale(1)
-        }
+        from {transform:scale(0)}
+        to {transform:scale(1)}
     }
 
     /* Responsive para el modal en pantallas muy pequeñas */
-    @media only screen and (max-width: 700px) {
+    @media only screen and (max-width: 700px){
         .modal-content {
-            width: 95%;
-            /* Usar un porcentaje más alto */
+            width: 95%; /* Usar un porcentaje más alto */
             max-width: 95%;
-            max-height: 85vh;
-            /* Ajustar altura para móvil */
+            max-height: 85vh; /* Ajustar altura para móvil */
         }
     }
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Obtener elementos del DOM relacionados con el modal
         var modal = document.getElementById("imageModal");
         var modalImg = document.getElementById("modalImage");
@@ -563,25 +496,38 @@
         var galleryImages = document.querySelectorAll(".gallery-image.clickable-image");
 
         // Asignar un evento de clic a cada imagen de la galería
-        galleryImages.forEach(function (img) {
-            img.onclick = function () {
+        galleryImages.forEach(function(img) {
+            img.onclick = function(){
                 modal.classList.add('is-visible'); // Añadir clase para mostrar el modal
                 // Establecer la fuente de la imagen del modal: primero intenta con data-src, si no, usa src
                 modalImg.src = this.dataset.src || this.src;
-                // Establecer el texto del pie de foto con el atributo 'alt' de la imagen
-                captionText.innerHTML = this.alt;
+                
+                // --- Lógica para el texto del pie de foto ---
+                var altText = this.alt;
+                if (altText && altText.trim() !== '') { // Si el alt text existe y no está vacío/solo espacios
+                    captionText.innerHTML = altText;
+                    captionText.style.display = 'block'; // Asegurarse de que el pie de foto se muestre
+                } else {
+                    captionText.innerHTML = '';
+                    captionText.style.display = 'none'; // Ocultar el pie de foto si no hay texto
+                }
+                // --- FIN Lógica ---
             }
         });
 
         // Cuando se hace clic en el botón de cerrar
-        closeButton.onclick = function () {
+        closeButton.onclick = function() {
             modal.classList.remove('is-visible'); // Remover clase para ocultar el modal
+            captionText.innerHTML = ''; // Limpiar el texto del pie de foto al cerrar
+            captionText.style.display = 'none'; // Ocultar el pie de foto al cerrar
         }
 
         // Cuando el usuario hace clic fuera de la imagen (en el overlay del modal)
-        modal.onclick = function (event) {
+        modal.onclick = function(event) {
             if (event.target === modal) { // Si el clic fue directamente en el fondo del modal (no en la imagen)
                 modal.classList.remove('is-visible'); // Remover clase para ocultar el modal
+                captionText.innerHTML = ''; // Limpiar el texto del pie de foto al cerrar
+                captionText.style.display = 'none'; // Ocultar el pie de foto al cerrar
             }
         }
     });
