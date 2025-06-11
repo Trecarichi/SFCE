@@ -12,8 +12,19 @@
 
     /* Estilos para el cuerpo de la página (fondo oscuro) */
     body {
-        background-color: #1a1a1a; /* Fondo gris muy oscuro */
+        background-color: #121212; /* Un gris muy oscuro, casi negro */
         color: #e0e0e0; /* Color de texto general claro para contraste */
+    }
+
+    /* Estilos para el contenido principal (la "parte de adentro") */
+    .index-content {
+        text-align: center;
+        padding: 20px;
+        background-color: #1a1a1a; /* Fondo oscuro para la sección principal */
+        border-radius: 8px; /* Bordes redondeados para el contenedor principal */
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Sombra sutil para darle profundidad */
+        margin: 20px auto; /* Centra el contenido y añade margen */
+        max-width: 90%; /* Ancho máximo para que no ocupe todo el espacio en pantallas grandes */
     }
 
     /* Estilos para el carrusel */
@@ -24,8 +35,8 @@
         margin: 20px auto;
         overflow: hidden;
         border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra ajustada para fondo oscuro */
-        background-color: #2a2a2a; /* Fondo ligeramente más claro para el carrusel */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Sombra ajustada para fondo oscuro */
+        background-color: #242424; /* Fondo ligeramente más claro para el carrusel */
     }
 
     .carrusel-inner {
@@ -69,7 +80,7 @@
     }
 
     .carrusel-button {
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.6); /* Botones más oscuros y semitransparentes */
         color: white;
         border: none;
         padding: 10px 15px;
@@ -80,7 +91,7 @@
     }
 
     .carrusel-button:hover {
-        background-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba(0, 0, 0, 0.9);
     }
 
     /* Estilos para el botón principal "Ver Lista de Torneos" */
@@ -94,7 +105,7 @@
         border-radius: 8px;
         transition: background-color 0.3s ease, transform 0.2s ease;
         margin-top: 30px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra ajustada */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra ajustada */
         border: 2px solid #2980b9;
         min-width: 200px;
         text-align: center;
@@ -106,14 +117,8 @@
         transform: translateY(-2px);
     }
 
-    /* Estilos para el contenido general de la página de inicio */
-    .index-content {
-        text-align: center;
-        padding: 20px;
-    }
-
     .index-content h2 {
-        color: #ADD8E6; /* Azul claro para los encabezados */
+        color: #64B5F6; /* Azul más vibrante para los encabezados */
         font-size: 2.2em;
         margin-bottom: 15px;
     }
@@ -122,7 +127,7 @@
         font-size: 1.1em;
         line-height: 1.6;
         margin-bottom: 25px;
-        color: #e0e0e0; /* Asegura que el párrafo también sea claro */
+        color: #B0BEC5; /* Gris azulado para los párrafos */
     }
 
     /* Estilos para el logo principal en index.html */
@@ -139,14 +144,14 @@
         margin-top: 30px;
         margin-bottom: 30px;
         text-align: center;
-        background-color: #2a2a2a; /* Fondo ligeramente más claro para la sección de redes */
+        background-color: #242424; /* Fondo ligeramente más claro para la sección de redes */
         padding: 20px;
         border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
 
     .social-links h3 {
-        color: #ADD8E6; /* Azul claro para el encabezado de redes */
+        color: #64B5F6; /* Azul más vibrante para el encabezado de redes */
         margin-bottom: 20px;
     }
 
@@ -155,13 +160,13 @@
         align-items: center;
         margin: 0 15px;
         text-decoration: none;
-        color: #87CEEB; /* Azul cielo más claro para los enlaces de redes */
+        color: #90CAF9; /* Azul claro para los enlaces de redes */
         font-weight: bold;
         transition: color 0.3s ease;
     }
 
     .social-item:hover {
-        color: #6495ED; /* Azul rey en hover */
+        color: #42A5F5; /* Azul medio en hover */
     }
 
     .social-icon {
@@ -193,6 +198,7 @@
     @media (max-width: 768px) {
         .index-content {
             padding: 10px;
+            margin: 10px auto; /* Ajusta márgenes para pantallas pequeñas */
         }
 
         .index-logo {
