@@ -12,28 +12,32 @@
     {% if torneo.imagen_estatica %}
     <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
     {% else %}
-    <img src="https://placehold.co/800x450/cccccc/333333?text=Imagen+no+disponible" alt="Imagen no disponible" class="torneo-detail-image">
+    <img src="https://placehold.co/800x450/cccccc/333333?text=Imagen+no+disponible" alt="Imagen no disponible"
+        class="torneo-detail-image">
     {% endif %}
 
     {# SECCIÓN PARA IMÁGENES ADICIONALES #}
     {% with torneo.imagenes_adicionales.all as imagenes_adicionales %}
     {% if imagenes_adicionales %}
-        <div class="additional-images-gallery">
-            <h3>Galería de Imágenes</h3>
-            <div class="gallery-grid">
-                {% for img_adic in imagenes_adicionales %}
-                    <div class="gallery-item">
-                        <img src="{% static img_adic.imagen_estatica %}" alt="{{ img_adic.descripcion|default:'Imagen adicional' }}" class="gallery-image">
-                        {% if img_adic.descripcion %}
-                            <p class="gallery-description">{{ img_adic.descripcion }}</p>
-                        {% endif %}
-                    </div>
-                {% endfor %}
+    <div class="additional-images-gallery">
+        <h3>Galería de Imágenes</h3>
+        <div class="gallery-grid">
+            {% for img_adic in imagenes_adicionales %}
+            <div class="gallery-item">
+                {# Añadir data-src para el zoom #}
+                <img src="{% static img_adic.imagen_estatica %}" data-src="{% static img_adic.imagen_estatica %}"
+                    alt="{{ img_adic.descripcion|default:'Imagen adicional' }}" class="gallery-image clickable-image">
+                {% if img_adic.descripcion %}
+                <p class="gallery-description">{{ img_adic.descripcion }}</p>
+                {% endif %}
             </div>
+            {% endfor %}
         </div>
+    </div>
     {% endif %}
     {% endwith %}
     {# FIN DE SECCIÓN PARA IMÁGENES ADICIONALES #}
+
 
     <div class="detail-info-block">
         <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
@@ -51,49 +55,52 @@
         <h2>Ediciones</h2>
         {% with torneo.informacion_por_anio.all as ediciones %}
         {% if ediciones %}
-            <div class="ediciones-grid">
-                {% for info_anio in ediciones %}
-                <div class="edicion-card">
-                    {% if info_anio.imagen_edicion_estatica %}
-                        <div class="edicion-image-wrapper">
-                            <img src="{% static info_anio.imagen_edicion_estatica %}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
-                        </div>
-                    {% else %}
-                        <div class="edicion-image-wrapper">
-                            <img src="https://placehold.co/300x200/eeeeee/333333?text=Edición+{{ info_anio.anio }}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
-                        </div>
-                    {% endif %}
-                    <div class="edicion-content">
-                        <h4>Edición: {{ info_anio.anio }}</h4>
-                        {% if info_anio.fecha_exacta %}
-                        <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
-                        {% endif %}
-                        {% if info_anio.ubicacion_especifica %}
-                        <p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}</p>
-                        {% endif %}
-                        <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
-                        {% if info_anio.subcampeon %}
-                        <p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>
-                        {% endif %}
-                        {% if info_anio.participantes_cantidad %}
-                        <p><strong>Participantes:</strong> {{ info_anio.participantes_cantidad }}</p>
-                        {% endif %}
-                        {% if info_anio.resumen %}
-                        <div class="edicion-resumen">
-                            <p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>
-                        </div>
-                        {% endif %}
-                        {% if info_anio.link_transmision %}
-                        <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer" class="link-transmision">
-                            Ver Transmisión
-                        </a>
-                        {% endif %}
-                    </div>
+        <div class="ediciones-grid">
+            {% for info_anio in ediciones %}
+            <div class="edicion-card">
+                {% if info_anio.imagen_edicion_estatica %}
+                <div class="edicion-image-wrapper">
+                    <img src="{% static info_anio.imagen_edicion_estatica %}"
+                        alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
                 </div>
-                {% endfor %}
+                {% else %}
+                <div class="edicion-image-wrapper">
+                    <img src="https://placehold.co/300x200/eeeeee/333333?text=Edición+{{ info_anio.anio }}"
+                        alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
+                </div>
+                {% endif %}
+                <div class="edicion-content">
+                    <h4>Edición: {{ info_anio.anio }}</h4>
+                    {% if info_anio.fecha_exacta %}
+                    <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
+                    {% endif %}
+                    {% if info_anio.ubicacion_especifica %}
+                    <p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}</p>
+                    {% endif %}
+                    <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
+                    {% if info_anio.subcampeon %}
+                    <p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>
+                    {% endif %}
+                    {% if info_anio.participantes_cantidad %}
+                    <p><strong>Participantes:</strong> {{ info_anio.participantes_cantidad }}</p>
+                    {% endif %}
+                    {% if info_anio.resumen %}
+                    <div class="edicion-resumen">
+                        <p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>
+                    </div>
+                    {% endif %}
+                    {% if info_anio.link_transmision %}
+                    <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer"
+                        class="link-transmision">
+                        Ver Transmisión
+                    </a>
+                    {% endif %}
+                </div>
             </div>
+            {% endfor %}
+        </div>
         {% else %}
-            <p class="no-data-message">No hay información de ediciones disponible para este torneo aún.</p>
+        <p class="no-data-message">No hay información de ediciones disponible para este torneo aún.</p>
         {% endif %}
         {% endwith %}
     </div>
@@ -101,6 +108,13 @@
 
     <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a>
     <button onclick="history.back()" class="btn-back">← Volver</button>
+</div>
+
+{# MODAL DE IMAGEN (oculto por defecto) #}
+<div id="imageModal" class="modal">
+    <span class="close-button">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div id="caption" class="modal-caption"></div>
 </div>
 
 <style>
@@ -152,34 +166,53 @@
         padding: 20px;
         background-color: #f9f9f9;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
     .additional-images-gallery h3 {
         text-align: center;
         margin-bottom: 20px;
         color: #2c3e50;
     }
+
     .gallery-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 15px;
     }
+
     .gallery-item {
         border: 1px solid #ddd;
         border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         transition: transform 0.2s ease-in-out;
     }
+
     .gallery-item:hover {
         transform: translateY(-5px);
     }
+
     .gallery-image {
         width: 100%;
-        height: 200px; /* Altura fija para consistencia */
-        object-fit: cover; /* Recorta la imagen para que quepa */
+        height: 200px;
+        /* Altura fija para consistencia */
+        object-fit: cover;
+        /* Recorta la imagen para que quepa */
         display: block;
     }
+
+    /* Estilo para imágenes clickables en la galería */
+    .clickable-image {
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .clickable-image:hover {
+        transform: scale(1.02);
+        /* Pequeño zoom al pasar el ratón */
+    }
+
     .gallery-description {
         padding: 10px;
         background-color: #f2f2f2;
@@ -223,14 +256,16 @@
 
     .edicion-image-wrapper {
         width: 100%;
-        height: 200px; /* Altura fija para consistencia */
+        height: 200px;
+        /* Altura fija para consistencia */
         overflow: hidden;
     }
 
     .edicion-image {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Asegura que las imágenes cubran el área sin distorsión */
+        object-fit: cover;
+        /* Asegura que las imágenes cubran el área sin distorsión */
         display: block;
     }
 
@@ -291,11 +326,14 @@
         text-decoration: none;
         border-radius: 5px;
         transition: background-color 0.3s ease;
-        border: none; /* Para el elemento button */
-        cursor: pointer; /* Para el elemento button */
+        border: none;
+        /* Para el elemento button */
+        cursor: pointer;
+        /* Para el elemento button */
     }
 
-    .btn-back + .btn-back { /* Agrega espacio entre botones */
+    .btn-back+.btn-back {
+        /* Agrega espacio entre botones */
         margin-left: 10px;
     }
 
@@ -330,7 +368,8 @@
 
         .gallery-image,
         .edicion-image-wrapper {
-            height: 180px; /* Ajusta la altura para móviles */
+            height: 180px;
+            /* Ajusta la altura para móviles */
         }
 
         .edicion-content {
@@ -346,9 +385,11 @@
         }
 
         .btn-back {
-            width: 100%; /* Botones de ancho completo */
+            width: 100%;
+            /* Botones de ancho completo */
             margin-top: 10px;
-            margin-left: 0 !important; /* Anula el margen para apilar */
+            margin-left: 0 !important;
+            /* Anula el margen para apilar */
         }
     }
 
@@ -364,9 +405,145 @@
 
         .gallery-image,
         .edicion-image-wrapper {
-            height: 150px; /* Reduce aún más la altura de la imagen en pantallas muy pequeñas */
+            height: 150px;
+            /* Reduce aún más la altura de la imagen en pantallas muy pequeñas */
+        }
+    }
+
+    /* --- MODAL STYLES --- */
+    .modal {
+        display: none;
+        /* Oculto por defecto */
+        position: fixed;
+        /* Permanece en su lugar incluso al desplazar */
+        z-index: 1000;
+        /* Se superpone a todo lo demás */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Ancho completo */
+        height: 100%;
+        /* Altura completa */
+        overflow: auto;
+        /* Habilitar desplazamiento si es necesario */
+        background-color: rgba(0, 0, 0, 0.9);
+        /* Fondo negro semitransparente */
+        display: flex;
+        /* Usar flexbox para centrar contenido */
+        align-items: center;
+        /* Centrar verticalmente */
+        justify-content: center;
+        /* Centrar horizontalmente */
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        max-width: 90%;
+        /* Limitar el tamaño de la imagen */
+        max-height: 90vh;
+        /* Limitar la altura de la imagen al 90% del viewport height */
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+
+    /* Botón de cerrar */
+    .close-button {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .close-button:hover,
+    .close-button:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Animación del modal */
+    .modal-content,
+    #caption {
+        -webkit-animation-name: zoom;
+        -webkit-animation-duration: 0.6s;
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+
+    @-webkit-keyframes zoom {
+        from {
+            -webkit-transform: scale(0)
+        }
+
+        to {
+            -webkit-transform: scale(1)
+        }
+    }
+
+    @keyframes zoom {
+        from {
+            transform: scale(0)
+        }
+
+        to {
+            transform: scale(1)
+        }
+    }
+
+    /* Responsive para el modal en pantallas muy pequeñas */
+    @media only screen and (max-width: 700px) {
+        .modal-content {
+            width: 100%;
         }
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Obtener el modal y el botón de cerrar
+        var modal = document.getElementById("imageModal");
+        var modalImg = document.getElementById("modalImage");
+        var captionText = document.getElementById("caption");
+        var closeButton = document.getElementsByClassName("close-button")[0];
+
+        // Obtener todas las imágenes de la galería que son clickables
+        var galleryImages = document.querySelectorAll(".gallery-image.clickable-image");
+
+        // Asignar evento click a cada imagen de la galería
+        galleryImages.forEach(function (img) {
+            img.onclick = function () {
+                modal.style.display = "flex"; // Usar flex para centrar
+                modalImg.src = this.dataset.src || this.src; // Usar data-src si está definido
+                captionText.innerHTML = this.alt; // Mostrar la descripción de la imagen
+            }
+        });
+
+        // Cuando se hace clic en el botón de cerrar o fuera de la imagen (en el overlay)
+        closeButton.onclick = function () {
+            modal.style.display = "none";
+        }
+        modal.onclick = function (event) {
+            if (event.target === modal) { // Solo si se hace clic en el overlay, no en la imagen
+                modal.style.display = "none";
+            }
+        }
+    });
+</script>
 
 {% endblock %}
