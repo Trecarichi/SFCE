@@ -4,128 +4,21 @@
 {% block title %}Detalles de {{ torneo.nombre }}{% endblock %}
 
 {% block content %}
-
-<div class="torneo-detail-container">
-    <h2>{{ torneo.nombre }}</h2>
-
-    {# Imagen principal del torneo #}
-    {% if torneo.imagen_estatica %}
-    <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
-    {% else %}
-    <img src="https://placehold.co/800x450/cccccc/333333?text=Imagen+no+disponible" alt="Imagen no disponible" class="torneo-detail-image">
-    {% endif %}
-
-    {# SECCIÓN PARA IMÁGENES ADICIONALES #}
-    {% with torneo.imagenes_adicionales.all as imagenes_adicionales %}
-    {% if imagenes_adicionales %}
-        <div class="additional-images-gallery">
-            <h3>Galería de Imágenes</h3>
-            <div class="gallery-grid">
-                {% for img_adic in imagenes_adicionales %}
-                    <div class="gallery-item">
-                        {# El alt attribute ahora usa solo la descripción si existe, de lo contrario está vacío #}
-                        <img src="{% static img_adic.imagen_estatica %}" data-src="{% static img_adic.imagen_estatica %}" alt="{{ img_adic.descripcion|default:'' }}" class="gallery-image clickable-image">
-                        {% if img_adic.descripcion %}
-                            <p class="gallery-description">{{ img_adic.descripcion }}</p>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    {% endif %}
-    {% endwith %}
-    {# FIN DE SECCIÓN PARA IMÁGENES ADICIONALES #}
-
-
-    <div class="detail-info-block">
-        <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
-        <p><strong>Ubicación:</strong> {{ torneo.ubicacion }}</p>
-        {% if torneo.internacional %}
-        <p style="color: #e67e22;"><strong>(Torneo Internacional)</strong></p>
-        {% endif %}
-        {% if torneo.descripcion %}
-        <p><strong>Descripción:</strong> {{ torneo.descripcion|linebreaksbr }}</p>
-        {% endif %}
-    </div>
-
-    {# --- SECCIÓN DE EDICIONES --- #}
-    <div class="ediciones-container">
-        <h2>Ediciones</h2>
-        {% with torneo.informacion_por_anio.all as ediciones %}
-        {% if ediciones %}
-            <div class="ediciones-grid">
-                {% for info_anio in ediciones %}
-                <div class="edicion-card">
-                    {% if info_anio.imagen_edicion_estatica %}
-                        <div class="edicion-image-wrapper">
-                            <img src="{% static info_anio.imagen_edicion_estatica %}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
-                        </div>
-                    {% else %}
-                        <div class="edicion-image-wrapper">
-                            <img src="https://placehold.co/300x200/eeeeee/333333?text=Edición+{{ info_anio.anio }}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
-                        </div>
-                    {% endif %}
-                    <div class="edicion-content">
-                        <h4>Edición: {{ info_anio.anio }}</h4>
-                        {% if info_anio.fecha_exacta %}
-                        <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
-                        {% endif %}
-                        {% if info_anio.ubicacion_especifica %}
-                        <p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}</p>
-                        {% endif %}
-                        <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
-                        {% if info_anio.subcampeon %}
-                        <p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>
-                        {% endif %}
-                        {% if info_anio.participantes_cantidad %}
-                        <p><strong>Participantes:</strong> {{ info_anio.participantes_cantidad }}</p>
-                        {% endif %}
-                        {% if info_anio.resumen %}
-                        <div class="edicion-resumen">
-                            <p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>
-                        </div>
-                        {% endif %}
-                        {% if info_anio.link_transmision %}
-                        <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer" class="link-transmision">
-                            Ver Transmisión
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="no-data-message">No hay información de ediciones disponible para este torneo aún.</p>
-        {% endif %}
-        {% endwith %}
-    </div>
-    {# --- FIN DE SECCIÓN DE EDICIONES --- #}
-
-    {# Se ha eliminado el botón 'Volver' con history.back() para dejar solo el que va a la lista de torneos #}
-    <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a>
-</div>
-
-{# MODAL DE IMAGEN (oculto por defecto) #}
-<div id="imageModal" class="modal">
-    <span class="close-button">&times;</span>
-    <img class="modal-content" id="modalImage">
-    <div id="caption" class="modal-caption"></div>
-</div>
-
 <style>
     /* Estilos generales para el contenedor de detalles */
     .torneo-detail-container {
         max-width: 900px;
         margin: 20px auto;
         padding: 20px;
-        background-color: #ffffff;
+        background-color: #382A4D; /* Un violeta oscuro ligeramente más claro para el contenedor principal */
         border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
         text-align: center;
+        color: #E6E0F0; /* Color de texto general claro */
     }
 
     .torneo-detail-container h2 {
-        color: #333;
+        color: #DDA0DD; /* Lila claro para los encabezados */
         margin-bottom: 20px;
     }
 
@@ -134,7 +27,7 @@
         height: auto;
         border-radius: 8px;
         margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     /* Bloque de información */
@@ -142,31 +35,32 @@
         text-align: left;
         margin-top: 20px;
         padding: 15px;
-        background-color: #f5f5f5;
+        background-color: #403058; /* Un violeta un poco más claro */
         border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .detail-info-block p {
         margin-bottom: 8px;
-        color: #555;
+        color: #CFBFFF; /* Violeta muy claro para los párrafos */
     }
 
     .detail-info-block strong {
-        color: #333;
+        color: #DDA0DD; /* Lila claro para etiquetas fuertes */
     }
 
     /* Galería de imágenes adicionales */
     .additional-images-gallery {
         margin-top: 30px;
         padding: 20px;
-        background-color: #f9f9f9;
+        background-color: #403058; /* Fondo similar al carrusel */
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
     .additional-images-gallery h3 {
         text-align: center;
         margin-bottom: 20px;
-        color: #2c3e50;
+        color: #DDA0DD; /* Lila claro */
     }
     .gallery-grid {
         display: grid;
@@ -174,11 +68,12 @@
         gap: 15px;
     }
     .gallery-item {
-        border: 1px solid #ddd;
+        border: 1px solid #5A4A6D; /* Borde violeta oscuro */
         border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         transition: transform 0.2s ease-in-out;
+        background-color: #4A3A5E; /* Fondo para cada item de la galería */
     }
     .gallery-item:hover {
         transform: translateY(-5px);
@@ -200,9 +95,9 @@
 
     .gallery-description {
         padding: 10px;
-        background-color: #f2f2f2;
+        background-color: #5A4A6D; /* Fondo violeta más oscuro para la descripción */
         font-size: 0.9em;
-        color: #555;
+        color: #E6E0F0; /* Texto claro */
         text-align: center;
     }
 
@@ -210,13 +105,13 @@
     .ediciones-container {
         margin-top: 30px;
         padding: 20px;
-        background-color: #e0e0e0;
+        background-color: #403058; /* Fondo similar al carrusel */
         border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
     }
 
     .ediciones-container h2 {
-        color: #333;
+        color: #DDA0DD; /* Lila claro */
         margin-bottom: 25px;
     }
 
@@ -227,10 +122,10 @@
     }
 
     .edicion-card {
-        background-color: #ffffff;
+        background-color: #4A3A5E; /* Fondo para cada tarjeta de edición */
         border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         transition: transform 0.2s ease-in-out;
         text-align: left;
     }
@@ -257,29 +152,29 @@
     }
 
     .edicion-content h4 {
-        color: #333;
+        color: #DDA0DD; /* Lila claro */
         margin-bottom: 10px;
     }
 
     .edicion-content p {
-        color: #555;
+        color: #CFBFFF; /* Violeta muy claro */
         margin-bottom: 5px;
         font-size: 0.95em;
     }
 
     .edicion-resumen {
         margin-top: 10px;
-        border-top: 1px solid #eee;
+        border-top: 1px solid #5A4A6D; /* Borde violeta oscuro */
         padding-top: 10px;
         font-size: 0.85em;
-        color: #666;
+        color: #C0B0D0; /* Un violeta claro un poco más oscuro */
     }
 
     .link-transmision {
         display: inline-block;
         margin-top: 15px;
         padding: 8px 15px;
-        background-color: #3498db;
+        background-color: #8A2BE2; /* Azul violeta fuerte */
         color: white;
         text-decoration: none;
         border-radius: 5px;
@@ -287,15 +182,15 @@
     }
 
     .link-transmision:hover {
-        background-color: #2980b9;
+        background-color: #6A1BAA; /* Violeta más oscuro */
     }
 
     .no-data-message {
         text-align: center;
-        color: #777;
+        color: #E6E0F0; /* Texto claro */
         font-style: italic;
         padding: 20px;
-        background-color: #f2f2f2;
+        background-color: #403058; /* Fondo similar al carrusel */
         border-radius: 8px;
     }
 
@@ -304,21 +199,17 @@
         display: inline-block;
         margin-top: 25px;
         padding: 10px 20px;
-        background-color: #7f8c8d;
+        background-color: #5A4A6D; /* Violeta oscuro desaturado para botones de volver */
         color: white;
         text-decoration: none;
         border-radius: 5px;
         transition: background-color 0.3s ease;
-        border: none; /* Para el elemento button, aunque aquí es un <a> */
-        cursor: pointer; /* Para el elemento <a> */
-    }
-
-    .btn-back + .btn-back { /* Esto se mantiene aunque ahora solo haya uno, no afecta */
-        margin-left: 10px;
+        border: none;
+        cursor: pointer;
     }
 
     .btn-back:hover {
-        background-color: #5d6d7e;
+        background-color: #7F6F92; /* Violeta más claro en hover */
     }
 
     /* --- ESTILOS RESPONSIVOS --- */
@@ -399,7 +290,7 @@
         top: 0;
         width: 100%; /* Ancho completo */
         height: 100%; /* Altura completa */
-        background-color: rgba(0,0,0,0.9); /* Fondo negro semitransparente */
+        background-color: rgba(44, 32, 58, 0.9); /* Fondo violeta muy oscuro semitransparente */
 
         /* Propiedades para CENTRADO FLEXBOX (solo aplican cuando visibility es visible) */
         display: flex; /* Mantener flexbox para centrado, ocultado por visibility/opacity */
@@ -429,10 +320,10 @@
         left: 0;
         width: 100%; /* Ancho completo */
         text-align: center;
-        color: #ccc;
+        color: #E6E0F0; /* Texto claro para la descripción */
         padding: 10px 0;
         font-size: 1.2em; /* Tamaño de fuente más visible */
-        background-color: rgba(0,0,0,0.5); /* Fondo semitransparente para legibilidad */
+        background-color: rgba(44, 32, 58, 0.7); /* Fondo violeta semitransparente para legibilidad */
         box-sizing: border-box; /* Incluye padding en el ancho total */
     }
 
@@ -441,7 +332,7 @@
         position: absolute; /* Posicionado absolutamente dentro del modal */
         top: 15px; /* Margen desde arriba */
         right: 25px; /* Margen desde la derecha */
-        color: #fff; /* Color blanco para contraste */
+        color: #E6E0F0; /* Color claro para contraste */
         font-size: 50px; /* Tamaño más grande para facilidad de toque */
         font-weight: bold;
         transition: 0.3s;
@@ -451,7 +342,7 @@
 
     .close-button:hover,
     .close-button:focus {
-        color: #bbb;
+        color: #CFBFFF; /* Violeta muy claro en hover */
         text-decoration: none;
         cursor: pointer;
     }
@@ -483,6 +374,113 @@
         }
     }
 </style>
+
+<div class="torneo-detail-container">
+    <h2>{{ torneo.nombre }}</h2>
+
+    {# Imagen principal del torneo #}
+    {% if torneo.imagen_estatica %}
+    <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
+    {% else %}
+    <img src="https://placehold.co/800x450/cccccc/333333?text=Imagen+no+disponible" alt="Imagen no disponible" class="torneo-detail-image">
+    {% endif %}
+
+    {# SECCIÓN PARA IMÁGENES ADICIONALES #}
+    {% with torneo.imagenes_adicionales.all as imagenes_adicionales %}
+    {% if imagenes_adicionales %}
+        <div class="additional-images-gallery">
+            <h3>Galería de Imágenes</h3>
+            <div class="gallery-grid">
+                {% for img_adic in imagenes_adicionales %}
+                    <div class="gallery-item">
+                        {# El alt attribute ahora usa solo la descripción si existe, de lo contrario está vacío #}
+                        <img src="{% static img_adic.imagen_estatica %}" data-src="{% static img_adic.imagen_estatica %}" alt="{{ img_adic.descripcion|default:'' }}" class="gallery-image clickable-image">
+                        {% if img_adic.descripcion %}
+                            <p class="gallery-description">{{ img_adic.descripcion }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    {% endwith %}
+    {# FIN DE SECCIÓN PARA IMÁGENES ADICIONALES #}
+
+
+    <div class="detail-info-block">
+        <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
+        <p><strong>Ubicación:</strong> {{ torneo.ubicacion }}</p>
+        {% if torneo.internacional %}
+        <p style="color: #DDA0DD;"><strong>(Torneo Internacional)</strong></p> {# Color que resalta en el tema violeta #}
+        {% endif %}
+        {% if torneo.descripcion %}
+        <p><strong>Descripción:</strong> {{ torneo.descripcion|linebreaksbr }}</p>
+        {% endif %}
+    </div>
+
+    {# --- SECCIÓN DE EDICIONES --- #}
+    <div class="ediciones-container">
+        <h2>Ediciones</h2>
+        {% with torneo.informacion_por_anio.all as ediciones %}
+        {% if ediciones %}
+            <div class="ediciones-grid">
+                {% for info_anio in ediciones %}
+                <div class="edicion-card">
+                    {% if info_anio.imagen_edicion_estatica %}
+                        <div class="edicion-image-wrapper">
+                            <img src="{% static info_anio.imagen_edicion_estatica %}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
+                        </div>
+                    {% else %}
+                        <div class="edicion-image-wrapper">
+                            <img src="https://placehold.co/300x200/eeeeee/333333?text=Edición+{{ info_anio.anio }}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
+                        </div>
+                    {% endif %}
+                    <div class="edicion-content">
+                        <h4>Edición: {{ info_anio.anio }}</h4>
+                        {% if info_anio.fecha_exacta %}
+                        <p><strong>Fecha:</strong> {{ info_anio.fecha_exacta|date:"d M Y" }}</p>
+                        {% endif %}
+                        {% if info_anio.ubicacion_especifica %}
+                        <p><strong>Ubicación:</strong> {{ info_anio.ubicacion_especifica }}</p>
+                        {% endif %}
+                        <p><strong>Campeón:</strong> {{ info_anio.campeon }}</p>
+                        {% if info_anio.subcampeon %}
+                        <p><strong>Subcampeón:</strong> {{ info_anio.subcampeon }}</p>
+                        {% endif %}
+                        {% if info_anio.participantes_cantidad %}
+                        <p><strong>Participantes:</strong> {{ info_anio.participantes_cantidad }}</p>
+                        {% endif %}
+                        {% if info_anio.resumen %}
+                        <div class="edicion-resumen">
+                            <p><strong>Resumen:</strong> {{ info_anio.resumen|linebreaksbr }}</p>
+                        </div>
+                        {% endif %}
+                        {% if info_anio.link_transmision %}
+                        <a href="{{ info_anio.link_transmision }}" target="_blank" rel="noopener noreferrer" class="link-transmision">
+                            Ver Transmisión
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-data-message">No hay información de ediciones disponible para este torneo aún.</p>
+        {% endif %}
+        {% endwith %}
+    </div>
+    {# --- FIN DE SECCIÓN DE EDICIONES --- #}
+
+    {# Se ha eliminado el botón 'Volver' con history.back() para dejar solo el que va a la lista de torneos #}
+    <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a>
+</div>
+
+{# MODAL DE IMAGEN (oculto por defecto) #}
+<div id="imageModal" class="modal">
+    <span class="close-button">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div id="caption" class="modal-caption"></div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

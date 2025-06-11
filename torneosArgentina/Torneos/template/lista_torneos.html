@@ -4,7 +4,246 @@
 {% block title %}Lista de Torneos{% endblock %}
 
 {% block content %}
+<style>
+    /* Estilos para el contenedor de filtros */
+    .filter-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #382A4D; /* Un violeta oscuro ligeramente más claro */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+    }
 
+    .filter-container form {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .filter-container select,
+    .filter-container input[type="number"] {
+        padding: 10px 15px;
+        border: 1px solid #5A4A6D; /* Borde violeta oscuro */
+        border-radius: 5px;
+        background-color: #403058; /* Fondo violeta claro para campos */
+        color: #E6E0F0; /* Texto claro */
+        font-size: 1em;
+        appearance: none; /* Elimina estilos por defecto del select */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        cursor: pointer;
+    }
+
+    .filter-container select:focus,
+    .filter-container input[type="number"]:focus {
+        outline: none;
+        border-color: #8A2BE2; /* Borde de enfoque azul violeta */
+        box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.3); /* Sombra de enfoque */
+    }
+
+    .filter-container button[type="submit"] {
+        padding: 10px 20px;
+        background-color: #8A2BE2; /* Azul violeta fuerte */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .filter-container button[type="submit"]:hover {
+        background-color: #6A1BAA; /* Violeta más oscuro en hover */
+    }
+
+    .filter-container .reset-link {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #5A4A6D; /* Violeta oscuro desaturado */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease;
+    }
+
+    .filter-container .reset-link:hover {
+        background-color: #7F6F92; /* Violeta más claro en hover */
+    }
+
+    /* Botón de volver arriba de los filtros */
+    .btn-back {
+        display: block; /* Se asegura que ocupe su propia línea */
+        width: fit-content; /* Se ajusta al contenido */
+        margin: 20px auto 10px auto; /* Centra y da margen arriba y abajo */
+        padding: 10px 20px;
+        background-color: #5A4A6D; /* Violeta oscuro desaturado */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-back:hover {
+        background-color: #7F6F92; /* Violeta más claro en hover */
+    }
+
+    /* Contenedor principal de torneos */
+    .torneos-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        color: #E6E0F0; /* Color de texto general claro */
+    }
+
+    /* Tarjeta de torneo individual */
+    .torneo-card {
+        background-color: #403058; /* Un violeta un poco más claro para las tarjetas */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .torneo-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
+    }
+
+    .torneo-card img {
+        width: 100%;
+        height: 200px; /* Altura fija para consistencia */
+        object-fit: cover; /* Asegura que la imagen cubra el área sin distorsión */
+        border-bottom: 1px solid #5A4A6D; /* Borde sutil al pie de la imagen */
+    }
+
+    .torneo-info {
+        padding: 15px;
+        flex-grow: 1; /* Permite que la información ocupe el espacio restante */
+        text-align: left;
+    }
+
+    .torneo-info h3 {
+        color: #DDA0DD; /* Lila claro */
+        margin-bottom: 10px;
+        font-size: 1.4em;
+    }
+
+    .torneo-info p {
+        color: #CFBFFF; /* Violeta muy claro */
+        margin-bottom: 5px;
+        font-size: 0.95em;
+    }
+
+    .torneo-info p strong {
+        color: #DDA0DD; /* Lila claro para etiquetas fuertes */
+    }
+
+    .torneo-info p[style="color: #e67e22;"] { /* Para el texto de "Torneo Internacional" */
+        color: #DDA0DD !important; /* Asegura que el color sea el nuevo lila claro */
+        font-weight: bold;
+    }
+
+    .torneo-actions {
+        padding: 15px;
+        border-top: 1px solid #5A4A6D; /* Borde superior */
+        text-align: center;
+    }
+
+    .btn-detalle {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #8A2BE2; /* Azul violeta fuerte */
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        font-weight: bold;
+    }
+
+    .btn-detalle:hover {
+        background-color: #6A1BAA; /* Violeta más oscuro en hover */
+    }
+
+    /* Mensaje de no torneos encontrados */
+    .torneos-container p {
+        color: #E6E0F0; /* Texto claro */
+    }
+
+
+    /* --- ESTILOS RESPONSIVOS --- */
+
+    /* Para pantallas medianas (tablets) */
+    @media (max-width: 992px) {
+        .filter-container,
+        .torneos-container {
+            margin: 15px auto;
+            padding: 15px;
+            gap: 20px;
+        }
+
+        .filter-container form {
+            flex-direction: column;
+        }
+
+        .filter-container select,
+        .filter-container input[type="number"],
+        .filter-container button[type="submit"],
+        .filter-container .reset-link {
+            width: 100%;
+        }
+    }
+
+    /* Para pantallas pequeñas (móviles) */
+    @media (max-width: 768px) {
+        .filter-container,
+        .torneos-container {
+            margin: 10px auto;
+            padding: 10px;
+            gap: 15px;
+        }
+
+        .torneo-card img {
+            height: 180px;
+        }
+
+        .torneo-info h3 {
+            font-size: 1.2em;
+        }
+
+        .torneo-info p {
+            font-size: 0.85em;
+        }
+
+        .btn-detalle {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+    }
+
+    /* Para pantallas extra pequeñas */
+    @media (max-width: 480px) {
+        .torneo-card img {
+            height: 150px;
+        }
+    }
+</style>
 
 <div class="filter-container">
     <form action="{% url 'lista_torneos' %}" method="GET">
@@ -46,7 +285,7 @@
             <p><strong>Fecha:</strong> {{ torneo.fecha|date:"d M Y" }}</p>
             <p><strong>Ubicación:</strong> {{ torneo.ubicacion }}</p>
             {% if torneo.internacional %}
-            <p style="color: #e67e22;">(Torneo Internacional)</p>
+            <p style="color: #DDA0DD;">(Torneo Internacional)</p> {# Color que resalta en el tema violeta #}
             {% endif %}
         </div>
         <div class="torneo-actions">
@@ -55,7 +294,7 @@
     </div>
     {% endfor %}
     {% else %}
-    <p style="grid-column: 1 / -1; text-align: center; font-size: 1.2em; color: #777;">No se encontraron torneos con los
+    <p style="grid-column: 1 / -1; text-align: center; font-size: 1.2em; color: #E6E0F0;">No se encontraron torneos con los
         filtros aplicados.</p>
     {% endif %}
 
