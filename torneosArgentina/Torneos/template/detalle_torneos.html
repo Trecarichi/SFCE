@@ -5,12 +5,14 @@
 
 {% block content %}
 <style>
+    /* El body ya tiene el fondo negro desde base.html */
+
     /* Estilos generales para el contenedor de detalles */
     .torneo-detail-container {
         max-width: 900px;
-        margin: 20px auto;
+        margin: 20px auto; /* Centra el contenido, dejando los bordes negros */
         padding: 20px;
-        background-color: #1A3258; /* Un azul oscuro ligeramente más claro para el contenedor principal */
+        background-color: #0A1D37; /* Azul oscuro profundo para el contenedor principal */
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
         text-align: center;
@@ -35,7 +37,7 @@
         text-align: left;
         margin-top: 20px;
         padding: 15px;
-        background-color: #2A4068; /* Un azul un poco más claro */
+        background-color: #1A3258; /* Azul oscuro ligeramente más claro */
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
@@ -53,7 +55,7 @@
     .additional-images-gallery {
         margin-top: 30px;
         padding: 20px;
-        background-color: #2A4068; /* Fondo similar al carrusel */
+        background-color: #1A3258; /* Fondo similar al contenedor principal */
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
@@ -68,12 +70,12 @@
         gap: 15px;
     }
     .gallery-item {
-        border: 1px solid #3A5580; /* Borde azul oscuro */
+        border: 1px solid #2A4068; /* Borde azul oscuro */
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         transition: transform 0.2s ease-in-out;
-        background-color: #3A5580; /* Fondo para cada item de la galería */
+        background-color: #2A4068; /* Fondo para cada item de la galería */
     }
     .gallery-item:hover {
         transform: translateY(-5px);
@@ -95,7 +97,7 @@
 
     .gallery-description {
         padding: 10px;
-        background-color: #3A5580; /* Fondo azul más oscuro para la descripción */
+        background-color: #2A4068; /* Fondo azul más oscuro para la descripción */
         font-size: 0.9em;
         color: #E0EBF5; /* Texto claro */
         text-align: center;
@@ -105,7 +107,7 @@
     .ediciones-container {
         margin-top: 30px;
         padding: 20px;
-        background-color: #2A4068; /* Fondo similar al carrusel */
+        background-color: #1A3258; /* Fondo similar al contenedor principal */
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
     }
@@ -122,7 +124,7 @@
     }
 
     .edicion-card {
-        background-color: #3A5580; /* Fondo para cada tarjeta de edición */
+        background-color: #2A4068; /* Fondo para cada tarjeta de edición */
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -168,7 +170,7 @@
 
     .edicion-resumen {
         margin-top: 10px;
-        border-top: 1px solid #3A5580; /* Borde azul oscuro */
+        border-top: 1px solid #2A4068; /* Borde azul oscuro */
         padding-top: 10px;
         font-size: 0.85em;
         color: #E0EBF5; /* Color de texto claro para el resumen */
@@ -178,7 +180,7 @@
         display: inline-block;
         margin-top: 15px;
         padding: 8px 15px;
-        background-color: #3498DB; /* Azul fuerte para el botón */
+        background-color: #3498DB; /* Azul vibrante para el botón */
         color: white;
         text-decoration: none;
         border-radius: 5px;
@@ -194,7 +196,7 @@
         color: #E0EBF5; /* Texto claro */
         font-style: italic;
         padding: 20px;
-        background-color: #2A4068; /* Fondo similar al carrusel */
+        background-color: #1A3258; /* Fondo similar al carrusel */
         border-radius: 8px;
     }
 
@@ -203,7 +205,7 @@
         display: inline-block;
         margin-top: 25px;
         padding: 10px 20px;
-        background-color: #3A5580; /* Azul oscuro desaturado para botones de volver */
+        background-color: #2A4068; /* Azul oscuro desaturado para botones de volver */
         color: white;
         text-decoration: none;
         border-radius: 5px;
@@ -213,7 +215,7 @@
     }
 
     .btn-back:hover {
-        background-color: #4A6590; /* Azul más claro en hover */
+        background-color: #3A5580; /* Azul más claro en hover */
     }
 
     /* --- ESTILOS RESPONSIVOS --- */
@@ -294,7 +296,7 @@
         top: 0;
         width: 100%; /* Ancho completo */
         height: 100%; /* Altura completa */
-        background-color: rgba(10, 29, 55, 0.9); /* Fondo azul muy oscuro semitransparente */
+        background-color: rgba(0, 0, 0, 0.9); /* Fondo negro semitransparente para el modal */
 
         /* Propiedades para CENTRADO FLEXBOX (solo aplican cuando visibility es visible) */
         display: flex; /* Mantener flexbox para centrado, ocultado por visibility/opacity */
@@ -327,7 +329,7 @@
         color: #E0EBF5; /* Texto claro para la descripción */
         padding: 10px 0;
         font-size: 1.2em; /* Tamaño de fuente más visible */
-        background-color: rgba(10, 29, 55, 0.7); /* Fondo azul semitransparente para legibilidad */
+        background-color: rgba(0, 0, 0, 0.7); /* Fondo negro semitransparente para legibilidad */
         box-sizing: border-box; /* Incluye padding en el ancho total */
     }
 
@@ -386,7 +388,7 @@
     {% if torneo.imagen_estatica %}
     <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}" class="torneo-detail-image">
     {% else %}
-    <img src="https://placehold.co/800x450/cccccc/333333?text=Imagen+no+disponible" alt="Imagen no disponible" class="torneo-detail-image">
+    <img src="https://placehold.co/800x450/1A3258/E0EBF5?text=Imagen+no+disponible" alt="Imagen no disponible" class="torneo-detail-image">
     {% endif %}
 
     {# SECCIÓN PARA IMÁGENES ADICIONALES #}
@@ -436,7 +438,7 @@
                         </div>
                     {% else %}
                         <div class="edicion-image-wrapper">
-                            <img src="https://placehold.co/300x200/eeeeee/333333?text=Edición+{{ info_anio.anio }}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
+                            <img src="https://placehold.co/300x200/2A4068/E0EBF5?text=Edición+{{ info_anio.anio }}" alt="Imagen de la edición {{ info_anio.anio }}" class="edicion-image">
                         </div>
                     {% endif %}
                     <div class="edicion-content">
@@ -475,7 +477,6 @@
     </div>
     {# --- FIN DE SECCIÓN DE EDICIONES --- #}
 
-    {# Se ha eliminado el botón 'Volver' con history.back() para dejar solo el que va a la lista de torneos #}
     <a href="{% url 'lista_torneos' %}" class="btn-back">Volver a la Lista de Torneos</a>
 </div>
 
@@ -534,5 +535,7 @@
         }
     });
 </script>
+
+<button onclick="history.back()" class="btn-back">← Volver</button>
 
 {% endblock %}

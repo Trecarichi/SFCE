@@ -5,12 +5,14 @@
 
 {% block content %}
 <style>
+    /* El body ya tiene el fondo negro desde base.html */
+
     /* Estilos para el contenedor de filtros */
     .filter-container {
         max-width: 900px;
-        margin: 20px auto;
+        margin: 20px auto; /* Centra el contenido, dejando los bordes negros */
         padding: 20px;
-        background-color: #1A3258; /* Un azul oscuro ligeramente más claro */
+        background-color: #0A1D37; /* Azul oscuro profundo */
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
         display: flex;
@@ -32,9 +34,9 @@
     .filter-container select,
     .filter-container input[type="number"] {
         padding: 10px 15px;
-        border: 1px solid #3A5580; /* Borde azul oscuro */
+        border: 1px solid #2A4068; /* Borde azul oscuro */
         border-radius: 5px;
-        background-color: #2A4068; /* Fondo azul claro para campos */
+        background-color: #1A3258; /* Fondo azul claro para campos */
         color: #E0EBF5; /* Texto claro */
         font-size: 1em;
         appearance: none; /* Elimina estilos por defecto del select */
@@ -68,7 +70,7 @@
     .filter-container .reset-link {
         display: inline-block;
         padding: 10px 15px;
-        background-color: #3A5580; /* Azul oscuro desaturado */
+        background-color: #2A4068; /* Azul oscuro desaturado */
         color: white;
         text-decoration: none;
         border-radius: 5px;
@@ -77,16 +79,16 @@
     }
 
     .filter-container .reset-link:hover {
-        background-color: #4A6590; /* Azul más claro en hover */
+        background-color: #3A5580; /* Azul más claro en hover */
     }
 
     /* Botón de volver arriba de los filtros */
     .btn-back {
-        display: block; /* Se asegura que ocupe su propia línea */
-        width: fit-content; /* Se ajusta al contenido */
-        margin: 20px auto 10px auto; /* Centra y da margen arriba y abajo */
+        display: block;
+        width: fit-content;
+        margin: 20px auto 10px auto;
         padding: 10px 20px;
-        background-color: #3A5580; /* Azul oscuro desaturado */
+        background-color: #2A4068; /* Azul oscuro desaturado */
         color: white;
         text-decoration: none;
         border-radius: 5px;
@@ -96,13 +98,13 @@
     }
 
     .btn-back:hover {
-        background-color: #4A6590; /* Azul más claro en hover */
+        background-color: #3A5580; /* Azul más claro en hover */
     }
 
     /* Contenedor principal de torneos */
     .torneos-container {
         max-width: 1200px;
-        margin: 20px auto;
+        margin: 20px auto; /* Centra el contenido, dejando los "bordes" negros */
         padding: 20px;
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -112,7 +114,7 @@
 
     /* Tarjeta de torneo individual */
     .torneo-card {
-        background-color: #2A4068; /* Un azul un poco más claro para las tarjetas */
+        background-color: #1A3258; /* Un azul oscuro ligeramente más claro para las tarjetas */
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         overflow: hidden;
@@ -130,7 +132,7 @@
         width: 100%;
         height: 200px; /* Altura fija para consistencia */
         object-fit: cover; /* Asegura que la imagen cubra el área sin distorsión */
-        border-bottom: 1px solid #3A5580; /* Borde sutil al pie de la imagen */
+        border-bottom: 1px solid #2A4068; /* Borde sutil al pie de la imagen */
     }
 
     .torneo-info {
@@ -162,14 +164,14 @@
 
     .torneo-actions {
         padding: 15px;
-        border-top: 1px solid #3A5580; /* Borde superior */
+        border-top: 1px solid #2A4068; /* Borde superior */
         text-align: center;
     }
 
     .btn-detalle {
         display: inline-block;
         padding: 10px 20px;
-        background-color: #3498DB; /* Azul fuerte para el botón */
+        background-color: #3498DB; /* Azul vibrante para el botón */
         color: white;
         text-decoration: none;
         border-radius: 5px;
