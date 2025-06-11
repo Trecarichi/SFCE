@@ -1,127 +1,383 @@
-# Torneos/models.py
+{% extends "base.html" %}
+{% load static %}
 
-from django.db import models
-from django.urls import reverse
+{% block title %}Inicio - Street Fighter Champion Edition Argentina{% endblock %}
 
-# =====================================================================
-# Modelos de Torneos
-# =====================================================================
+{% block content %}
+<style>
+    /* Regla global para facilitar el diseño responsivo */
+    * {
+        box-sizing: border-box;
+    }
 
-class Torneo(models.Model):
-    nombre = models.CharField(max_length=200)
-    tipo = models.CharField(max_length=100) # Ej. "Nacional", "Regional"
-    ubicacion = models.CharField(max_length=200)
-    internacional = models.BooleanField(default=False)
-    descripcion = models.TextField(blank=True, null=True)
-    # Ruta relativa a la imagen estática principal del torneo
-    imagen_estatica = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Ruta relativa a la imagen principal del torneo (ej. 'images/torneos/mi_torneo.jpg')"
-    )
+    /* Estilos para el carrusel */
+    .carrusel-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        /* Ancho máximo del carrusel */
+        margin: 20px auto;
+        /* Centra el carrusel y añade margen */
+        overflow: hidden;
+        /* Oculta partes de las imágenes que se salgan */
+        border-radius: 8px;
+        /* Bordes redondeados */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        /* Sombra suave */
+    }
 
-    def __str__(self):
-        return self.nombre
+    .carrusel-inner {
+        display: flex;
+        /* Permite que los elementos del carrusel se coloquen en fila */
+        transition: transform 0.5s ease-in-out;
+        /* Transición suave para el movimiento del carrusel */
+    }
 
-    def get_absolute_url(self):
-        return reverse('detalle_torneo', args=[str(self.id)])
+    .carrusel-item {
+        min-width: 100%;
+        /* Cada imagen ocupa el 100% del ancho del contenedor */
+        box-sizing: border-box;
+        /* Incluye padding y borde en el ancho total */
+    }
 
-class InformacionPorAnio(models.Model):
-    torneo = models.ForeignKey(Torneo, related_name='informacion_por_anio', on_delete=models.CASCADE)
-    anio = models.IntegerField()
-    fecha_exacta = models.DateField(blank=True, null=True)
-    ubicacion_especifica = models.CharField(max_length=200, blank=True, null=True)
-    campeon = models.CharField(max_length=100)
-    subcampeon = models.CharField(max_length=100, blank=True, null=True)
-    participantes_cantidad = models.IntegerField(blank=True, null=True)
-    resumen = models.TextField(blank=True, null=True)
-    link_transmision = models.URLField(blank=True, null=True)
-    # Ruta relativa a la imagen estática de la edición (ej. 'images/ediciones/edicion_2015.gif')
-    imagen_edicion_estatica = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Ruta relativa a la imagen de la edición (ej. 'images/ediciones/edicion_2015.gif')"
-    )
+    .carrusel-item img {
+        width: 100%;
+        /* La imagen ocupa todo el ancho del item */
+        height: auto;
+        /* Mantiene la proporción de la imagen */
+        display: block;
+        border-radius: 8px;
+        /* Bordes redondeados para la imagen */
+    }
 
-    class Meta:
-        unique_together = ('torneo', 'anio')
-        ordering = ['-anio'] # Ordenar por año descendente (más reciente primero)
+    .carrusel-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.5);
+        /* Fondo semitransparente para el texto */
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 1.1em;
+    }
 
-    def __str__(self):
-        return f"{self.torneo.nombre} - {self.anio}"
+    .carrusel-buttons {
+        position: absolute;
+        top: 50%;
+        /* Centra verticalmente los botones */
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        /* Espacia los botones a los extremos */
+        transform: translateY(-50%);
+        /* Ajuste fino para centrado vertical */
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .carrusel-button {
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Fondo semitransparente para los botones */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 50%;
+        /* Botones circulares */
+        font-size: 1.5em;
+        transition: background-color 0.3s;
+        /* Transición suave al pasar el mouse */
+    }
+
+    .carrusel-button:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+        /* Fondo más oscuro al pasar el mouse */
+    }
+
+    /* Estilos para el botón principal "Ver Lista de Torneos" */
+    .btn-large {
+        display: inline-block;
+        background-color: #3498db;
+        /* Azul vibrante */
+        color: white !important;
+        /* Texto blanco y visible por defecto */
+        padding: 15px 30px;
+        font-size: 1.5em;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        margin-top: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border: 2px solid #2980b9;
+        min-width: 200px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .btn-large:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+    }
+
+    /* Estilos para el contenido general de la página de inicio */
+    .index-content {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .index-content h2 {
+        color: #2c3e50;
+        font-size: 2.2em;
+        margin-bottom: 15px;
+    }
+
+    .index-content p {
+        font-size: 1.1em;
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
+
+    /* Estilos para el logo principal en index.html */
+    .index-logo {
+        width: auto;
+        max-width: 90%;
+        /* Ajustado para mayor flexibilidad */
+        height: auto;
+        margin: 0 auto 30px auto;
+        display: block;
+    }
+
+    /* Estilos para los enlaces de redes sociales */
+    .social-links {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .social-links h3 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .social-item {
+        display: inline-flex;
+        /* Usar inline-flex para alinear el icono y el texto */
+        align-items: center;
+        /* Centrar verticalmente icono y texto */
+        margin: 0 15px;
+        /* Espacio entre los enlaces */
+        text-decoration: none;
+        color: #3498db;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .social-item:hover {
+        color: #2980b9;
+    }
+
+    .social-icon {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        border-radius: 50%;
+        /* Iconos circulares */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .social-text {
+        font-size: 1.1em;
+    }
 
 
-class ImagenAdicionalTorneo(models.Model):
-    torneo = models.ForeignKey(Torneo, related_name='imagenes_adicionales', on_delete=models.CASCADE)
-    # Ruta relativa a la imagen estática adicional (ej. 'images/extras/foto1.jpg')
-    imagen_estatica = models.CharField(
-        max_length=255,
-        help_text="Ruta relativa a la imagen estática adicional (ej. 'images/extras/foto1.jpg')"
-    )
-    descripcion = models.CharField(max_length=255, blank=True, null=True)
+    /* --- Media Queries para Responsividad --- */
 
-    def __str__(self):
-        return f"Imagen de {self.torneo.nombre} - {self.descripcion or 'Sin descripción'}"
+    /* Para pantallas medianas (tablets y algunos laptops) */
+    @media (max-width: 992px) {
+        .index-content h2 {
+            font-size: 2em;
+        }
+
+        .social-item {
+            margin: 0 10px;
+            /* Menos espacio entre iconos en pantallas más pequeñas */
+        }
+    }
+
+    /* Para pantallas pequeñas (móviles) */
+    @media (max-width: 768px) {
+        .index-content {
+            padding: 10px;
+            /* Reduce el padding del contenido principal */
+        }
+
+        .index-logo {
+            max-width: 95%;
+            /* Da un poco más de espacio al logo */
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .carrusel-container {
+            margin-left: 5px;
+            /* Ajusta márgenes para evitar desbordamiento */
+            margin-right: 5px;
+        }
+
+        .carrusel-caption {
+            font-size: 0.9em;
+            /* Fuente más pequeña para los subtítulos */
+            padding: 10px;
+        }
+
+        .carrusel-button {
+            padding: 8px 12px;
+            /* Botones más pequeños */
+            font-size: 1.2em;
+        }
+
+        .btn-large {
+            padding: 10px 20px;
+            font-size: 1.2em;
+        }
+
+        .social-item {
+            display: block;
+            /* Hace que los enlaces de redes sociales se apilen verticalmente */
+            margin: 0 auto 10px auto;
+            /* Centra y añade margen inferior */
+        }
+
+        .social-icon {
+            width: 40px;
+            /* Iconos de redes sociales más pequeños */
+            height: 40px;
+        }
+
+        .social-text {
+            font-size: 0.9em;
+            /* Texto más pequeño para enlaces de redes sociales */
+        }
+    }
+
+    /* Para pantallas muy pequeñas (móviles pequeños) */
+    @media (max-width: 480px) {
+        .index-content h2 {
+            font-size: 1.8em;
+            /* Encabezado principal más pequeño */
+        }
+
+        .index-content p {
+            font-size: 1em;
+        }
+    }
+</style>
+
+<div class="index-content">
+    {# --- LOGO PRINCIPAL --- #}
+    <img src="{% static 'images/LOGO_CE_ARG_3D.gif' %}" alt="SFCE ARG" class="index-logo">
+    {# --- FIN LOGO PRINCIPAL --- #}
+
+    <h2>Bienvenido a la página oficial de Street Fighter Champion Edition Argentina</h2>
+
+    {# --- INICIO DEL CARRUSEL --- #}
+    {% if imagenes_carrusel %} {# Solo muestra el carrusel si hay imágenes #}
+    <div class="carrusel-container">
+        <div class="carrusel-inner">
+            {% for imagen in imagenes_carrusel %}
+            <div class="carrusel-item">
+                {# ¡CORRECCIÓN CRÍTICA AQUÍ! Usar imagen_estatica del modelo y la etiqueta {% static %} #}
+                {% if imagen.imagen_estatica %}
+                <img src="{% static imagen.imagen_estatica %}" alt="{{ imagen.titulo|default:'Imagen del carrusel' }}">
+                {% else %}
+                {# Opcional: una imagen por defecto para el carrusel si no tiene una estática #}
+                <img src="{% static 'images/default_carrusel_placeholder.png' %}" alt="Imagen por defecto del carrusel">
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% if imagenes_carrusel|length > 1 %} {# Solo muestra botones si hay más de una imagen #}
+        <div class="carrusel-buttons">
+            <button class="carrusel-button" id="prevBtn">❮</button>
+            <button class="carrusel-button" id="nextBtn">❯</button>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const carruselInner = document.querySelector('.carrusel-inner');
+        const carruselItems = document.querySelectorAll('.carrusel-item');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentIndex = 0;
+
+        if (carruselItems.length > 0) {
+            function updateCarrusel() {
+                const itemWidth = carruselItems[0] ? carruselItems[0].clientWidth : 0;
+                carruselInner.style.transform = `translateX(${-currentIndex * itemWidth}px)`;
+            }
+
+            if (prevBtn && nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % carruselItems.length;
+                    updateCarrusel();
+                });
+
+                prevBtn.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + carruselItems.length) % carruselItems.length;
+                    updateCarrusel();
+                });
+            }
+
+            window.addEventListener('resize', updateCarrusel);
+            window.addEventListener('load', updateCarrusel);
+        }
+    </script>
+    {% else %} {# Mensaje si no hay imágenes para el carrusel #}
+    <p>No hay imágenes disponibles para el carrusel en este momento.</p>
+    {% endif %}
+    {# --- FIN DEL CARRUSEL --- #}
+
+    {# --- ENLACES DE REDES SOCIALES (IMÁGENES Y TEXTO) --- #}
+    <div class="social-links">
+        <h3>Síguenos en nuestras redes:</h3>
+
+        <a href="https://www.facebook.com/groups/sf2ceargentina" target="_blank" aria-label="Síguenos en Facebook"
+            class="social-item">
+            <img src="{% static 'images/facebook_logo.png' %}" alt="Facebook" class="social-icon">
+            <span class="social-text">Grupo de facebook de SFCE Argentina</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+
+                <a href="https://www.twitch.tv/mechakuma34" target="_blank" aria-label="Síguenos en Twitch"
+                    class="social-item">
+                    <img src="{% static 'images/twitch_logo.png' %}" alt="Twitch" class="social-icon">
+                    <span class="social-text">canal de MechAkuma</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+
+                        <a href="https://www.youtube.com/@mechakuma34" target="_blank" aria-label="Síguenos en Youtube"
+                            class="social-item">
+                            <img src="{% static 'images/youtube_logo.png' %}" alt="YouTube" class="social-icon">
+                            <span class="social-text">canal de MechAkuma</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                        <a href="https://www.youtube.com/@fighterlatinos" target="_blank" aria-label="Síguenos en Youtube"
+                            class="social-item">
+                            <img src="{% static 'images/youtube_logo.png' %}" alt="YouTube" class="social-icon">
+                            <span class="social-text">canal de Errenoob</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                        <a href="https://www.tiktok.com/@nostraxlive" target="_blank" aria-label="Síguenos en Youtube"
+                            class="social-item">
+                            <img src="{% static 'images/tiktok_logo.png' %}" alt="Tiktok" class="social-icon">
+                            <span class="social-text">Canal de Nostrax</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                        <a href="https://www.tiktok.com/@mechakuma" target="_blank" aria-label="Síguenos en Tiktok"
+                            class="social-item">
+                            <img src="{% static 'images/tiktok_logo.png' %}" alt="Tiktok" class="social-icon">
+                            <span class="social-text">Canal de MechAkuma</span> {# <-- ¡NUEVO: Texto visible! #} </a>
+                            {# Puedes añadir más iconos aquí si tienes Twitter, YouTube, etc. #}
+    </div>
+    {# --- FIN ENLACES DE REDES SOCIALES --- #}
 
 
-class ImagenCarrusel(models.Model):
-    # Ruta relativa a la imagen estática del carrusel (ej. 'images/carrusel/imagen_carrusel.png')
-    imagen_estatica = models.CharField(
-        max_length=255,
-        help_text="Ruta relativa a la imagen para el carrusel principal (ej. 'images/carrusel/imagen_carrusel.png')"
-    )
-    descripcion = models.CharField(max_length=255, blank=True, null=True)
-    link = models.URLField(blank=True, null=True, help_text="Enlace opcional al hacer clic en la imagen")
-    orden = models.IntegerField(default=0, help_text="Orden de aparición en el carrusel")
+    <p>Explora nuestros torneos y descubre más sobre la escena de los juegos de lucha.</p>
 
-    class Meta:
-        ordering = ['orden'] # Ordenar por el campo 'orden'
+    <a href="{% url 'lista_torneos' %}" class="btn-large">Ver Lista de Torneos</a>
+</div>
 
-    def __str__(self):
-        return self.descripcion or f"Imagen Carrusel {self.id}"
-
-
-# =====================================================================
-# NUEVOS MODELOS DE REDES SOCIALES
-# =====================================================================
-
-class RedSocial(models.Model):
-    """Representa una plataforma de red social (ej. YouTube, TikTok, Facebook)."""
-    nombre = models.CharField(max_length=100, unique=True, help_text="Nombre de la plataforma (ej. YouTube, TikTok, Facebook)")
-    # Ruta relativa al logo de la PLATAFORMA (ej. 'images/logos/youtube_main.png')
-    logo_plataforma_estatico = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Ruta relativa al logo principal de la plataforma (ej. 'images/logos/youtube_main.png')"
-    )
-    orden = models.IntegerField(default=0, help_text="Orden de aparición de la plataforma en la página")
-
-    class Meta:
-        ordering = ['orden'] # Ordenar plataformas
-
-    def __str__(self):
-        return self.nombre
-
-class CanalRedSocial(models.Model):
-    """Representa un canal específico dentro de una plataforma de red social."""
-    plataforma = models.ForeignKey(RedSocial, related_name='canales', on_delete=models.CASCADE,
-                                   help_text="Plataforma de red social a la que pertenece este canal")
-    nombre_canal = models.CharField(max_length=150, help_text="Nombre descriptivo del canal (ej. Canal de YouTube de MechAkuma)")
-    link_canal = models.URLField(help_text="Enlace directo al canal o perfil")
-    # Ruta relativa al logo ESPECÍFICO del canal (ej. 'images/logos/mech_akuma_youtube_logo.png')
-    logo_canal_estatico = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        help_text="Ruta relativa al logo específico del canal (ej. 'images/logos/mech_akuma_youtube_logo.png')"
-    )
-    orden = models.IntegerField(default=0, help_text="Orden de aparición dentro de su plataforma")
-
-    class Meta:
-        ordering = ['orden'] # Ordenar canales dentro de una plataforma
-
-    def __str__(self):
-        return f"{self.nombre_canal} ({self.plataforma.nombre})"
+{% endblock %}
