@@ -161,7 +161,8 @@
         color: #87CEEB; /* Azul cielo claro para etiquetas fuertes */
     }
 
-    .torneo-info p[style="color: #e67e22;"] { /* Para el texto de "Torneo Internacional" */
+    /* Estilo para el texto de (Torneo Offline) */
+    .torneo-info .offline-tag {
         color: #87CEEB !important; /* Asegura que el color sea el nuevo azul cielo claro */
         font-weight: bold;
     }
@@ -301,13 +302,14 @@
             <option value="Liga" {% if selected_options.liga %}selected{% endif %}>Liga</option>
             <option value="Superliga" {% if selected_options.superliga %}selected{% endif %}>Superliga</option>
             <option value="Desafio" {% if selected_options.desafio %}selected{% endif %}>Desafío </option>
-            <option value="Internacional" {% if selected_options.internacional %}selected{% endif %}>Internacional
-            </option>
+            {# CAMBIO: Opción "Offline" en lugar de "Internacional" #}
+            <option value="Offline" {% if selected_offline == 'True' %}selected{% endif %}>Offline</option>
+            <option value="Online" {% if selected_offline == 'False' %}selected{% endif %}>Online</option>
         </select>
 
         <input type="number" name="year" placeholder="Año" value="{{ selected_year }}">
         <button type="submit">Filtrar</button>
-        {% if selected_tipo or selected_year %}
+        {% if selected_tipo or selected_year or selected_offline %} {# También consideramos el filtro de offline #}
         <a href="{% url 'lista_torneos' %}" class="reset-link">Restablecer Filtros</a>
         {% endif %}
     </form>
@@ -330,8 +332,11 @@
             <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
             <p><strong>Fecha:</strong> {{ torneo.fecha|date:"d M Y" }}</p>
             <p><strong>Ubicación:</strong> {{ torneo.ubicacion }}</p>
-            {% if torneo.internacional %}
-            <p style="color: #87CEEB;">(Torneo Internacional)</p> {# Color que resalta en el tema azul #}
+            {# CAMBIO: Mostrar "Torneo Offline" o "Torneo Online" #}
+            {% if torneo.es_offline %}
+            <p class="offline-tag">(Torneo Offline)</p>
+            {% else %}
+            <p class="offline-tag">(Torneo Online)</p>
             {% endif %}
         </div>
         <div class="torneo-actions">

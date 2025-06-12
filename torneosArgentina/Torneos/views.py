@@ -1,7 +1,7 @@
 # Torneos/views.py
 
 from django.shortcuts import render, get_object_or_404
-from .models import Torneo, ImagenCarrusel, InformacionTorneoAnio # Asegúrate de importar todos los modelos necesarios
+from .models import Torneo, ImagenCarrusel, InformacionTorneoAnio 
 
 def index(request):
     """
@@ -18,12 +18,14 @@ def index(request):
 def lista_torneos(request):
     """
     Vista principal para listar torneos.
-    Permite filtrar por tipo y año usando parámetros GET.
+    Permite filtrar por tipo, año y si es offline usando parámetros GET.
     """
     torneos = Torneo.objects.all() # Inicia con todos los torneos
 
     selected_tipo = request.GET.get('tipo', '')
     selected_year = request.GET.get('year', '')
+    # NUEVO: Obtener el estado de 'offline' del filtro
+    selected_offline = request.GET.get('offline', '') 
 
     # Aplicar filtro por tipo si se seleccionó uno Y NO ES 'todas_las_competencias'
     if selected_tipo and selected_tipo != 'todas_las_competencias':
@@ -33,26 +35,31 @@ def lista_torneos(request):
     if selected_year and selected_year.isdigit():
         torneos = torneos.filter(fecha__year=int(selected_year))
 
-    # --- INICIO DE CORRECCIÓN EN selected_options ---
-    # Las claves del diccionario deben coincidir con cómo se acceden en el template (ej. selected_options.copa_america)
+    # NUEVO: Aplicar filtro por 'offline'
+    if selected_offline == 'True': # Si el filtro es para mostrar solo torneos offline
+        torneos = torneos.filter(es_offline=True)
+    elif selected_offline == 'False': # Si el filtro es para mostrar solo torneos online
+        torneos = torneos.filter(es_offline=False)
+
+
     selected_options = {
         'todas_las_competencias': (not selected_tipo or selected_tipo == 'todas_las_competencias'),
-        # ERROR: La clave era 'Copa_America' (mayúsculas) y en HTML se usa 'copa_america' (minúsculas)
-        'copa_america': (selected_tipo == 'Copa_America'), # Clave en minúsculas, valor de comparación con mayúsculas
-        # ERROR: La clave era 'Copa' (mayúscula) y en HTML se usa 'copa' (minúscula)
-        'copa': (selected_tipo == 'Copa'), # Clave en minúsculas, valor de comparación con mayúsculas
-        # Lo mismo para las demás, asegurando que la clave del diccionario sea minúscula
+        'copa_america': (selected_tipo == 'Copa_America'),
+        'copa': (selected_tipo == 'Copa'),
         'liga': (selected_tipo == 'Liga'),
         'superliga': (selected_tipo == 'Superliga'),
         'desafio': (selected_tipo == 'Desafio'),
-        'internacional': (selected_tipo == 'Internacional'),
+        # CAMBIO: Ahora manejamos 'offline' en lugar de 'internacional'
+        'offline_filter_active': (selected_offline == 'True'), # Para saber si el filtro offline está activo
+        'online_filter_active': (selected_offline == 'False'), # Para saber si el filtro online está activo
     }
-    # --- FIN DE CORRECCIÓN EN selected_options ---
+    
 
     context = {
         "torneos": torneos,
         "selected_tipo": selected_tipo,
         "selected_year": selected_year,
+        "selected_offline": selected_offline, # Pasar el estado de offline seleccionado al template
         "selected_options": selected_options,
     }
     return render(request, "lista_torneos.html", context)
@@ -73,13 +80,13 @@ def lista_torneos_por_tipo(request, tipo):
     """
     return lista_torneos(request, tipo=tipo)
 
-
-def torneos_internacionales(request):
-    """
-    Muestra solo torneos marcados como internacionales.
-    Asume que 'Internacional' es un valor del campo 'tipo' en tu modelo Torneo.
-    """
-    return lista_torneos(request, tipo="Internacional")
+# ELIMINAMOS torneos_internacionales porque ahora lo maneja el filtro 'offline'
+# def torneos_internacionales(request):
+#     """
+#     Muestra solo torneos marcados como internacionales.
+#     Asume que 'Internacional' es un valor del campo 'tipo' en tu modelo Torneo.
+#     """
+#     return lista_torneos(request, tipo="Internacional")
 
 
 def desafios(request):

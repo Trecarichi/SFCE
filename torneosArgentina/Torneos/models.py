@@ -1,8 +1,8 @@
 # Torneos/models.py
 
 from django.db import models
-from django.utils.html import format_html # Importa format_html aquí
-from django.templatetags.static import static # Importa static aquí
+from django.utils.html import format_html
+from django.templatetags.static import static
 
 class Torneo(models.Model):
     nombre = models.CharField(max_length=200, unique=True)
@@ -10,7 +10,12 @@ class Torneo(models.Model):
     fecha = models.DateField()
     ubicacion = models.CharField(max_length=200)
     descripcion = models.TextField(blank=True, null=True)
-    internacional = models.BooleanField(default=False)
+    # CAMBIO: Renombramos 'internacional' a 'es_offline'
+    es_offline = models.BooleanField(
+        default=False, 
+        verbose_name="¿Es offline (presencial)?",
+        help_text="Marca si el torneo es presencial/offline. Si no, se considera online."
+    )
     imagen_estatica = models.CharField(
         max_length=255, 
         blank=True, 
@@ -62,7 +67,7 @@ class ImagenAdicionalTorneo(models.Model):
 
 
 class ImagenCarrusel(models.Model):
-    titulo = models.CharField(max_length=200, blank=True, null=True) # Agregué blank=True, null=True para evitar errores al migrar si hay nulos
+    titulo = models.CharField(max_length=200, blank=True, null=True)
     imagen_estatica = models.CharField(
         max_length=255, 
         help_text="Ruta a la imagen estática del carrusel (ej. images/carrusel/imagen1.png). Debe estar en torneos/static/images/carrusel/"
@@ -79,13 +84,8 @@ class ImagenCarrusel(models.Model):
     def __str__(self):
         return self.titulo if self.titulo else f"Imagen {self.id}"
     
-    # Método para previsualizar la imagen en el admin
     def imagen_preview(self):
-        # Asegúrate de que 'static' y 'format_html' están importados al principio del archivo
         if self.imagen_estatica:
-            # Construye la URL estática usando la función static() y luego format_html
-            # La función static() de Django es la forma correcta de resolver rutas estáticas
             return format_html('<img src="{}" style="width: 50px; height: auto;" />', static(self.imagen_estatica))
-        return "(Sin imagen)" # Retorna un texto o un placeholder si no hay imagen_estatica
+        return "(Sin imagen)"
     imagen_preview.short_description = 'Previsualización'
-

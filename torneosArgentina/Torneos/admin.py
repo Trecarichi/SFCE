@@ -37,10 +37,13 @@ class ImagenAdicionalTorneoInline(admin.TabularInline):
 # ===========================================================================
 @admin.register(Torneo)
 class TorneoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'fecha', 'tipo', 'ubicacion', 'internacional', 'imagen_estatica_display') 
+    # CAMBIO: 'internacional' a 'es_offline' en list_display
+    list_display = ('nombre', 'fecha', 'tipo', 'ubicacion', 'es_offline', 'imagen_estatica_display') 
     search_fields = ('nombre', 'tipo', 'ubicacion')
-    list_filter = ('fecha', 'tipo', 'internacional')
-    fields = ['nombre', 'tipo', 'fecha', 'ubicacion', 'descripcion', 'internacional', 'imagen_estatica']
+    # CAMBIO: 'internacional' a 'es_offline' en list_filter
+    list_filter = ('fecha', 'tipo', 'es_offline')
+    # CAMBIO: 'internacional' a 'es_offline' en fields
+    fields = ['nombre', 'tipo', 'fecha', 'ubicacion', 'descripcion', 'es_offline', 'imagen_estatica']
     inlines = [InformacionTorneoAnioInline, ImagenAdicionalTorneoInline] # Asegúrate de que ImagenAdicionalTorneoInline esté aquí
 
     def imagen_estatica_display(self, obj):
@@ -85,4 +88,3 @@ class ImagenCarruselAdmin(admin.ModelAdmin):
     readonly_fields = ('imagen_preview', 'fecha_subida') 
     # Asegúrate de que 'imagen_estatica' es el campo aquí y no 'imagen'
     fields = ('titulo', 'imagen_estatica', 'descripcion', 'orden', 'activo', 'fecha_subida')
-

@@ -458,8 +458,11 @@
     <div class="detail-info-block">
         <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
         <p><strong>Ubicación:</strong> {{ torneo.ubicacion }}</p>
-        {% if torneo.internacional %}
-        <p style="color: #87CEEB;"><strong>(Torneo Internacional)</strong></p> {# Color que resalta en el tema azul #}
+        {# CAMBIO: Mostrar si el torneo es Offline o Online #}
+        {% if torneo.es_offline %}
+        <p style="color: #87CEEB;"><strong>(Torneo Offline)</strong></p> {# Color que resalta en el tema azul #}
+        {% else %}
+        <p style="color: #87CEEB;"><strong>(Torneo Online)</strong></p> {# Color que resalta en el tema azul #}
         {% endif %}
         {% if torneo.descripcion %}
         <p><strong>Descripción:</strong> {{ torneo.descripcion|linebreaksbr }}</p>
