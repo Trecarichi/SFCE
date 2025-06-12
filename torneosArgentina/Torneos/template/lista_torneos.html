@@ -294,6 +294,7 @@
 
 <div class="filter-container">
     <form action="{% url 'lista_torneos' %}" method="GET">
+        {# Filtro principal por Tipo de Competencia (incluyendo Offline/Online) #}
         <select name="tipo" onchange="this.form.submit()">
             <option value="todas_las_competencias" {% if selected_options.todas_las_competencias %}selected{% endif %}>
                 Todas las competencias</option>
@@ -302,14 +303,16 @@
             <option value="Liga" {% if selected_options.liga %}selected{% endif %}>Liga</option>
             <option value="Superliga" {% if selected_options.superliga %}selected{% endif %}>Superliga</option>
             <option value="Desafio" {% if selected_options.desafio %}selected{% endif %}>Desafío </option>
-            {# CAMBIO: Opción "Offline" en lugar de "Internacional" #}
-            <option value="Offline" {% if selected_offline == 'True' %}selected{% endif %}>Offline</option>
-            <option value="Online" {% if selected_offline == 'False' %}selected{% endif %}>Online</option>
+            <option value="Offline" {% if selected_options.offline %}selected{% endif %}>Offline (Presencial)</option>
+            <option value="Online" {% if selected_options.online %}selected{% endif %}>Online</option>
         </select>
 
+        {# Filtro por Año #}
         <input type="number" name="year" placeholder="Año" value="{{ selected_year }}">
+
         <button type="submit">Filtrar</button>
-        {% if selected_tipo or selected_year or selected_offline %} {# También consideramos el filtro de offline #}
+        {# La condición para restablecer filtros se actualiza para considerar solo selected_tipo y selected_year #}
+        {% if selected_tipo or selected_year %}
         <a href="{% url 'lista_torneos' %}" class="reset-link">Restablecer Filtros</a>
         {% endif %}
     </form>
@@ -319,12 +322,9 @@
     {% if torneos %}
     {% for torneo in torneos %}
     <div class="torneo-card">
-        {# ESTO ES CORRECTO: Usamos el campo imagen_estatica y la etiqueta {% static %} #}
-        {# Asegúrate de que 'torneo.imagen_estatica' contenga solo la ruta relativa (ej. 'images/mi_torneo.png') #}
         {% if torneo.imagen_estatica %}
         <img src="{% static torneo.imagen_estatica %}" alt="Imagen de {{ torneo.nombre }}">
         {% else %}
-        {# Imagen por defecto si el torneo no tiene una imagen cargada o la ruta es inválida #}
         <img src="{% static 'images/default_tournament.png' %}" alt="Imagen por defecto de torneo">
         {% endif %}
         <div class="torneo-info">
@@ -332,7 +332,7 @@
             <p><strong>Tipo:</strong> {{ torneo.tipo }}</p>
             <p><strong>Fecha:</strong> {{ torneo.fecha|date:"d M Y" }}</p>
             <p><strong>Ubicación:</strong> {{ torneo.ubicacion }}</p>
-            {# CAMBIO: Mostrar "Torneo Offline" o "Torneo Online" #}
+            {# Mostrar "Torneo Offline" o "Torneo Online" basado en es_offline #}
             {% if torneo.es_offline %}
             <p class="offline-tag">(Torneo Offline)</p>
             {% else %}
